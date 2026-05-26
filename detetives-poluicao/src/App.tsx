@@ -1,7 +1,9 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import './App.css'
 import './styles/premium.css'
+import './styles/institutional.css'
+import './styles/teacher-saas.css'
 import { Header } from './components/Header'
 import { LoginScreen } from './components/LoginScreen'
 import { MenuScreen } from './components/MenuScreen'
@@ -14,9 +16,6 @@ import { HistoryScreen } from './components/HistoryScreen'
 import { RankingScreen } from './components/RankingScreen'
 import { FusionBackground } from './components/scene/FusionBackground'
 
-const Scene3D = lazy(() =>
-  import('./components/scene/Scene3D').then((m) => ({ default: m.Scene3D })),
-)
 import { getCaseById } from './data/cases'
 import { SCHOOL } from './data/config'
 import { buildReport, createSession, pickCase } from './lib/gameEngine'
@@ -50,7 +49,7 @@ function App() {
   const [soundOn, setSoundOn] = useState(loadSoundEnabled)
   const [fontSize, setFontSize] = useState<FontSize>(loadFontSize)
 
-  const immersive = screen === 'login' || screen === 'menu'
+  const immersive = screen === 'login' || screen === 'menu' || screen === 'teacher'
 
   useEffect(() => {
     setSoundEnabled(soundOn)
@@ -135,17 +134,10 @@ function App() {
 
   return (
     <main className={`app app--${screen}`}>
-      {immersive && (
-        <>
-          <FusionBackground />
-          <Suspense fallback={null}>
-            <Scene3D intensity={screen === 'login' ? 'full' : 'lite'} />
-          </Suspense>
-        </>
-      )}
+      {immersive && <FusionBackground />}
 
       <div className="app-content">
-        <Header compact={screen === 'game'} premium={immersive} />
+        {screen !== 'teacher' && <Header compact={screen === 'game'} premium={immersive} />}
 
         <AnimatePresence mode="wait">
           {screen === 'login' && (

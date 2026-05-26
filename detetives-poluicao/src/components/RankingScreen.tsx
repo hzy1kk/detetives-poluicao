@@ -16,11 +16,8 @@ export function RankingScreen({ profile, onBack }: Props) {
 
   return (
     <AnimatedPanel className="card ranking-card">
-      <h2>🏆 Ranking — Turma {profile.turma}</h2>
-      <p className="lead">
-        Melhores notas registradas neste aparelho (até ~70 detetives no laboratório). Para nota
-        oficial mensal, a Profª Maria também pode usar o Google Forms.
-      </p>
+      <h2>🏆 Ranking</h2>
+      <p className="lead">Melhores notas registradas neste aparelho.</p>
 
       {mine && (
         <div className="ranking-you">

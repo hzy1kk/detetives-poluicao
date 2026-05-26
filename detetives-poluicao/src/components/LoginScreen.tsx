@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { AUTHORS, TEAM_PASSWORD, TURMA_PADRAO } from '../data/config'
-import { QrAccessPanel } from './QrAccessPanel'
+import { SCHOOL, TEAM_PASSWORD, TURMA_PADRAO } from '../data/config'
 import type { Difficulty } from '../types'
 import { playClick } from '../lib/audio'
-import { AnimatedPanel, StaggerItem } from './ui/AnimatedPanel'
+import { CreditsFooter } from './CreditsFooter'
 
 type Props = {
   onLogin: (nome: string, turma: string, dificuldade: Difficulty) => void
@@ -13,14 +12,13 @@ type Props = {
 }
 
 const DIFF_LABELS: Record<Difficulty, string> = {
-  facil: 'Fácil · 4 pistas',
-  medio: 'Médio · 5 pistas',
-  dificil: 'Difícil · 6 pistas',
+  facil: 'Fácil',
+  medio: 'Médio',
+  dificil: 'Difícil',
 }
 
 export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Props) {
   const [nome, setNome] = useState('')
-  const [turma] = useState(TURMA_PADRAO)
   const [senha, setSenha] = useState('')
   const [dificuldade, setDificuldade] = useState<Difficulty>(defaultDifficulty)
   const [erro, setErro] = useState('')
@@ -29,60 +27,56 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
     e.preventDefault()
     playClick()
     if (!nome.trim()) {
-      setErro('Informe seu nome.')
+      setErro('Informe seu nome completo.')
       return
     }
     if (senha !== TEAM_PASSWORD) {
-      setErro('Senha da turma incorreta. Dica: palavra do jogo.')
+      setErro('Senha incorreta.')
       return
     }
     setErro('')
-    onLogin(nome.trim(), turma, dificuldade)
+    onLogin(nome.trim(), TURMA_PADRAO, dificuldade)
   }
 
   return (
-    <div className="login-stage">
-      <AnimatedPanel className="login-glass card">
-        <span className="login-tag-4d">Lab 3D · Fusão cromática · Tempo real</span>
-        <div className="login-hero-icon">
-          <motion.span
-            animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.08, 1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            🔬🌊🧪
-          </motion.span>
-        </div>
-        <h2>Entrar na investigação</h2>
-        <p className="lead">
-          Ambiente imersivo 3D · Casos de poluição · Turma <strong>AALG</strong> · ~10 min por missão
+    <motion.div
+      className="login-shell"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45 }}
+    >
+      <aside className="login-brand">
+        <img src="/logo-escola.png" alt="" className="login-brand__logo" />
+        <span className="login-brand__badge">Química ambiental</span>
+        <h2>Detetives da Poluição</h2>
+        <p>
+          Investigue casos reais de contaminação, use o laboratório virtual e descubra a solução
+          correta para proteger o meio ambiente.
         </p>
+        <p style={{ fontSize: '0.82rem', opacity: 0.85 }}>
+          {SCHOOL.nome} · {SCHOOL.disciplina}
+        </p>
+      </aside>
+
+      <div className="login-form-panel">
+        <h3>Entrar</h3>
+        <p className="lead">Preencha seus dados para iniciar a missão (~15 min).</p>
 
         <form onSubmit={submit} className="grid">
-          <StaggerItem index={0}>
-            <label>
-              Nome completo
-              <input
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                autoComplete="name"
-                placeholder="Seu nome"
-              />
-            </label>
-          </StaggerItem>
+          <label>
+            Nome completo
+            <input
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              autoComplete="name"
+              placeholder="Ex.: Maria Silva"
+            />
+          </label>
 
-          <StaggerItem index={1}>
-            <label>
-              Turma
-              <div className="turma-badge-field">
-                <input value={turma} readOnly aria-readonly />
-              </div>
-            </label>
-          </StaggerItem>
-
-          <StaggerItem index={2}>
-            <span className="sr-only">Nível do caso</span>
-            <p style={{ margin: '0 0 0.35rem', fontWeight: 700, fontSize: '0.88rem' }}>Nível do caso</p>
-            <div className="difficulty-pills" role="group" aria-label="Dificuldade">
+          <div>
+            <span className="sr-only">Nível</span>
+            <p style={{ margin: '0 0 0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Nível do caso</p>
+            <div className="difficulty-pills difficulty-pills--inst" role="group" aria-label="Dificuldade">
               {(['facil', 'medio', 'dificil'] as const).map((d) => (
                 <button
                   key={d}
@@ -97,40 +91,28 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
                 </button>
               ))}
             </div>
-          </StaggerItem>
+          </div>
 
-          <StaggerItem index={3}>
-            <label>
-              Senha da turma
-              <input
-                type="password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                placeholder="••••••••"
-              />
-            </label>
-          </StaggerItem>
+          <label>
+            Senha de acesso
+            <input
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="Senha fornecida em sala"
+            />
+          </label>
 
-          {erro && (
-            <motion.p
-              className="erro"
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              {erro}
-            </motion.p>
-          )}
+          {erro && <p className="erro">{erro}</p>}
 
-          <StaggerItem index={4}>
-            <motion.button
-              type="submit"
-              className="btn-fusion btn-block"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Iniciar missão 3D
-            </motion.button>
-          </StaggerItem>
+          <motion.button
+            type="submit"
+            className="btn-inst-primary"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+          >
+            Iniciar investigação
+          </motion.button>
         </form>
 
         <button
@@ -141,22 +123,11 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
             onTeacherAccess()
           }}
         >
-          Acesso professor (PIN)
+          Acesso da professora
         </button>
 
-        <QrAccessPanel compact />
-
-        <footer className="creditos-mini">
-          <strong>Equipe:</strong>{' '}
-          {AUTHORS.map((a) => (
-            <span key={a.nome} className={a.destaque ? 'destaque' : ''}>
-              {a.nome}
-              {a.destaque ? ' ★' : ''}
-              {' · '}
-            </span>
-          ))}
-        </footer>
-      </AnimatedPanel>
-    </div>
+        <CreditsFooter />
+      </div>
+    </motion.div>
   )
 }

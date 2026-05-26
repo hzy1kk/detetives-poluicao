@@ -341,20 +341,15 @@ html[data-screen='menu'] body {
 }
 
 .btn-fusion {
-  background: linear-gradient(135deg, var(--fusion-magenta) 0%, var(--fusion-violet) 45%, var(--fusion-cyan) 100%);
-  background-size: 200% 200%;
-  animation: fusion-btn 4s ease infinite;
+  background: linear-gradient(180deg, #0eaf61 0%, #0a8f4f 100%);
   color: #fff;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.05rem;
-  letter-spacing: 0.02em;
   border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 0.95rem 1.2rem;
-  box-shadow:
-    0 12px 32px rgba(123, 47, 247, 0.45),
-    0 0 40px rgba(0, 245, 212, 0.15);
+  box-shadow: 0 8px 20px rgba(14, 175, 97, 0.28);
   width: 100%;
   min-height: 3.1rem;
 }
@@ -534,8 +529,8 @@ html[data-screen='menu'] body {
 }
 
 .game-hud--premium {
-  background: linear-gradient(135deg, rgba(7, 31, 99, 0.95), rgba(17, 138, 178, 0.9));
-  border: 1px solid rgba(0, 245, 212, 0.3);
+  background: linear-gradient(135deg, #001d7e 0%, #0c49a7 55%, #118ab2 100%);
+  border: 1px solid rgba(14, 175, 97, 0.35);
   color: #fff;
   box-shadow: 0 8px 32px rgba(123, 47, 247, 0.2);
 }
@@ -559,7 +554,7 @@ html[data-screen='menu'] body {
 }
 
 .progress-fill--fusion {
-  background: linear-gradient(90deg, var(--fusion-magenta), var(--fusion-violet), var(--fusion-cyan));
+  background: linear-gradient(90deg, #0c49a7, #0eaf61, #118ab2);
   background-size: 200% 100%;
   animation: fusion-progress 3s linear infinite;
 }

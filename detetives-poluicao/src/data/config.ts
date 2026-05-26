@@ -8,7 +8,7 @@ export const SCHOOL = {
 }
 
 export const AUTHORS = [
-  { nome: 'Lucas Lohan', destaque: true, papel: 'Detetive ambiental (guia)' },
+  { nome: 'Lucas Lohan', destaque: false, papel: 'Detetive ambiental (guia)' },
   { nome: 'Ana Flávia', destaque: false, papel: 'Dra. em Química ambiental' },
   { nome: 'André Soares', destaque: false, papel: 'Técnico de laboratório' },
   { nome: 'Gabriel Rosa', destaque: false, papel: 'Guarda ambiental' },

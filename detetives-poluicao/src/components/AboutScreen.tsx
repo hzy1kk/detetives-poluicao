@@ -11,7 +11,7 @@ export function AboutScreen({ onBack }: Props) {
       <h2>Sobre o projeto</h2>
       <p>
         <strong>Detetives da Poluição</strong> é um jogo educativo de Química e educação ambiental
-        desenvolvido para o {SCHOOL.serie}, turma {SCHOOL.turma}, do {SCHOOL.nome} ({SCHOOL.cidade}),
+        desenvolvido para o {SCHOOL.serie} do {SCHOOL.nome} ({SCHOOL.cidade}),
         sob orientação da {SCHOOL.professora}.
       </p>
       <h3>Equipe</h3>
@@ -19,7 +19,7 @@ export function AboutScreen({ onBack }: Props) {
         {AUTHORS.map((a) => (
           <li key={a.nome}>
             <strong>{a.nome}</strong>
-            {a.destaque ? ' (coordenação)' : ''} — {a.papel}
+            {' — '}{a.papel}
           </li>
         ))}
       </ul>

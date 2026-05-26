@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { AUTHORS } from '../data/config'
 import type { StudentProfile } from '../types'
 import { playClick } from '../lib/audio'
 import { AnimatedPanel } from './ui/AnimatedPanel'
+import { CreditsFooter } from './CreditsFooter'
 
 type Props = {
   profile: StudentProfile
@@ -20,27 +20,14 @@ type Props = {
 }
 
 const tiles = [
-  {
-    id: 'play',
-    icon: '🎯',
-    title: 'Nova investigação',
-    sub: 'Caso sorteado · valendo nota',
-    primary: true,
-    action: 'play' as const,
-  },
-  {
-    id: 'treino',
-    icon: '📚',
-    title: 'Modo treino',
-    sub: 'Sem pressão · revisar',
-    action: 'treino' as const,
-  },
-  { id: 'rank', icon: '🏆', title: 'Ranking da turma', sub: 'Top detetives AALG', action: 'ranking' as const },
-  { id: 'hist', icon: '📊', title: 'Meu histórico', sub: 'Partidas anteriores', action: 'history' as const },
-  { id: 'tut', icon: '❓', title: 'Como jogar', sub: 'Tutorial rápido', action: 'tutorial' as const },
-  { id: 'about', icon: 'ℹ️', title: 'Sobre o projeto', sub: 'Equipe e BNCC', action: 'about' as const },
-  { id: 'docs', icon: '📄', title: 'Documentação PDF', sub: 'Manuais e relatórios', action: 'docs' as const },
-  { id: 'teacher', icon: '👩‍🏫', title: 'Área da professora', sub: 'PIN e relatórios', action: 'teacher' as const },
+  { id: 'play', icon: '🎯', title: 'Nova investigação', sub: 'Caso sorteado', primary: true, action: 'play' as const },
+  { id: 'treino', icon: '📚', title: 'Modo treino', sub: 'Revisar conteúdo', action: 'treino' as const },
+  { id: 'rank', icon: '🏆', title: 'Ranking', sub: 'Melhores notas', action: 'ranking' as const },
+  { id: 'hist', icon: '📊', title: 'Histórico', sub: 'Suas partidas', action: 'history' as const },
+  { id: 'tut', icon: '❓', title: 'Como jogar', sub: 'Tutorial', action: 'tutorial' as const },
+  { id: 'about', icon: 'ℹ️', title: 'Sobre', sub: 'Projeto e BNCC', action: 'about' as const },
+  { id: 'docs', icon: '📄', title: 'Documentação', sub: 'PDFs', action: 'docs' as const },
+  { id: 'teacher', icon: '👩‍🏫', title: 'Professora', sub: 'Painel de notas', action: 'teacher' as const },
 ]
 
 export function MenuScreen({
@@ -89,14 +76,12 @@ export function MenuScreen({
 
   return (
     <div className="menu-stage">
-      <AnimatedPanel className="card card--glass" delay={0.05}>
-        <div className="menu-hero">
-          <div className="menu-hero-avatar">🕵️</div>
+      <AnimatedPanel className="card card--inst" delay={0.05}>
+        <div className="menu-hero menu-hero--inst">
+          <div className="menu-hero-avatar menu-hero-avatar--inst">🕵️</div>
           <div>
-            <h2>Olá, {profile.nome}!</h2>
-            <p>
-              Turma <strong>{profile.turma}</strong> · Detetive Lucas aguarda sua próxima missão
-            </p>
+            <h2>Olá, {profile.nome}</h2>
+            <p>Pronto para a próxima investigação ambiental?</p>
           </div>
         </div>
 
@@ -105,12 +90,12 @@ export function MenuScreen({
             <motion.button
               key={t.id}
               type="button"
-              className={`menu-tile menu-tile--premium ${t.primary ? 'primary' : ''}`}
-              initial={{ opacity: 0, y: 16 }}
+              className={`menu-tile menu-tile--inst ${t.primary ? 'primary' : ''}`}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.06 * i, duration: 0.4 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              transition={{ delay: 0.04 * i }}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => handleTile(t.action)}
             >
               <span className="tile-icon">{t.icon}</span>
@@ -143,9 +128,7 @@ export function MenuScreen({
           </div>
         </div>
 
-        <p className="creditos-mini">
-          Idealizado por {AUTHORS.find((a) => a.destaque)?.nome} e equipe · Turma {profile.turma}
-        </p>
+        <CreditsFooter />
         <button type="button" className="btn-link" onClick={onLogout}>
           Sair
         </button>

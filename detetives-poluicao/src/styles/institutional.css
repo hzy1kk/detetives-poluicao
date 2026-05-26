@@ -1,0 +1,297 @@
+/* Paleta institucional: azul escola + verde ambiental + branco */
+
+:root {
+  --inst-blue: #001d7e;
+  --inst-blue-mid: #0c49a7;
+  --inst-blue-light: #118ab2;
+  --inst-green: #0eaf61;
+  --inst-green-dark: #0a8f4f;
+  --inst-green-soft: #e8faf1;
+  --inst-white: #ffffff;
+  --inst-off: #f4f8fc;
+  --inst-text: #0f172a;
+  --inst-muted: #64748b;
+  --inst-border: #c8d6e8;
+  --inst-shadow: 0 12px 40px rgba(0, 29, 126, 0.12);
+}
+
+html[data-screen='login'] body,
+html[data-screen='menu'] body,
+html[data-screen='teacher'] body {
+  background: var(--inst-off);
+  color: var(--inst-text);
+}
+
+.inst-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(165deg, #f0f6ff 0%, #f5fffa 45%, #ffffff 100%);
+}
+
+.inst-bg__layer {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.45;
+}
+
+.inst-bg__layer--blue {
+  width: 70vw;
+  height: 70vw;
+  max-width: 520px;
+  background: rgba(0, 29, 126, 0.18);
+  top: -20%;
+  right: -15%;
+}
+
+.inst-bg__layer--green {
+  width: 55vw;
+  height: 55vw;
+  max-width: 400px;
+  background: rgba(14, 175, 97, 0.2);
+  bottom: -15%;
+  left: -10%;
+}
+
+.inst-bg__layer--white {
+  width: 40vw;
+  height: 40vw;
+  background: rgba(255, 255, 255, 0.9);
+  top: 30%;
+  left: 30%;
+  opacity: 0.6;
+}
+
+/* —— Login —— */
+.login-shell {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 0;
+  margin-top: 0.5rem;
+  min-height: min(520px, calc(100dvh - 140px));
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--inst-shadow);
+  border: 1px solid var(--inst-border);
+}
+
+.login-brand {
+  background: linear-gradient(160deg, var(--inst-blue) 0%, var(--inst-blue-mid) 55%, var(--inst-blue-light) 100%);
+  color: #fff;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.login-brand__logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.4rem;
+}
+
+.login-brand h2 {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  margin: 0;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.login-brand p {
+  margin: 0;
+  opacity: 0.92;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.login-brand__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(14, 175, 97, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.login-form-panel {
+  background: var(--inst-white);
+  padding: 1.75rem 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form-panel h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  color: var(--inst-blue);
+  font-family: var(--font-display);
+}
+
+.login-form-panel .lead {
+  color: var(--inst-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.1rem;
+}
+
+.login-form-panel label {
+  color: var(--inst-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.login-form-panel input {
+  background: var(--inst-off);
+  border: 1px solid var(--inst-border);
+  border-radius: 12px;
+  color: var(--inst-text);
+}
+
+.login-form-panel input:focus {
+  border-color: var(--inst-blue-mid);
+  box-shadow: 0 0 0 3px rgba(12, 73, 167, 0.15);
+}
+
+.difficulty-pills--inst button {
+  background: var(--inst-off);
+  border: 1px solid var(--inst-border);
+  color: var(--inst-text);
+}
+
+.difficulty-pills--inst button.active {
+  background: linear-gradient(180deg, var(--inst-green), var(--inst-green-dark));
+  border-color: var(--inst-green-dark);
+  color: #fff;
+}
+
+.btn-inst-primary {
+  background: linear-gradient(180deg, var(--inst-green) 0%, var(--inst-green-dark) 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  width: 100%;
+  font-family: var(--font-display);
+  box-shadow: 0 8px 20px rgba(14, 175, 97, 0.28);
+  min-height: 3rem;
+}
+
+.btn-inst-secondary {
+  background: var(--inst-off);
+  color: var(--inst-blue);
+  border: 1px solid var(--inst-border);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+}
+
+.login-form-panel .btn-link {
+  color: var(--inst-blue-mid);
+  margin-top: 0.75rem;
+  text-align: center;
+  width: 100%;
+}
+
+.credits-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--inst-border);
+  text-align: center;
+}
+
+.credits-footer p {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--inst-muted);
+  line-height: 1.45;
+}
+
+/* Menu institucional */
+.menu-stage .card--inst {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--inst-border);
+  box-shadow: var(--inst-shadow);
+  color: var(--inst-text);
+}
+
+.menu-hero--inst h2 {
+  color: var(--inst-blue);
+  font-family: var(--font-display);
+}
+
+.menu-hero--inst p {
+  color: var(--inst-muted);
+}
+
+.menu-hero-avatar--inst {
+  background: linear-gradient(145deg, var(--inst-blue-mid), var(--inst-blue-light));
+  box-shadow: 0 8px 24px rgba(0, 29, 126, 0.2);
+}
+
+.menu-tile--inst {
+  background: var(--inst-off);
+  border: 1px solid var(--inst-border);
+  color: var(--inst-text);
+}
+
+.menu-tile--inst:hover {
+  border-color: var(--inst-green);
+  box-shadow: 0 8px 24px rgba(14, 175, 97, 0.12);
+}
+
+.menu-tile--inst.primary {
+  background: linear-gradient(145deg, rgba(0, 29, 126, 0.08), rgba(14, 175, 97, 0.12));
+  border-color: var(--inst-green);
+}
+
+.topo--inst {
+  background: linear-gradient(130deg, var(--inst-blue) 0%, var(--inst-blue-mid) 50%, var(--inst-blue-light) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.topo--inst::before {
+  display: none;
+}
+
+.menu-stage .prefs {
+  border-top-color: var(--inst-border);
+}
+
+.menu-stage .font-btns button.active {
+  background: var(--inst-blue-mid);
+  color: #fff;
+  border-color: var(--inst-blue-mid);
+}
+
+.menu-stage .btn-link {
+  color: var(--inst-blue-mid);
+}
+
+@media (max-width: 768px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .login-brand {
+    padding: 1.25rem 1.25rem 1rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .login-brand h2 {
+    font-size: 1.3rem;
+  }
+}
