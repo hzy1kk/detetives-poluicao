@@ -24,7 +24,7 @@ export function TutorialScreen({ onDone }: Props) {
         <p>🌿 Gabriel — meio ambiente</p>
         <p>💧 Gota Gi — rios e lagos</p>
       </div>
-      <button type="button" className="btn-primary" onClick={() => { playClick(); onDone() }}>
+      <button type="button" className="btn-primary btn-block" onClick={() => { playClick(); onDone() }}>
         Entendi, vamos lá!
       </button>
     </section>

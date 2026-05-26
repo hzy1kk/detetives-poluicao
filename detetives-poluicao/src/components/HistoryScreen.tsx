@@ -32,7 +32,7 @@ export function HistoryScreen({ onBack }: Props) {
             ))}
         </ul>
       )}
-      <button type="button" className="btn-primary" onClick={onBack}>
+      <button type="button" className="btn-primary btn-block" onClick={onBack}>
         Voltar
       </button>
     </section>

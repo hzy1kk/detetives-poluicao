@@ -53,6 +53,10 @@ function App() {
   }, [fontSize])
 
   useEffect(() => {
+    document.documentElement.dataset.screen = screen
+  }, [screen])
+
+  useEffect(() => {
     if (screen !== 'game' || !session || session.finalizado) return
     const id = window.setInterval(() => setTick((t) => t + 1), 1000)
     return () => clearInterval(id)
@@ -120,7 +124,7 @@ function App() {
   const gameCase = session ? getCaseById(session.caseId) : null
 
   return (
-    <main className="app">
+    <main className={`app app--${screen}`}>
       <Header compact={screen === 'game'} />
 
       {screen === 'login' && (

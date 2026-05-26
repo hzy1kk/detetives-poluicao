@@ -4,12 +4,27 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
-  background: linear-gradient(165deg, #e8f4ff 0%, #f0fff8 45%, #fff8e8 100%);
-  color: #1a1a1a;
+  font-family: 'Inter', 'Segoe UI', 'Trebuchet MS', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 10% -20%, rgba(40, 117, 255, 0.2), transparent 45%),
+    radial-gradient(circle at 95% 10%, rgba(3, 201, 136, 0.14), transparent 38%),
+    linear-gradient(180deg, #f4f8ff 0%, #f5fbff 48%, #f7fffb 100%);
+  color: #0f172a;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html[data-screen='game'] body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 html[data-font='p'] {

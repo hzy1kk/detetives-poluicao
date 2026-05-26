@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AUTHORS, SCHOOL, TEAM_PASSWORD, TURMA_PADRAO } from '../data/config'
+import { AUTHORS, TEAM_PASSWORD, TURMA_PADRAO } from '../data/config'
 import type { Difficulty } from '../types'
 import { playClick } from '../lib/audio'
 
@@ -36,7 +36,7 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
       <div className="mascote-banner">🔍🌊🧪</div>
       <h2>Entrar na investigação</h2>
       <p className="lead">
-        Você é detetive ambiental da turma {SCHOOL.turma}. Resolva o caso em cerca de 10 minutos.
+        Você vai investigar um caso de poluição e escolher a solução correta. Tempo médio: 10 minutos.
       </p>
       <form onSubmit={submit} className="grid">
         <label>
@@ -48,11 +48,11 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
           <input value={turma} onChange={(e) => setTurma(e.target.value)} />
         </label>
         <label>
-          Dificuldade
+          Nível do caso
           <select value={dificuldade} onChange={(e) => setDificuldade(e.target.value as Difficulty)}>
-            <option value="facil">Fácil — 4 pistas</option>
-            <option value="medio">Médio — 5 pistas</option>
-            <option value="dificil">Difícil — 6 pistas</option>
+            <option value="facil">Fácil (4 pistas)</option>
+            <option value="medio">Médio (5 pistas)</option>
+            <option value="dificil">Difícil (6 pistas)</option>
           </select>
         </label>
         <label>
@@ -65,7 +65,7 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
           />
         </label>
         {erro && <p className="erro">{erro}</p>}
-        <button type="submit" className="btn-primary">
+        <button type="submit" className="btn-primary btn-block">
           Iniciar missão
         </button>
       </form>

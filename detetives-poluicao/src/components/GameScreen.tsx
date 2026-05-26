@@ -137,32 +137,56 @@ export function GameScreen({
 
   const suspeitosFiltrados = gameCase.suspeitos.filter((s) => !suspeitosOcultos.includes(s))
 
+  const progresso = Math.round((visibleIds.length / totalPistas) * 100)
+
   return (
     <section className="card game-card">
-      <div className="linha">
-        <h2>
-          {gameCase.emoji} {gameCase.nome}
-        </h2>
-        <div className="badges">
-          {session.modoTreino && <span className="badge treino">Treino</span>}
-          <span className="badge tempo">⏱ {formatTime(tempoSegundos)}</span>
+      <div className="game-hud" role="status" aria-live="polite">
+        <div className="hud-top">
+          <span className="hud-emoji" aria-hidden>
+            {gameCase.emoji}
+          </span>
+          <div className="hud-title-wrap">
+            <p className="hud-kicker">Caso em andamento</p>
+            <strong className="hud-title">{gameCase.nome}</strong>
+          </div>
+          <span className="badge tempo hud-time">⏱ {formatTime(tempoSegundos)}</span>
+        </div>
+        {session.modoTreino && <span className="badge treino hud-treino">Modo treino</span>}
+        <div className="progress-bar hud-progress" aria-hidden>
+          <div className="progress-fill" style={{ width: `${progresso}%` }} />
+        </div>
+        <div className="hud-stats">
+          <span className="stat-chip">
+            <b>{visibleIds.length}</b>/{totalPistas} pistas
+          </span>
+          <span className="stat-chip">
+            <b>{session.labCharges}</b> testes
+          </span>
+          <span className="stat-chip">
+            <b>{session.tentativas}</b>/3 tentativas
+          </span>
         </div>
       </div>
+
       <p className="speech-bubble">{gameCase.intro}</p>
-      <p>{gameCase.contexto}</p>
-
-      <div className="progress-bar">
-        <div
-          className="progress-fill"
-          style={{ width: `${(visibleIds.length / totalPistas) * 100}%` }}
-        />
+      <p className="contexto">{gameCase.contexto}</p>
+      <div className="quick-facts">
+        <div>
+          <span className="q-label">Ambiente</span>
+          <strong>{gameCase.cenario === 'agua' ? 'Água' : gameCase.cenario === 'solo' ? 'Solo' : 'Lagoa'}</strong>
+        </div>
+        <div>
+          <span className="q-label">Missão</span>
+          <strong>Encontrar poluente + descarte correto</strong>
+        </div>
+        <div>
+          <span className="q-label">Meta de tempo</span>
+          <strong>10 minutos</strong>
+        </div>
       </div>
-      <p className="meta">
-        Pistas {visibleIds.length}/{totalPistas} · Lab {session.labCharges} cargas · Tentativas{' '}
-        {session.tentativas}/3
-      </p>
 
-      <h3>🔎 Evidências</h3>
+      <h3>🔎 Dados coletados</h3>
       <ul className="pistas">
         {pistas.map((p, i) => (
           <li key={p.id} className="pista-item">
@@ -175,17 +199,19 @@ export function GameScreen({
       {session.cluesRevealed < totalPistas && (
         <div className="unlock-box">
           {!miniAtiva ? (
-            <button type="button" className="btn-secondary" onClick={pedirDesbloqueio}>
-              Desbloquear próxima pista
+            <button type="button" className="btn-secondary btn-block" onClick={pedirDesbloqueio}>
+              Coletar próxima pista
             </button>
           ) : (
             proximaClue?.miniPergunta && (
               <div className="mini-quiz">
+                <p className="quiz-title">Checkpoint rápido de Química</p>
                 <p>{proximaClue.miniPergunta.pergunta}</p>
                 {proximaClue.miniPergunta.opcoes.map((op, idx) => (
                   <button
                     key={op}
                     type="button"
+                    className="btn-option"
                     onClick={() => responderMini(proximaClue.id, idx)}
                   >
                     {op}
@@ -197,19 +223,29 @@ export function GameScreen({
         </div>
       )}
 
-      <div className="acoes">
-        <button type="button" onClick={pedirDica} disabled={session.dicasUsadas >= 3}>
-          Dica ({session.dicasUsadas}/3)
+      <div className="acoes acoes-stack">
+        <button
+          type="button"
+          className="btn-block"
+          onClick={pedirDica}
+          disabled={session.dicasUsadas >= 3}
+        >
+          Pedir dica estratégica ({session.dicasUsadas}/3)
         </button>
       </div>
       {session.dicasUsadas > 0 && (
         <p className="dica">{getHintText(gameCase, session.dicasUsadas)}</p>
       )}
 
-      <h3>🧪 Laboratório — Técnico André</h3>
-      <div className="acoes lab">
+      <h3>🧪 Laboratório do André</h3>
+      <div className="acoes lab acoes-stack">
         {gameCase.testes.map((t) => (
-          <button key={t.id} type="button" onClick={() => rodarTeste(t.id, t.resultado)}>
+          <button
+            key={t.id}
+            type="button"
+            className="btn-block"
+            onClick={() => rodarTeste(t.id, t.resultado)}
+          >
             {t.nome}
             {session.testesFeitos.includes(t.id) ? ' ✓' : ''}
           </button>
@@ -217,10 +253,10 @@ export function GameScreen({
       </div>
       {resultadoLab && <p className="resultado">{resultadoLab}</p>}
 
-      <h3>⚖️ Acusação final</h3>
+      <h3>⚖️ Conclusão da investigação</h3>
       <form onSubmit={enviar} className="grid">
         <label>
-          Poluente / origem
+          Qual é a principal fonte de poluição?
           <select value={suspeito} onChange={(e) => setSuspeito(e.target.value)} required>
             <option value="">Selecione...</option>
             {suspeitosFiltrados.map((s) => (
@@ -231,7 +267,7 @@ export function GameScreen({
           </select>
         </label>
         <label>
-          Tratamento / descarte correto
+          Qual é a ação correta de descarte/tratamento?
           <select value={descarte} onChange={(e) => setDescarte(e.target.value)} required>
             <option value="">Selecione...</option>
             {gameCase.descartes.map((d) => (
@@ -241,14 +277,18 @@ export function GameScreen({
             ))}
           </select>
         </label>
-        <button type="submit" className="btn-primary">
-          Enviar solução
+        <button type="submit" className="btn-primary btn-block btn-sticky-submit">
+          Confirmar resposta final
         </button>
       </form>
 
-      {feedback && <p className={feedback.includes('incorret') ? 'erro' : 'ok-msg'}>{feedback}</p>}
+      {feedback && (
+        <p className={`feedback-banner ${feedback.includes('incorret') ? 'erro' : 'ok-msg'}`}>
+          {feedback}
+        </p>
+      )}
 
-      <button type="button" className="btn-link" onClick={onQuit}>
+      <button type="button" className="btn-link btn-block-touch" onClick={onQuit}>
         Voltar ao menu
       </button>
     </section>

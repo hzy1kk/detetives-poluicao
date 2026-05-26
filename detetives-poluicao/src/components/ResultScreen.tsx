@@ -26,6 +26,12 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
       <p>Tempo: {formatTime(report.tempoSegundos)}</p>
 
       <article className="feedback">
+        <h3>Resumo rápido</h3>
+        <p>
+          <strong>Fonte escolhida:</strong> {report.suspeitoEscolhido}
+          <br />
+          <strong>Ação escolhida:</strong> {report.descarteEscolhido}
+        </p>
         <h3>Explicação química</h3>
         <p>{gameCase.explicacao}</p>
         <p className="bncc">
@@ -44,21 +50,32 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
       {!report.modoTreino && (
         <div className="export-box">
           <p>Envie para a Profª Maria:</p>
-          <button type="button" onClick={() => downloadJson(report, `relatorio-${report.aluno}.json`)}>
+          <button
+            type="button"
+            className="btn-block"
+            onClick={() => downloadJson(report, `relatorio-${report.aluno}.json`)}
+          >
             Baixar relatório JSON
           </button>
-          <button type="button" onClick={copiarCodigo}>
+          <button type="button" className="btn-block" onClick={copiarCodigo}>
             Copiar código para colar
           </button>
           <textarea readOnly value={report.codigoExport} rows={3} className="code-area" />
         </div>
       )}
 
-      <div className="acoes">
-        <button type="button" className="btn-primary" onClick={() => { playClick(); onPlayAgain() }}>
+      <div className="acoes acoes-stack">
+        <button
+          type="button"
+          className="btn-primary btn-block"
+          onClick={() => {
+            playClick()
+            onPlayAgain()
+          }}
+        >
           Novo caso
         </button>
-        <button type="button" onClick={() => { playClick(); onMenu() }}>
+        <button type="button" className="btn-block" onClick={() => { playClick(); onMenu() }}>
           Menu principal
         </button>
       </div>

@@ -39,7 +39,7 @@ export function AboutScreen({ onBack }: Props) {
       <p className="creditos-mini">
         Versão digital · PWA offline · Deploy Vercel · {new Date().getFullYear()}
       </p>
-      <button type="button" className="btn-primary" onClick={onBack}>
+      <button type="button" className="btn-primary btn-block" onClick={onBack}>
         Voltar
       </button>
     </section>
