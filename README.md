@@ -4,6 +4,17 @@ Jogo educativo de Química ambiental — **2º EM Técnico, Turma TT** — Colé
 
 O código do jogo está na pasta [`detetives-poluicao/`](./detetives-poluicao/).
 
+## Documentação (PDF)
+
+Pacote completo em **`detetives-poluicao/docs/`** — manuais, relatório, BNCC, gabaritos, ficha de avaliação e pôster.
+
+```bash
+cd detetives-poluicao
+npm run docs:pdf   # gera docs/pdf/*.pdf
+```
+
+No jogo: menu → **Documentação PDF**. Online: `/docs/index.html` (após deploy).
+
 ## Início rápido
 
 ```bash

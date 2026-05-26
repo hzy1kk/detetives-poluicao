@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pôster — Detetives da Poluição</title>
+    <link rel="stylesheet" href="assets/print.css" />
+    <style>
+      .poster-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .poster-highlight {
+        background: linear-gradient(135deg, #001d7e, #118ab2);
+        color: #fff;
+        border-radius: 16px;
+        padding: 1.2rem;
+        grid-column: 1 / -1;
+      }
+      .poster-highlight h2 {
+        color: #fff;
+        border: none;
+        padding: 0;
+        margin: 0 0 0.5rem;
+        font-family: 'DM Serif Display', serif;
+        font-size: 1.8rem;
+      }
+      .qr-box {
+        text-align: center;
+        padding: 1rem;
+        border: 2px dashed var(--line);
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="no-print">
+      <button type="button" onclick="window.print()">Salvar como PDF</button>
+      <a href="index.html">← Índice</a>
+    </div>
+    <article class="doc">
+      <section class="content" style="padding-top: 12mm">
+        <div class="poster-highlight">
+          <img src="assets/logo-escola.png" alt="" style="width:64px;background:#fff;border-radius:10px;padding:6px" />
+          <h2>Detetives da Poluição</h2>
+          <p style="margin:0;opacity:0.95;font-size:1.1rem">
+            Jogo educativo de Química · Investigue. Analise. Proteja o meio ambiente.
+          </p>
+        </div>
+
+        <div class="poster-grid">
+          <div class="info-box">
+            <strong>O que é?</strong>
+            Jogo digital em que você é detetive ambiental e resolve casos de poluição em ~10 min.
+          </div>
+          <div class="info-box">
+            <strong>Para quem?</strong>
+            2º EM Técnico · Turma TT · Colégio Paulo de Tarso
+          </div>
+          <div class="info-box">
+            <strong>Conteúdos</strong>
+            pH · Metais pesados · Plásticos · Reciclagem
+          </div>
+          <div class="info-box">
+            <strong>Equipe</strong>
+            Lucas Lohan ★ · Ana Flávia · André · Gabriel — Profª Maria
+          </div>
+        </div>
+
+        <div class="qr-box">
+          <p><strong>Jogue agora</strong></p>
+          <p style="font-size:1.2rem;color:var(--brand)">https://detetives-poluicao.vercel.app</p>
+          <p style="font-size:0.85rem;color:var(--muted)">Senha da turma: <strong>detetive</strong></p>
+          <p style="font-size:0.8rem">Gere um QR Code em qr.io apontando para o link</p>
+        </div>
+
+        <p class="footer-note">Formato A4 ou A3 · Ideal para feira de ciências e mural</p>
+      </section>
+    </article>
+  </body>
+</html>

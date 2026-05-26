@@ -58,6 +58,17 @@ export function MenuScreen({
           <span className="tile-icon">ℹ️</span>
           Sobre o projeto
         </button>
+        <a
+          className="menu-tile"
+          href="/docs/index.html"
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => playClick()}
+        >
+          <span className="tile-icon">📄</span>
+          Documentação PDF
+          <small>Manuais e relatórios</small>
+        </a>
         <button type="button" className="menu-tile" onClick={() => { playClick(); onTeacher() }}>
           <span className="tile-icon">👩‍🏫</span>
           Área da professora

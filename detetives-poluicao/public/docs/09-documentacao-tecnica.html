@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Documentação Técnica — Detetives da Poluição</title>
+    <link rel="stylesheet" href="assets/print.css" />
+  </head>
+  <body>
+    <div class="no-print">
+      <button type="button" onclick="window.print()">Salvar como PDF</button>
+      <a href="index.html">← Índice</a>
+    </div>
+    <article class="doc">
+      <section class="cover">
+        <div>
+          <img src="assets/logo-escola.png" alt="" class="cover-logo" />
+          <h1>Documentação Técnica</h1>
+          <p class="tagline">Stack, deploy e estrutura do projeto</p>
+        </div>
+      </section>
+      <section class="content">
+        <header class="doc-header">
+          <h2>Arquitetura</h2>
+        </header>
+        <table>
+          <tr><th>Tecnologia</th><th>Uso</th></tr>
+          <tr><td>React 19 + TypeScript</td><td>Interface do jogo</td></tr>
+          <tr><td>Vite 8</td><td>Build e dev server</td></tr>
+          <tr><td>vite-plugin-pwa</td><td>Offline / instalar no celular</td></tr>
+          <tr><td>localStorage</td><td>Perfil, relatórios, config professor</td></tr>
+          <tr><td>GitHub + Vercel</td><td>Publicação na web</td></tr>
+        </table>
+
+        <h3>Estrutura de pastas</h3>
+        <pre style="background:#f1f5f9;padding:0.75rem;border-radius:8px;font-size:0.8rem">detetives-poluicao/
+├── src/
+│   ├── components/   # Telas (login, jogo, professor…)
+│   ├── data/         # Casos e config da escola
+│   └── lib/          # Motor do jogo, áudio, storage
+├── public/           # Logo, manual HTML
+├── docs/             # Documentação PDF/HTML
+└── vercel.json</pre>
+
+        <h3>Deploy (Vercel)</h3>
+        <ol>
+          <li>Repositório: github.com/hzy1kk/detetives-poluicao</li>
+          <li>Root: repositório com vercel.json na raiz</li>
+          <li>Build: detetives-poluicao/dist</li>
+          <li>Push em main → redeploy automático</li>
+        </ol>
+
+        <h3>Comandos</h3>
+        <pre style="background:#f1f5f9;padding:0.75rem;border-radius:8px">npm install
+npm run dev      # desenvolvimento
+npm run build    # produção
+npm run docs:pdf # gerar PDFs da pasta docs/</pre>
+
+        <p class="footer-note">Lucas Lohan · Documentação técnica v1.0</p>
+      </section>
+    </article>
+  </body>
+</html>

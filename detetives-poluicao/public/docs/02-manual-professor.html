@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Manual da Professora — Detetives da Poluição</title>
+    <link rel="stylesheet" href="assets/print.css" />
+  </head>
+  <body>
+    <div class="no-print">
+      <button type="button" onclick="window.print()">Salvar como PDF</button>
+      <a href="index.html">← Índice</a>
+    </div>
+    <article class="doc">
+      <section class="cover">
+        <div>
+          <img src="assets/logo-escola.png" alt="" class="cover-logo" />
+          <h1>Manual da Professora</h1>
+          <p class="tagline">Guia para aplicação em sala — Profª Maria · Turma TT</p>
+        </div>
+        <div class="cover-meta">
+          <p>Colégio Paulo de Tarso · 2º EM Técnico · Química</p>
+        </div>
+      </section>
+      <section class="content">
+        <header class="doc-header">
+          <h2>Acesso e configuração</h2>
+        </header>
+        <table>
+          <tr><th>Item</th><th>Valor</th></tr>
+          <tr><td>Senha da turma (alunos)</td><td><code>detetive</code></td></tr>
+          <tr><td>PIN modo professor</td><td><code>detetive</code></td></tr>
+          <tr><td>Turma padrão</td><td>2TT</td></tr>
+        </table>
+
+        <h3>Roteiro de aula (45 minutos)</h3>
+        <table>
+          <tr><th>Tempo</th><th>Atividade</th></tr>
+          <tr><td>0–5 min</td><td>Apresentar o jogo e formar “detetives ambientais”.</td></tr>
+          <tr><td>5–15 min</td><td>Alunos jogam <strong>individualmente</strong> no celular (caso sorteado).</td></tr>
+          <tr><td>15–25 min</td><td>Exportar relatório (JSON ou código) e enviar à professora.</td></tr>
+          <tr><td>25–45 min</td><td>Debate: qual pista foi decisiva? Como agir na comunidade?</td></tr>
+        </table>
+
+        <h3>Painel da professora</h3>
+        <ol>
+          <li>Abrir o jogo → <strong>Área da professora</strong> → PIN.</li>
+          <li>Escolher <strong>temas</strong> e dificuldade padrão antes da aula.</li>
+          <li>Após a partida: aluno envia <strong>código</strong> ou arquivo JSON.</li>
+          <li>Colar no painel → <strong>Importar</strong>.</li>
+          <li>Exportar <strong>CSV da turma</strong> para planilha.</li>
+        </ol>
+
+        <h3>Gabaritos resumidos</h3>
+        <div class="case-card">
+          <h4>🛢️ Rio Sereno</h4>
+          <div class="gabarito">Óleo lubrificante → Ecoponto / coleta especializada</div>
+        </div>
+        <div class="case-card">
+          <h4>🔋 Solo envenenado</h4>
+          <div class="gabarito">Pilhas e baterias → Coleta de eletrônicos</div>
+        </div>
+        <div class="case-card">
+          <h4>🧴 Lagoa Espelho</h4>
+          <div class="gabarito">Plásticos PET → Reduzir + reciclar PET</div>
+        </div>
+        <div class="case-card">
+          <h4>⚗️ Efluente ácido</h4>
+          <div class="gabarito">Efluente industrial → Tratamento + fiscalização</div>
+        </div>
+
+        <h3>Avaliação sugerida</h3>
+        <table>
+          <tr><th>Critério</th><th>Peso</th></tr>
+          <tr><td>Interpretação das pistas</td><td>40%</td></tr>
+          <tr><td>Solução ambiental correta</td><td>30%</td></tr>
+          <tr><td>Uso do laboratório</td><td>20%</td></tr>
+          <tr><td>Tempo e autonomia</td><td>10%</td></tr>
+        </table>
+
+        <h3>Dicas para a aula</h3>
+        <ul>
+          <li>Peça para abrir o link <strong>1× com internet</strong> antes (instalar PWA).</li>
+          <li>Cada aluno recebe <strong>caso diferente</strong> (sorteio automático).</li>
+          <li>Use o <strong>modo treino</strong> na véspera para familiarização.</li>
+        </ul>
+
+        <p class="footer-note">Profª Maria · Detetives da Poluição · Manual v1.0</p>
+      </section>
+    </article>
+  </body>
+</html>

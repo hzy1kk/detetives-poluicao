@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documentação — Detetives da Poluição</title>
+    <link rel="stylesheet" href="assets/print.css" />
+    <style>
+      .hub-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 0.85rem;
+        margin: 1.2rem 0;
+      }
+      .hub-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem;
+        background: var(--soft);
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .hub-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 40, 120, 0.1);
+      }
+      .hub-card h3 {
+        border: none;
+        padding: 0;
+        margin: 0 0 0.35rem;
+        font-size: 1rem;
+      }
+      .hub-card p {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin: 0;
+      }
+      .hub-card .tag {
+        font-size: 0.72rem;
+        color: var(--brand);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="no-print">
+      <p><strong>Central de documentação</strong> — Abra cada documento e use Imprimir → Salvar como PDF</p>
+      <button type="button" onclick="window.print()">Imprimir esta página</button>
+    </div>
+
+    <article class="doc">
+      <section class="cover">
+        <div>
+          <img src="assets/logo-escola.png" alt="Logo" class="cover-logo" />
+          <h1>Detetives da Poluição</h1>
+          <p class="tagline">Pacote completo de documentação escolar — Química e Educação Ambiental</p>
+        </div>
+        <div class="cover-meta">
+          <p><strong>Colégio Paulo de Tarso</strong> · São Paulo – SP</p>
+          <p>2º EM Técnico · Turma TT · Profª Maria</p>
+          <p>Lucas Lohan · Ana Flávia · André Soares · Gabriel Rosa</p>
+          <p>2026</p>
+        </div>
+      </section>
+
+      <section class="content">
+        <header class="doc-header">
+          <h2>Índice de documentos</h2>
+          <p class="sub">Clique para abrir. Em cada página: Ctrl+P (Cmd+P) → Salvar como PDF</p>
+        </header>
+
+        <p class="lead">
+          Todos os arquivos estão formatados em A4 para apresentação, entrega à professora e feira de ciências.
+        </p>
+
+        <h3>Download direto (PDF)</h3>
+        <p>PDFs já gerados com capa azul e tipografia profissional:</p>
+        <ul class="checklist">
+          <li><a href="pdf/00-indice-documentacao.pdf">00 — Índice (PDF)</a></li>
+          <li><a href="pdf/01-documentacao-do-jogo.pdf">01 — Documentação do jogo</a></li>
+          <li><a href="pdf/02-manual-professor.pdf">02 — Manual da professora</a></li>
+          <li><a href="pdf/03-manual-aluno.pdf">03 — Manual do aluno</a></li>
+          <li><a href="pdf/04-relatorio-projeto.pdf">04 — Relatório do projeto</a></li>
+          <li><a href="pdf/05-gabaritos-casos.pdf">05 — Gabaritos</a></li>
+          <li><a href="pdf/06-bncc.pdf">06 — BNCC</a></li>
+          <li><a href="pdf/07-ficha-avaliacao.pdf">07 — Ficha de avaliação</a></li>
+          <li><a href="pdf/08-roteiro-aula.pdf">08 — Roteiro de aula</a></li>
+          <li><a href="pdf/09-documentacao-tecnica.pdf">09 — Documentação técnica</a></li>
+          <li><a href="pdf/10-poster-apresentacao.pdf">10 — Pôster</a></li>
+        </ul>
+
+        <div class="hub-grid">
+          <a class="hub-card" href="01-documentacao-do-jogo.html">
+            <span class="tag">Pedagógico</span>
+            <h3>01 — Documentação do jogo</h3>
+            <p>Proposta, objetivos, mecânica e conteúdos de Química.</p>
+          </a>
+          <a class="hub-card" href="02-manual-professor.html">
+            <span class="tag">Professor</span>
+            <h3>02 — Manual da professora</h3>
+            <p>Roteiro de aula, acesso, relatórios e gabaritos.</p>
+          </a>
+          <a class="hub-card" href="03-manual-aluno.html">
+            <span class="tag">Aluno</span>
+            <h3>03 — Manual do aluno</h3>
+            <p>Como jogar, login e dicas para a investigação.</p>
+          </a>
+          <a class="hub-card" href="04-relatorio-projeto.html">
+            <span class="tag">Entrega</span>
+            <h3>04 — Relatório do projeto</h3>
+            <p>Relatório formal para banca e apresentação.</p>
+          </a>
+          <a class="hub-card" href="05-gabaritos-casos.html">
+            <span class="tag">Professor</span>
+            <h3>05 — Gabaritos dos 4 casos</h3>
+            <p>Respostas corretas e explicações resumidas.</p>
+          </a>
+          <a class="hub-card" href="06-bncc.html">
+            <span class="tag">BNCC</span>
+            <h3>06 — Alinhamento BNCC</h3>
+            <p>Competências e habilidades trabalhadas.</p>
+          </a>
+          <a class="hub-card" href="07-ficha-avaliacao.html">
+            <span class="tag">Avaliação</span>
+            <h3>07 — Ficha de avaliação</h3>
+            <p>Critérios e nota sugerida para a turma.</p>
+          </a>
+          <a class="hub-card" href="08-roteiro-aula.html">
+            <span class="tag">Aula</span>
+            <h3>08 — Roteiro de aula (45 min)</h3>
+            <p>Cronograma minuto a minuto na sala.</p>
+          </a>
+          <a class="hub-card" href="09-documentacao-tecnica.html">
+            <span class="tag">Técnico</span>
+            <h3>09 — Documentação técnica</h3>
+            <p>Stack, deploy Vercel, PWA e estrutura do código.</p>
+          </a>
+          <a class="hub-card" href="10-poster-apresentacao.html">
+            <span class="tag">Feira</span>
+            <h3>10 — Pôster de apresentação</h3>
+            <p>Resumo visual para mural ou slides.</p>
+          </a>
+        </div>
+
+        <h3>Gerar PDFs automaticamente (opcional)</h3>
+        <p>No computador, na pasta do projeto:</p>
+        <pre style="background:#f1f5f9;padding:0.75rem;border-radius:8px;font-size:0.85rem">cd detetives-poluicao
+npm install
+npm run docs:pdf</pre>
+        <p>Os PDFs serão salvos em <strong>docs/pdf/</strong></p>
+
+        <p class="footer-note">
+          Detetives da Poluição · Colégio Paulo de Tarso · Documentação v1.0
+        </p>
+      </section>
+    </article>
+  </body>
+</html>
