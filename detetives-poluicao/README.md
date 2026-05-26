@@ -12,8 +12,9 @@ Interface premium com **cenário 3D**, animações e paleta de cores em fusão (
 
 Após publicar na Vercel, acesse o link do projeto (ex.: `https://seu-projeto.vercel.app`).
 
-- Senha da turma: `detetive`
-- PIN professor: `detetive`
+- Senha da turma: `detetive01`
+- PIN professor: `detetive01`
+- QR code: `public/qr-jogo.png` (gerar com `npm run qr`)
 
 ---
 

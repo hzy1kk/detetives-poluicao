@@ -11,6 +11,7 @@ import { ResultScreen } from './components/ResultScreen'
 import { TeacherScreen } from './components/TeacherScreen'
 import { AboutScreen } from './components/AboutScreen'
 import { HistoryScreen } from './components/HistoryScreen'
+import { RankingScreen } from './components/RankingScreen'
 import { FusionBackground } from './components/scene/FusionBackground'
 
 const Scene3D = lazy(() =>
@@ -176,6 +177,7 @@ function App() {
               onTeacher={() => setScreen('teacher')}
               onAbout={() => setScreen('about')}
               onHistory={() => setScreen('history')}
+          onRanking={() => setScreen('ranking')}
               onTutorial={() => setScreen('tutorial')}
               onToggleSound={() => setSoundOn((v) => !v)}
               onFontSize={setFontSize}
@@ -213,6 +215,10 @@ function App() {
 
           {screen === 'history' && (
             <HistoryScreen key="history" onBack={() => setScreen('menu')} />
+          )}
+
+          {screen === 'ranking' && profile && (
+            <RankingScreen key="ranking" profile={profile} onBack={() => setScreen('menu')} />
           )}
         </AnimatePresence>
       </div>

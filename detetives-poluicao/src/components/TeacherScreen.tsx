@@ -1,41 +1,28 @@
 import { useState } from 'react'
 import { CASES } from '../data/cases'
-import { TOPIC_LABELS, SCHOOL } from '../data/config'
+import { GOOGLE_FORMS_URL, SCHOOL } from '../data/config'
+import { buildRanking } from '../lib/ranking'
 import {
   clearReports,
-  decodeReportCode,
   downloadCsv,
-  downloadJson,
-  importReports,
   loadReports,
   loadTeacherSettings,
-  saveTeacherSettings,
 } from '../lib/storage'
 import { formatTime } from '../lib/gameEngine'
-import type { Difficulty, TeacherSettings, Topic } from '../types'
 import { playClick } from '../lib/audio'
+import { QrAccessPanel } from './QrAccessPanel'
 
 type Props = {
   onBack: () => void
 }
 
-const ALL_TOPICS: Topic[] = [
-  'ph',
-  'metais',
-  'plasticos',
-  'reacoes',
-  'agua_solo',
-  'reciclagem',
-  'sustentabilidade',
-]
-
 export function TeacherScreen({ onBack }: Props) {
   const [pin, setPin] = useState('')
   const [authed, setAuthed] = useState(false)
-  const [settings, setSettings] = useState<TeacherSettings>(loadTeacherSettings())
-  const [importCode, setImportCode] = useState('')
   const [msg, setMsg] = useState('')
-  const [reports, setReports] = useState(loadReports())
+  const settings = loadTeacherSettings()
+  const reports = loadReports().filter((r) => !r.modoTreino)
+  const ranking = buildRanking(SCHOOL.turma, 15)
 
   function login(e: React.FormEvent) {
     e.preventDefault()
@@ -43,81 +30,34 @@ export function TeacherScreen({ onBack }: Props) {
       setAuthed(true)
       setMsg('')
     } else {
-      setMsg('PIN incorreto.')
+      setMsg('PIN incorreto. Use: detetive01')
     }
   }
 
-  function refresh() {
-    setReports(loadReports())
-  }
-
-  function toggleTopic(t: Topic) {
-    const has = settings.temasAtivos.includes(t)
-    const temasAtivos = has
-      ? settings.temasAtivos.filter((x) => x !== t)
-      : [...settings.temasAtivos, t]
-    const next = { ...settings, temasAtivos }
-    setSettings(next)
-    saveTeacherSettings(next)
-  }
-
-  function saveDiff(d: Difficulty) {
-    const next = { ...settings, dificuldadePadrao: d }
-    setSettings(next)
-    saveTeacherSettings(next)
-  }
-
-  function importar() {
-    try {
-      const decoded = decodeReportCode(importCode)
-      if (decoded) {
-        importReports(JSON.stringify(decoded))
-        setMsg('Relatório importado.')
-      } else {
-        importReports(importCode)
-        setMsg('JSON importado.')
-      }
-      setImportCode('')
-      refresh()
-    } catch {
-      setMsg('Código/JSON inválido.')
-    }
-  }
-
-  function exportarCsv() {
+  function exportarPlanilha() {
+    playClick()
     const rows = [
-      [
-        'Aluno',
-        'Turma',
-        'Caso',
-        'Dificuldade',
-        'Tempo',
-        'Pontos',
-        'Estrelas',
-        'Correto',
-        'Dicas',
-        'Data',
-      ],
+      ['Aluno', 'Turma', 'Nota total', 'Poluente 50%', 'Descarte 50%', 'Caso', 'Tempo', 'Data'],
       ...reports.map((r) => [
         r.aluno,
         r.turma,
+        String(r.notaTotal ?? (r.poluenteCorreto ? 50 : 0) + (r.descarteCorreto ? 50 : 0)),
+        r.poluenteCorreto ? '50' : '0',
+        r.descarteCorreto ? '50' : '0',
         r.casoNome,
-        r.dificuldade,
         formatTime(r.tempoSegundos),
-        String(r.pontuacao),
-        String(r.estrelas),
-        r.correto ? 'Sim' : 'Não',
-        String(r.dicasUsadas),
         new Date(r.dataISO).toLocaleString('pt-BR'),
       ]),
     ]
-    downloadCsv(rows, 'relatorios-turma-tt.csv')
+    downloadCsv(rows, `notas-turma-${SCHOOL.turma}.csv`)
+    setMsg('Planilha baixada! Abra no Excel ou Google Planilhas.')
   }
 
   if (!authed) {
     return (
       <section className="card">
         <h2>Área da {SCHOOL.professora}</h2>
+        <p className="lead">PIN simples — sem complicação técnica.</p>
         <form onSubmit={login} className="grid">
           <label>
             PIN
@@ -125,11 +65,13 @@ export function TeacherScreen({ onBack }: Props) {
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              placeholder="detetive"
+              placeholder="detetive01"
             />
           </label>
           {msg && <p className="erro">{msg}</p>}
-          <button type="submit">Entrar</button>
+          <button type="submit" className="btn-primary btn-block">
+            Entrar
+          </button>
         </form>
         <button type="button" className="btn-link" onClick={onBack}>
           Voltar
@@ -138,121 +80,85 @@ export function TeacherScreen({ onBack }: Props) {
     )
   }
 
-  const media =
+  const mediaNota =
     reports.length > 0
-      ? Math.round(reports.reduce((a, r) => a + r.pontuacao, 0) / reports.length)
+      ? Math.round(
+          reports.reduce(
+            (a, r) => a + (r.notaTotal ?? (r.poluenteCorreto ? 50 : 0) + (r.descarteCorreto ? 50 : 0)),
+            0,
+          ) / reports.length,
+        )
       : 0
 
   return (
-    <section className="card teacher-card">
-      <h2>Painel da Profª Maria</h2>
+    <section className="card teacher-card teacher-card--simple">
+      <h2>Painel simples — {SCHOOL.professora}</h2>
       <p>
-        Turma {SCHOOL.turma} · {reports.length} relatório(s) · Média {media} pts
+        Turma <strong>{SCHOOL.turma}</strong> · {reports.length} partida(s) neste computador · Média{' '}
+        {mediaNota}/100
       </p>
 
-      <h3>Configuração da aula</h3>
-      <label>
-        Dificuldade padrão
-        <select
-          value={settings.dificuldadePadrao}
-          onChange={(e) => saveDiff(e.target.value as Difficulty)}
-        >
-          <option value="facil">Fácil</option>
-          <option value="medio">Médio</option>
-          <option value="dificil">Difícil</option>
-        </select>
-      </label>
-      <div className="topic-grid">
-        {ALL_TOPICS.map((t) => (
-          <label key={t} className="chip">
-            <input
-              type="checkbox"
-              checked={settings.temasAtivos.includes(t)}
-              onChange={() => toggleTopic(t)}
-            />
-            {TOPIC_LABELS[t]}
-          </label>
-        ))}
-      </div>
+      <QrAccessPanel compact />
 
-      <h3>Importar relatório do aluno</h3>
-      <textarea
-        value={importCode}
-        onChange={(e) => setImportCode(e.target.value)}
-        placeholder="Cole o código ou JSON aqui"
-        rows={4}
-      />
-      <div className="acoes">
-        <button type="button" onClick={importar}>
-          Importar
+      <h3>Passo a passo (25 min de aula)</h3>
+      <ol className="tutorial-list">
+        <li>Projete o QR — alunos entram com senha <strong>detetive01</strong>.</li>
+        <li>~15 min de jogo + ~10 min de explicação com os 3 aprendizados no final.</li>
+        <li>Nota mensal: <strong>50% poluente + 50% descarte</strong>.</li>
+      </ol>
+
+      <div className="acoes acoes-stack">
+        <button type="button" className="btn-fusion btn-block" onClick={exportarPlanilha}>
+          Baixar planilha de notas (Excel)
         </button>
-        <button type="button" onClick={exportarCsv}>
-          Exportar CSV da turma
-        </button>
-        <button type="button" onClick={() => downloadJson(reports, 'todos-relatorios.json')}>
-          Baixar todos JSON
-        </button>
+        {GOOGLE_FORMS_URL ? (
+          <a className="btn-secondary btn-block" href={GOOGLE_FORMS_URL} target="_blank" rel="noreferrer">
+            Abrir Google Forms (backup)
+          </a>
+        ) : (
+          <p className="dica">
+            Backup: peça à equipe do projeto para vincular o link do Google Forms da turma.
+          </p>
+        )}
         <button
           type="button"
-          className="danger"
+          className="danger btn-block"
           onClick={() => {
-            if (confirm('Apagar todos os relatórios deste navegador?')) {
+            if (confirm('Apagar relatórios só deste navegador?')) {
               clearReports()
-              refresh()
+              setMsg('Dados apagados.')
             }
           }}
         >
-          Limpar dados
+          Limpar dados deste PC
         </button>
       </div>
       {msg && <p className="ok-msg">{msg}</p>}
 
-      <h3>Gabaritos dos {CASES.length} casos</h3>
+      <h3>Ranking (top 15 neste PC)</h3>
+      {ranking.length === 0 ? (
+        <p>Os alunos jogam e as notas aparecem aqui no computador da sala.</p>
+      ) : (
+        <ul className="ranking-list-simple">
+          {ranking.map((r) => (
+            <li key={r.aluno}>
+              {r.posicao}. {r.aluno} — <strong>{r.notaTotal}/100</strong>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h3>Gabaritos rápidos</h3>
       <ul className="gabaritos">
         {CASES.map((c) => (
           <li key={c.id}>
-            <strong>{c.emoji} {c.nome}</strong> — {c.gabarito.suspeito} / {c.gabarito.descarte}
+            {c.emoji} {c.nome}: {c.gabarito.suspeito.slice(0, 40)}… / {c.gabarito.descarte.slice(0, 35)}…
           </li>
         ))}
       </ul>
 
-      <h3>Relatórios</h3>
-      {reports.length === 0 ? (
-        <p>Nenhum relatório ainda. Peça aos alunos para exportar após jogar.</p>
-      ) : (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Aluno</th>
-                <th>Caso</th>
-                <th>Pontos</th>
-                <th>Tempo</th>
-                <th>OK</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reports.map((r) => (
-                <tr key={r.id}>
-                  <td>{r.aluno}</td>
-                  <td>{r.casoNome}</td>
-                  <td>{r.pontuacao}</td>
-                  <td>{formatTime(r.tempoSegundos)}</td>
-                  <td>{r.correto ? '✓' : '✗'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <p>
-        <a href="/manual-professor.html" target="_blank" rel="noreferrer">
-          Abrir manual da professora (PDF via impressão)
-        </a>
-      </p>
       <button type="button" className="btn-link" onClick={() => { playClick(); onBack() }}>
-        Voltar ao menu
+        Voltar
       </button>
     </section>
   )

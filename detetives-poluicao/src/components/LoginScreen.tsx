@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { AUTHORS, TEAM_PASSWORD, TURMA_PADRAO } from '../data/config'
+import { QrAccessPanel } from './QrAccessPanel'
 import type { Difficulty } from '../types'
 import { playClick } from '../lib/audio'
 import { AnimatedPanel, StaggerItem } from './ui/AnimatedPanel'
@@ -142,6 +143,8 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
         >
           Acesso professor (PIN)
         </button>
+
+        <QrAccessPanel compact />
 
         <footer className="creditos-mini">
           <strong>Equipe:</strong>{' '}

@@ -15,9 +15,13 @@ export type Screen =
   | 'tutorial'
   | 'game'
   | 'result'
+  | 'ranking'
   | 'teacher'
   | 'about'
   | 'history'
+
+/** Desempenho para celebração 3D */
+export type PerformanceTier = 'excelente' | 'bom' | 'parcial' | 'reforco'
 
 export type LabTest = {
   id: string
@@ -52,6 +56,8 @@ export type GameCase = {
   testes: LabTest[]
   gabarito: { suspeito: string; descarte: string }
   explicacao: string
+  /** 3 aprendizados para os ~10 min de explicação em sala */
+  aprendizados: [string, string, string]
   dicas: [string, string, string]
   suspeitoEliminarDica3: string
 }
@@ -72,6 +78,11 @@ export type Report = {
   poluenteCorreto: boolean
   descarteCorreto: boolean
   correto: boolean
+  /** Nota mensal: 50% poluente + 50% descarte */
+  notaPoluente: number
+  notaDescarte: number
+  notaTotal: number
+  performanceTier: PerformanceTier
   dicasUsadas: number
   tentativas: number
   pistasVistas: number

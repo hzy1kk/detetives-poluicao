@@ -23,7 +23,24 @@ export function loadReports(): Report[] {
 export function saveReport(report: Report): void {
   const list = loadReports()
   list.push(report)
+  if (list.length > 500) list.splice(0, list.length - 500)
   localStorage.setItem(KEYS.reports, JSON.stringify(list))
+}
+
+/** Compatível com relatórios antigos sem notaTotal */
+export function normalizeReport(r: Report): Report {
+  const notaPoluente = r.notaPoluente ?? (r.poluenteCorreto ? 50 : 0)
+  const notaDescarte = r.notaDescarte ?? (r.descarteCorreto ? 50 : 0)
+  const notaTotal = r.notaTotal ?? notaPoluente + notaDescarte
+  return {
+    ...r,
+    notaPoluente,
+    notaDescarte,
+    notaTotal,
+    performanceTier:
+      r.performanceTier ??
+      (r.correto ? 'bom' : notaTotal >= 50 ? 'parcial' : 'reforco'),
+  }
 }
 
 export function importReports(json: string): number {

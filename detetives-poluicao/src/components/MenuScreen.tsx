@@ -12,6 +12,7 @@ type Props = {
   onTeacher: () => void
   onAbout: () => void
   onHistory: () => void
+  onRanking: () => void
   onTutorial: () => void
   onToggleSound: () => void
   onFontSize: (s: 'p' | 'm' | 'g') => void
@@ -34,6 +35,7 @@ const tiles = [
     sub: 'Sem pressão · revisar',
     action: 'treino' as const,
   },
+  { id: 'rank', icon: '🏆', title: 'Ranking da turma', sub: 'Top detetives AALG', action: 'ranking' as const },
   { id: 'hist', icon: '📊', title: 'Meu histórico', sub: 'Partidas anteriores', action: 'history' as const },
   { id: 'tut', icon: '❓', title: 'Como jogar', sub: 'Tutorial rápido', action: 'tutorial' as const },
   { id: 'about', icon: 'ℹ️', title: 'Sobre o projeto', sub: 'Equipe e BNCC', action: 'about' as const },
@@ -49,6 +51,7 @@ export function MenuScreen({
   onTeacher,
   onAbout,
   onHistory,
+  onRanking,
   onTutorial,
   onToggleSound,
   onFontSize,
@@ -65,6 +68,9 @@ export function MenuScreen({
         break
       case 'history':
         onHistory()
+        break
+      case 'ranking':
+        onRanking()
         break
       case 'tutorial':
         onTutorial()

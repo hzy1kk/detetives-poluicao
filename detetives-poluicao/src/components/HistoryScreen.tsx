@@ -24,8 +24,8 @@ export function HistoryScreen({ onBack }: Props) {
               <li key={r.id}>
                 <strong>{r.casoNome}</strong>
                 <span>
-                  {r.pontuacao} pts · {formatTime(r.tempoSegundos)} ·{' '}
-                  {'★'.repeat(r.estrelas)}
+                  Nota {(r.notaTotal ?? (r.poluenteCorreto ? 50 : 0) + (r.descarteCorreto ? 50 : 0))}/100 ·{' '}
+                  {formatTime(r.tempoSegundos)} · {'★'.repeat(r.estrelas)}
                   {r.modoTreino ? ' · treino' : ''}
                 </span>
               </li>

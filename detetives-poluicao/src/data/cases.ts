@@ -12,7 +12,7 @@ export const CASES: GameCase[] = [
     contexto:
       'Peixes aparecem com escamas brilhantes e há cheiro forte perto de uma ponte com oficinas nas margens.',
     intro:
-      'Detetive Lucas: “Gota Gi avisou que o rio está diferente. Vamos cruzar pH, aparência da água e origem do resíduo.”',
+      '🕵️ Lucas: “Gota Gi ligou — o rio está estranho.” · 💧 Gota Gi: “Tem brilho na água perto da ponte.” · 🔬 Dra. Ana: “pH quase neutro afasta ácido forte; foquem no aspecto oleoso.”',
     pistas: [
       {
         id: 'a1',
@@ -69,7 +69,7 @@ export const CASES: GameCase[] = [
       {
         id: 'ph',
         nome: 'Teste de pH',
-        personagem: 'Ana',
+        personagem: 'Dra. Ana',
         resultado: 'pH ≈ 7. Não indica efluente fortemente ácido.',
       },
       {
@@ -91,6 +91,11 @@ export const CASES: GameCase[] = [
     },
     explicacao:
       'Filme iridescente e resíduo viscoso indicam hidrocarbonetos (óleo). pH neutro afasta efluente ácido. Descarte correto: coleta especializada — nunca ralo ou queima.',
+    aprendizados: [
+      'Filme iridescente na água sugere óleo/hidrocarbonetos, não necessariamente pH ácido.',
+      'Óleo usado deve ir ao ecoponto — nunca ralo, queima ou lixo comum.',
+      'Oficinas mecânicas precisam de coleta especializada de lubrificantes.',
+    ],
     dicas: [
       'Revise o que pH neutro diz sobre acidez extrema.',
       'Cruze filme iridescente com área de oficinas.',
@@ -109,7 +114,7 @@ export const CASES: GameCase[] = [
     contexto:
       'Plantas murcham em um terreno perto de lixeira comum onde aparecem pilhas e baterias.',
     intro:
-      'Dra. Ana: “Chumbo e mercúrio não somem com chuva. Precisamos do teste de metais e da origem do lixo.”',
+      '🔬 Dra. Ana: “Chumbo no solo não some com chuva — vamos ao teste de metais.” · 🕵️ Lucas: “A lixeira do bairro é nossa primeira pista.” · 🌿 Gabriel: “Plantas murchando é sinal de contaminação.”',
     pistas: [
       {
         id: 'b1',
@@ -167,7 +172,7 @@ export const CASES: GameCase[] = [
       {
         id: 'ph',
         nome: 'Teste de pH do solo',
-        personagem: 'Ana',
+        personagem: 'Dra. Ana',
         resultado: 'pH ácido leve. Pode agravar mobilidade de metais.',
       },
       {
@@ -183,6 +188,11 @@ export const CASES: GameCase[] = [
     },
     explicacao:
       'Metais pesados como Pb vêm de pilhas e baterias. O descarte correto é coleta especializada (logística reversa), nunca lixo comum ou queima.',
+    aprendizados: [
+      'Metais pesados (Pb, Hg) vêm de pilhas e baterias descartadas incorretamente.',
+      'Logística reversa e pontos de coleta evitam contaminação do solo e lençol.',
+      'Lixo comum e queima liberam toxinas — nunca são solução.',
+    ],
     dicas: [
       'Qual teste de laboratório apontou metal tóxico?',
       'Pb + lixeira sem seletiva sugere qual resíduo?',
@@ -201,7 +211,7 @@ export const CASES: GameCase[] = [
     contexto:
       'Após festa na margem, peixes apresentam micropartículas no trato digestivo.',
     intro:
-      'Guarda Gabriel: “Plástico vira microplástico com sol e desgaste. Vamos identificar o polímero.”',
+      '🌿 Gabriel: “Depois da festa, a lagoa ganhou grãos invisíveis.” · 🕵️ Lucas: “Microplástico é pista séria.” · 🔬 Dra. Ana: “Vamos identificar o polímero — PET é suspeito.”',
     pistas: [
       {
         id: 'c1',
@@ -259,7 +269,7 @@ export const CASES: GameCase[] = [
       {
         id: 'ph',
         nome: 'Teste de pH',
-        personagem: 'Ana',
+        personagem: 'Dra. Ana',
         resultado: 'Neutro. Pouco compatível com ácido industrial forte.',
       },
       {
@@ -275,6 +285,11 @@ export const CASES: GameCase[] = [
     },
     explicacao:
       'Microplásticos formam-se pela fragmentação do plástico. PET nas margens indica descarte inadequado. Solução: reduzir uso e reciclar corretamente.',
+    aprendizados: [
+      'Microplásticos são fragmentos plásticos menores que 5 mm.',
+      'PET de copos e garrafas acumula nas margens se o descarte for irregular.',
+      'Reduzir descartáveis e reciclar PET protege a vida aquática.',
+    ],
     dicas: [
       'O que significa partícula sintética < 5 mm?',
       'PET aparece em qual tipo de lixo comum em festas?',
@@ -293,7 +308,7 @@ export const CASES: GameCase[] = [
     contexto:
       'Algas morrem em trecho próximo a tubulação; moradores culpam “chuva ácida” sem evidência.',
     intro:
-      'Dra. Ana: “pH muito baixo mata organismos aquáticos. Vamos ver se é chuva ou descarga industrial.”',
+      '🔬 Dra. Ana: “pH 3,5 mata algas — isso não é chuva comum.” · 🕵️ Lucas: “Tubulação a montante merece inspeção.” · 🧪 André: “Sulfatos reforçam hipótese industrial.”',
     pistas: [
       {
         id: 'd1',
@@ -345,7 +360,7 @@ export const CASES: GameCase[] = [
       {
         id: 'ph',
         nome: 'Teste de pH',
-        personagem: 'Ana',
+        personagem: 'Dra. Ana',
         resultado: 'pH 3,5. Fortemente ácido — incompatível com vida aquática.',
       },
       {
@@ -367,6 +382,11 @@ export const CASES: GameCase[] = [
     },
     explicacao:
       'pH muito baixo (3,5) indica ácido forte, típico de efluente industrial mal tratado. Chuva ácida sozinha não explica pH tão extremo localizado. Tratamento e neutralização são obrigatórios.',
+    aprendizados: [
+      'pH abaixo de 7 indica meio ácido; valores muito baixos são letais para a vida aquática.',
+      'Efluente industrial precisa de tratamento e neutralização antes do despejo.',
+      'Chuva ácida isolada raramente explica pH extremo em um único ponto.',
+    ],
     dicas: [
       'Interprete a escala de pH: abaixo de 7 é ácido.',
       'Compare chuva recente com pH local extremo.',

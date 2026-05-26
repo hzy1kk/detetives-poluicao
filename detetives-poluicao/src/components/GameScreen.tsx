@@ -1,7 +1,13 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AnimatedPanel } from './ui/AnimatedPanel'
-import { getClueCount, getHintText, getVisibleClueIds, formatTime } from '../lib/gameEngine'
+import {
+  getClueCount,
+  getErrorHint,
+  getHintText,
+  getVisibleClueIds,
+  formatTime,
+} from '../lib/gameEngine'
 import { playClick, playError, playSuccess, playUnlock } from '../lib/audio'
 import type { GameCase, GameSession } from '../types'
 
@@ -123,13 +129,13 @@ export function GameScreen({
     onUpdateSession({ ...session, tentativas: tent })
     if (!ok && tent < 3) {
       playError()
-      setFeedback(
+      const baseMsg =
         !polOk && !descOk
-          ? 'Poluente e descarte incorretos. Use pistas e laboratório.'
+          ? 'Poluente e descarte incorretos.'
           : !polOk
-            ? 'Poluente incorreto. Descarte estava no caminho.'
-            : 'Descarte incorreto. Poluente estava certo.',
-      )
+            ? 'Poluente incorreto — descarte estava no caminho (50%).'
+            : 'Descarte incorreto — poluente estava certo (50%).'
+      setFeedback(`${baseMsg}\n\n${getErrorHint(gameCase, polOk, descOk)}`)
       return
     }
     if (ok) playSuccess()

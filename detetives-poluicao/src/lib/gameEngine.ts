@@ -1,6 +1,6 @@
 import { CASES } from '../data/cases'
 import { CLUE_COUNT, LAB_CHARGES } from '../data/config'
-import type { Difficulty, GameCase, GameSession, Report, Topic } from '../types'
+import type { Difficulty, GameCase, GameSession, PerformanceTier, Report, Topic } from '../types'
 import { encodeReportCode } from './storage'
 
 export function shuffle<T>(arr: T[]): T[] {
@@ -62,10 +62,39 @@ export function getHintText(gameCase: GameCase, level: number): string {
   return gameCase.dicas[2]
 }
 
-export function calcStars(pontuacao: number, correto: boolean): 1 | 2 | 3 {
-  if (!correto) return 1
-  if (pontuacao >= 850) return 3
-  if (pontuacao >= 600) return 2
+/** Dica automática ao errar (sem consumir dica estratégica) */
+export function getErrorHint(
+  gameCase: GameCase,
+  poluenteOk: boolean,
+  descarteOk: boolean,
+): string {
+  if (!poluenteOk && !descarteOk) {
+    return `💡 Dica da investigação: ${gameCase.dicas[0]}`
+  }
+  if (!poluenteOk) {
+    return `💡 Dica — fonte da poluição: ${gameCase.dicas[1]}`
+  }
+  return `💡 Dica — descarte correto: ${gameCase.dicas[2]}`
+}
+
+export function calcPerformanceTier(params: {
+  correto: boolean
+  poluenteCorreto: boolean
+  descarteCorreto: boolean
+  tentativas: number
+  dicasUsadas: number
+}): PerformanceTier {
+  const { correto, poluenteCorreto, descarteCorreto, tentativas, dicasUsadas } = params
+  if (correto && tentativas <= 1 && dicasUsadas === 0) return 'excelente'
+  if (correto) return 'bom'
+  if (poluenteCorreto || descarteCorreto) return 'parcial'
+  return 'reforco'
+}
+
+export function calcStars(notaTotal: number, correto: boolean): 1 | 2 | 3 {
+  if (!correto && notaTotal < 50) return 1
+  if (notaTotal >= 100) return 3
+  if (notaTotal >= 50) return 2
   return 1
 }
 
@@ -83,21 +112,29 @@ export function buildReport(params: {
   const descarteCorreto = descarte === gameCase.gabarito.descarte
   const correto = poluenteCorreto && descarteCorreto
 
-  let pontuacao = 0
-  if (correto) {
-    pontuacao = 1000
-    pontuacao -= session.dicasUsadas * 120
-    pontuacao -= (session.tentativas - 1) * 90
-    if (tempoSegundos > 600) pontuacao -= 100
-    if (session.tentativas === 1 && session.dicasUsadas === 0) pontuacao += 100
-    pontuacao = Math.max(200, Math.min(1000, pontuacao))
-  } else if (poluenteCorreto || descarteCorreto) {
-    pontuacao = 350
-  } else {
-    pontuacao = session.modoTreino ? 0 : 120
+  const notaPoluente = poluenteCorreto ? 50 : 0
+  const notaDescarte = descarteCorreto ? 50 : 0
+  let notaTotal = notaPoluente + notaDescarte
+
+  if (session.modoTreino) {
+    notaTotal = correto ? Math.min(notaTotal, 50) : 0
+  } else if (correto) {
+    if (session.tentativas === 1 && session.dicasUsadas === 0) notaTotal = 100
+    else if (session.dicasUsadas > 0) notaTotal = Math.max(85, notaTotal - session.dicasUsadas * 5)
+    else if (session.tentativas > 1) notaTotal = Math.max(90, notaTotal - (session.tentativas - 1) * 5)
   }
 
-  if (session.modoTreino) pontuacao = correto ? Math.min(pontuacao, 500) : 0
+  const performanceTier = calcPerformanceTier({
+    correto,
+    poluenteCorreto,
+    descarteCorreto,
+    tentativas: session.tentativas,
+    dicasUsadas: session.dicasUsadas,
+  })
+
+  let pontuacao = notaTotal * 10
+  if (correto && tempoSegundos <= 900) pontuacao += 50
+  pontuacao = Math.min(1000, pontuacao)
 
   const report: Report = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -109,12 +146,16 @@ export function buildReport(params: {
     modoTreino: session.modoTreino,
     tempoSegundos,
     pontuacao,
-    estrelas: calcStars(pontuacao, correto),
+    estrelas: calcStars(notaTotal, correto),
     suspeitoEscolhido: suspeito,
     descarteEscolhido: descarte,
     poluenteCorreto,
     descarteCorreto,
     correto,
+    notaPoluente,
+    notaDescarte,
+    notaTotal,
+    performanceTier,
     dicasUsadas: session.dicasUsadas,
     tentativas: session.tentativas,
     pistasVistas: session.cluesRevealed,
