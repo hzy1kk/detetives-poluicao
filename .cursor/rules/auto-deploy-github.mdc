@@ -1,0 +1,18 @@
+---
+description: Após alterações no projeto, fazer commit e push automático para o GitHub
+alwaysApply: true
+---
+
+# Deploy automático (GitHub → Vercel)
+
+Quando o usuário pedir mudanças no jogo **Detetives da Poluição** (pasta `detetives-poluicao/`):
+
+1. Implementar a alteração.
+2. Rodar build (`npm run build` em `detetives-poluicao`) se mudou código relevante.
+3. **Sempre** ao finalizar: `git add`, `git commit` com mensagem clara em português, e `git push origin main`.
+4. Informar ao usuário que o push foi feito e que a Vercel deve redeployar em 1–2 min.
+
+Repositório: `https://github.com/hzy1kk/detetives-poluicao`
+Root Vercel: raiz do repo (`vercel.json` aponta para `detetives-poluicao/dist`).
+
+Não pedir confirmação para commit/push neste projeto, salvo se o usuário disser explicitamente para não subir.
