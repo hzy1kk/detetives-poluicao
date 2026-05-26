@@ -1,0 +1,7 @@
+.DS_Store
+*.log
+node_modules/
+dist/
+
+# Logo duplicada na raiz (a oficial está em detetives-poluicao/public/)
+/public/

@@ -1,0 +1,46 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(165deg, #e8f4ff 0%, #f0fff8 45%, #fff8e8 100%);
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+html[data-font='p'] {
+  font-size: 15px;
+}
+
+html[data-font='m'] {
+  font-size: 17px;
+}
+
+html[data-font='g'] {
+  font-size: 19px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: #0f172a;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+a {
+  color: #001d7e;
+}
