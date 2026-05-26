@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import './App.css'
+import './styles/premium.css'
 import { Header } from './components/Header'
 import { LoginScreen } from './components/LoginScreen'
 import { MenuScreen } from './components/MenuScreen'
@@ -9,6 +11,11 @@ import { ResultScreen } from './components/ResultScreen'
 import { TeacherScreen } from './components/TeacherScreen'
 import { AboutScreen } from './components/AboutScreen'
 import { HistoryScreen } from './components/HistoryScreen'
+import { FusionBackground } from './components/scene/FusionBackground'
+
+const Scene3D = lazy(() =>
+  import('./components/scene/Scene3D').then((m) => ({ default: m.Scene3D })),
+)
 import { getCaseById } from './data/cases'
 import { SCHOOL } from './data/config'
 import { buildReport, createSession, pickCase } from './lib/gameEngine'
@@ -41,6 +48,8 @@ function App() {
   const [, setTick] = useState(0)
   const [soundOn, setSoundOn] = useState(loadSoundEnabled)
   const [fontSize, setFontSize] = useState<FontSize>(loadFontSize)
+
+  const immersive = screen === 'login' || screen === 'menu'
 
   useEffect(() => {
     setSoundEnabled(soundOn)
@@ -125,68 +134,88 @@ function App() {
 
   return (
     <main className={`app app--${screen}`}>
-      <Header compact={screen === 'game'} />
-
-      {screen === 'login' && (
-        <LoginScreen
-          defaultDifficulty={loadTeacherSettings().dificuldadePadrao}
-          onLogin={handleLogin}
-          onTeacherAccess={() => setScreen('teacher')}
-        />
+      {immersive && (
+        <>
+          <FusionBackground />
+          <Suspense fallback={null}>
+            <Scene3D intensity={screen === 'login' ? 'full' : 'lite'} />
+          </Suspense>
+        </>
       )}
 
-      {screen === 'tutorial' && (
-        <TutorialScreen
-          onDone={() => {
-            markTutorialSeen()
-            setScreen('menu')
-          }}
-        />
-      )}
+      <div className="app-content">
+        <Header compact={screen === 'game'} premium={immersive} />
 
-      {screen === 'menu' && profile && (
-        <MenuScreen
-          profile={profile}
-          soundOn={soundOn}
-          fontSize={fontSize}
-          onPlay={startGame}
-          onTeacher={() => setScreen('teacher')}
-          onAbout={() => setScreen('about')}
-          onHistory={() => setScreen('history')}
-          onTutorial={() => setScreen('tutorial')}
-          onToggleSound={() => setSoundOn((v) => !v)}
-          onFontSize={setFontSize}
-          onLogout={logout}
-        />
-      )}
+        <AnimatePresence mode="wait">
+          {screen === 'login' && (
+            <LoginScreen
+              key="login"
+              defaultDifficulty={loadTeacherSettings().dificuldadePadrao}
+              onLogin={handleLogin}
+              onTeacherAccess={() => setScreen('teacher')}
+            />
+          )}
 
-      {screen === 'game' && session && gameCase && (
-        <GameScreen
-          gameCase={gameCase}
-          session={session}
-          tempoSegundos={tempoSegundos}
-          onUpdateSession={setSession}
-          onFinish={handleFinish}
-          onQuit={() => setScreen('menu')}
-        />
-      )}
+          {screen === 'tutorial' && (
+            <TutorialScreen
+              key="tutorial"
+              onDone={() => {
+                markTutorialSeen()
+                setScreen('menu')
+              }}
+            />
+          )}
 
-      {screen === 'result' && report && getCaseById(report.casoId) && (
-        <ResultScreen
-          report={report}
-          gameCase={getCaseById(report.casoId)!}
-          onMenu={() => setScreen('menu')}
-          onPlayAgain={() => startGame(report.modoTreino)}
-        />
-      )}
+          {screen === 'menu' && profile && (
+            <MenuScreen
+              key="menu"
+              profile={profile}
+              soundOn={soundOn}
+              fontSize={fontSize}
+              onPlay={startGame}
+              onTeacher={() => setScreen('teacher')}
+              onAbout={() => setScreen('about')}
+              onHistory={() => setScreen('history')}
+              onTutorial={() => setScreen('tutorial')}
+              onToggleSound={() => setSoundOn((v) => !v)}
+              onFontSize={setFontSize}
+              onLogout={logout}
+            />
+          )}
 
-      {screen === 'teacher' && (
-        <TeacherScreen onBack={() => setScreen(profile ? 'menu' : 'login')} />
-      )}
+          {screen === 'game' && session && gameCase && (
+            <GameScreen
+              key="game"
+              gameCase={gameCase}
+              session={session}
+              tempoSegundos={tempoSegundos}
+              onUpdateSession={setSession}
+              onFinish={handleFinish}
+              onQuit={() => setScreen('menu')}
+            />
+          )}
 
-      {screen === 'about' && <AboutScreen onBack={() => setScreen('menu')} />}
+          {screen === 'result' && report && getCaseById(report.casoId) && (
+            <ResultScreen
+              key="result"
+              report={report}
+              gameCase={getCaseById(report.casoId)!}
+              onMenu={() => setScreen('menu')}
+              onPlayAgain={() => startGame(report.modoTreino)}
+            />
+          )}
 
-      {screen === 'history' && <HistoryScreen onBack={() => setScreen('menu')} />}
+          {screen === 'teacher' && (
+            <TeacherScreen key="teacher" onBack={() => setScreen(profile ? 'menu' : 'login')} />
+          )}
+
+          {screen === 'about' && <AboutScreen key="about" onBack={() => setScreen('menu')} />}
+
+          {screen === 'history' && (
+            <HistoryScreen key="history" onBack={() => setScreen('menu')} />
+          )}
+        </AnimatePresence>
+      </div>
     </main>
   )
 }

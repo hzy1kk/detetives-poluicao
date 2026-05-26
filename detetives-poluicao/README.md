@@ -1,6 +1,8 @@
 # Detetives da Poluição
 
-Jogo educativo de Química ambiental — **2º EM Técnico, Turma TT** — Colégio Paulo de Tarso.
+Jogo educativo de Química ambiental — **2º EM Técnico, Turma AALG** — Colégio Paulo de Tarso.
+
+Interface premium com **cenário 3D**, animações e paleta de cores em fusão (React Three Fiber + Framer Motion).
 
 **Equipe:** Lucas Lohan · Ana Flávia · André Soares · Gabriel Rosa — **Profª Maria**
 

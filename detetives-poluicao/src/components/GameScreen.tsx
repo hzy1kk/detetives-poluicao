@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
+import { AnimatedPanel } from './ui/AnimatedPanel'
 import { getClueCount, getHintText, getVisibleClueIds, formatTime } from '../lib/gameEngine'
 import { playClick, playError, playSuccess, playUnlock } from '../lib/audio'
 import type { GameCase, GameSession } from '../types'
@@ -140,8 +142,8 @@ export function GameScreen({
   const progresso = Math.round((visibleIds.length / totalPistas) * 100)
 
   return (
-    <section className="card game-card">
-      <div className="game-hud" role="status" aria-live="polite">
+    <AnimatedPanel className="card game-card">
+      <div className="game-hud game-hud--premium" role="status" aria-live="polite">
         <div className="hud-top">
           <span className="hud-emoji" aria-hidden>
             {gameCase.emoji}
@@ -154,7 +156,12 @@ export function GameScreen({
         </div>
         {session.modoTreino && <span className="badge treino hud-treino">Modo treino</span>}
         <div className="progress-bar hud-progress" aria-hidden>
-          <div className="progress-fill" style={{ width: `${progresso}%` }} />
+          <motion.div
+            className="progress-fill progress-fill--fusion"
+            initial={{ width: 0 }}
+            animate={{ width: `${progresso}%` }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          />
         </div>
         <div className="hud-stats">
           <span className="stat-chip">
@@ -277,9 +284,14 @@ export function GameScreen({
             ))}
           </select>
         </label>
-        <button type="submit" className="btn-primary btn-block btn-sticky-submit">
+        <motion.button
+          type="submit"
+          className="btn-fusion btn-block btn-sticky-submit"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
           Confirmar resposta final
-        </button>
+        </motion.button>
       </form>
 
       {feedback && (
@@ -291,6 +303,6 @@ export function GameScreen({
       <button type="button" className="btn-link btn-block-touch" onClick={onQuit}>
         Voltar ao menu
       </button>
-    </section>
+    </AnimatedPanel>
   )
 }

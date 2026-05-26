@@ -1,7 +1,12 @@
+import { useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { formatTime } from '../lib/gameEngine'
 import { playClick } from '../lib/audio'
 import type { GameCase, Report } from '../types'
 import { downloadJson } from '../lib/storage'
+import { AnimatedPanel } from './ui/AnimatedPanel'
+
+const CONFETTI_COLORS = ['#00f5d4', '#7b2ff7', '#f72585', '#fee440', '#4cc9f0']
 
 type Props = {
   report: Report
@@ -13,14 +18,47 @@ type Props = {
 export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
   const stars = '★'.repeat(report.estrelas) + '☆'.repeat(3 - report.estrelas)
 
+  const confetti = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 0.8}s`,
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      })),
+    [],
+  )
+
   function copiarCodigo() {
     playClick()
     navigator.clipboard.writeText(report.codigoExport)
   }
 
   return (
-    <section className="card result-card">
-      <h2>{report.correto ? '🎉 Caso resolvido!' : '📋 Investigação encerrada'}</h2>
+    <AnimatedPanel className="card result-card result-card--premium">
+      {report.correto && (
+        <div className="confetti-burst" aria-hidden>
+          {confetti.map((c) => (
+            <span
+              key={c.id}
+              style={{
+                left: c.left,
+                top: '-8px',
+                background: c.color,
+                animationDelay: c.delay,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      <motion.h2
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 200 }}
+      >
+        {report.correto ? '🎉 Caso resolvido!' : '📋 Investigação encerrada'}
+      </motion.h2>
       <p className="stars">{stars}</p>
       <p className="score">Pontuação: {report.pontuacao}</p>
       <p>Tempo: {formatTime(report.tempoSegundos)}</p>
@@ -65,20 +103,22 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
       )}
 
       <div className="acoes acoes-stack">
-        <button
+        <motion.button
           type="button"
-          className="btn-primary btn-block"
+          className="btn-fusion btn-block"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => {
             playClick()
             onPlayAgain()
           }}
         >
           Novo caso
-        </button>
+        </motion.button>
         <button type="button" className="btn-block" onClick={() => { playClick(); onMenu() }}>
           Menu principal
         </button>
       </div>
-    </section>
+    </AnimatedPanel>
   )
 }

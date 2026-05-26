@@ -1,4 +1,6 @@
+import { motion } from 'framer-motion'
 import { playClick } from '../lib/audio'
+import { AnimatedPanel } from './ui/AnimatedPanel'
 
 type Props = {
   onDone: () => void
@@ -6,7 +8,7 @@ type Props = {
 
 export function TutorialScreen({ onDone }: Props) {
   return (
-    <section className="card">
+    <AnimatedPanel className="card">
       <h2>Como jogar</h2>
       <ol className="tutorial-list">
         <li>Faça login com a senha da turma.</li>
@@ -24,9 +26,15 @@ export function TutorialScreen({ onDone }: Props) {
         <p>🌿 Gabriel — meio ambiente</p>
         <p>💧 Gota Gi — rios e lagos</p>
       </div>
-      <button type="button" className="btn-primary btn-block" onClick={() => { playClick(); onDone() }}>
+      <motion.button
+        type="button"
+        className="btn-fusion btn-block"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => { playClick(); onDone() }}
+      >
         Entendi, vamos lá!
-      </button>
-    </section>
+      </motion.button>
+    </AnimatedPanel>
   )
 }

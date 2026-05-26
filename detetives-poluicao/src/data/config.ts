@@ -3,7 +3,7 @@ export const SCHOOL = {
   cidade: 'São Paulo – SP',
   disciplina: 'Química',
   serie: '2º EM Técnico',
-  turma: 'TT',
+  turma: 'AALG',
   professora: 'Profª Maria',
 }
 
@@ -16,7 +16,7 @@ export const AUTHORS = [
 
 export const TEAM_PASSWORD = 'detetive'
 export const TEACHER_PIN_DEFAULT = 'detetive'
-export const TURMA_PADRAO = '2TT'
+export const TURMA_PADRAO = 'AALG'
 
 export const CLUE_COUNT: Record<'facil' | 'medio' | 'dificil', number> = {
   facil: 4,

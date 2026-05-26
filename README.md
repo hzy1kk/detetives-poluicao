@@ -1,6 +1,6 @@
 # Detetives da Poluição
 
-Jogo educativo de Química ambiental — **2º EM Técnico, Turma TT** — Colégio Paulo de Tarso.
+Jogo educativo de Química ambiental — **2º EM Técnico, Turma AALG** — Colégio Paulo de Tarso (UI 3D premium).
 
 O código do jogo está na pasta [`detetives-poluicao/`](./detetives-poluicao/).
 
