@@ -15,42 +15,57 @@
         <div>
           <img src="assets/logo-escola.png" alt="" class="cover-logo" />
           <h1>Manual da Professora</h1>
-          <p class="tagline">Guia para aplicação em sala — Profª Maria · Turma AALG</p>
+          <p class="tagline">Guia simples — Profª Maria · Turma AALG</p>
         </div>
         <div class="cover-meta">
           <p>Colégio Paulo de Tarso · 2º EM Técnico · Química</p>
+          <p>Nota mensal até o fim do ano</p>
         </div>
       </section>
       <section class="content">
         <header class="doc-header">
-          <h2>Acesso e configuração</h2>
+          <h2>Acesso rápido</h2>
         </header>
         <table>
           <tr><th>Item</th><th>Valor</th></tr>
+          <tr><td>Link do jogo</td><td><code>https://detetives-poluicao.vercel.app</code></td></tr>
           <tr><td>Senha da turma (alunos)</td><td><code>detetive01</code></td></tr>
-          <tr><td>PIN modo professor</td><td><code>detetive01</code></td></tr>
-          <tr><td>Turma padrão</td><td>AALG</td></tr>
+          <tr><td>PIN área da professora</td><td><code>detetive01</code></td></tr>
+          <tr><td>Turma</td><td>AALG</td></tr>
         </table>
 
-        <h3>Roteiro de aula (45 minutos)</h3>
+        <div class="case-card" style="text-align:center">
+          <img src="assets/qr-jogo.png" alt="QR Code" style="width:160px;border-radius:8px" />
+          <p><strong>Projete este QR</strong> para os alunos entrarem no celular ou PC.</p>
+        </div>
+
+        <h3>Roteiro sugerido (25 min na aula)</h3>
         <table>
           <tr><th>Tempo</th><th>Atividade</th></tr>
-          <tr><td>0–5 min</td><td>Apresentar o jogo e formar “detetives ambientais”.</td></tr>
-          <tr><td>5–15 min</td><td>Alunos jogam <strong>individualmente</strong> no celular (caso sorteado).</td></tr>
-          <tr><td>15–25 min</td><td>Exportar relatório (JSON ou código) e enviar à professora.</td></tr>
-          <tr><td>25–45 min</td><td>Debate: qual pista foi decisiva? Como agir na comunidade?</td></tr>
+          <tr><td>0–3 min</td><td>Projetar QR / link · senha <strong>detetive01</strong></td></tr>
+          <tr><td>3–18 min</td><td>Alunos jogam <strong>individualmente</strong> (celular ou computador)</td></tr>
+          <tr><td>18–25 min</td><td>Explicação em sala com os <strong>3 aprendizados</strong> na tela final do jogo</td></tr>
         </table>
+        <p class="lead">Ao longo do ano: repetir mensalmente para nota. Carga prevista: 50–70 alunos (laboratório ou BYOD).</p>
 
-        <h3>Painel da professora</h3>
+        <h3>Nota mensal (automática no jogo)</h3>
+        <table>
+          <tr><th>Parte</th><th>Peso</th></tr>
+          <tr><td>Poluente correto</td><td>50%</td></tr>
+          <tr><td>Descarte correto</td><td>50%</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>100 pontos</strong></td></tr>
+        </table>
+        <p>Ao errar, o jogo mostra <strong>dica automática</strong> (sem complicar para a professora).</p>
+
+        <h3>Painel da professora (sem TI)</h3>
         <ol>
-          <li>Abrir o jogo → <strong>Área da professora</strong> → PIN.</li>
-          <li>Escolher <strong>temas</strong> e dificuldade padrão antes da aula.</li>
-          <li>Após a partida: aluno envia <strong>código</strong> ou arquivo JSON.</li>
-          <li>Colar no painel → <strong>Importar</strong>.</li>
-          <li>Exportar <strong>CSV da turma</strong> para planilha.</li>
+          <li>No jogo: <strong>Área da professora</strong> → PIN <code>detetive01</code>.</li>
+          <li>Botão <strong>Baixar planilha de notas (Excel)</strong> — use para lançar notas mensais.</li>
+          <li>Veja o <strong>ranking top 15</strong> no computador da sala (opcional).</li>
+          <li>Backup: Google Forms (se a equipe configurar o link no jogo).</li>
         </ol>
 
-        <h3>Gabaritos resumidos</h3>
+        <h3>Gabaritos dos 4 casos</h3>
         <div class="case-card">
           <h4>🛢️ Rio Sereno</h4>
           <div class="gabarito">Óleo lubrificante → Ecoponto / coleta especializada</div>
@@ -68,23 +83,15 @@
           <div class="gabarito">Efluente industrial → Tratamento + fiscalização</div>
         </div>
 
-        <h3>Avaliação sugerida</h3>
-        <table>
-          <tr><th>Critério</th><th>Peso</th></tr>
-          <tr><td>Interpretação das pistas</td><td>40%</td></tr>
-          <tr><td>Solução ambiental correta</td><td>30%</td></tr>
-          <tr><td>Uso do laboratório</td><td>20%</td></tr>
-          <tr><td>Tempo e autonomia</td><td>10%</td></tr>
-        </table>
-
-        <h3>Dicas para a aula</h3>
+        <h3>Personagens (falas no jogo)</h3>
         <ul>
-          <li>Peça para abrir o link <strong>1× com internet</strong> antes (instalar PWA).</li>
-          <li>Cada aluno recebe <strong>caso diferente</strong> (sorteio automático).</li>
-          <li>Use o <strong>modo treino</strong> na véspera para familiarização.</li>
+          <li><strong>Lucas Lohan</strong> — detetive guia</li>
+          <li><strong>Dra. Ana Flávia</strong> — química ambiental</li>
+          <li><strong>André Soares</strong> — laboratório</li>
+          <li><strong>Gabriel Rosa</strong> — meio ambiente</li>
         </ul>
 
-        <p class="footer-note">Profª Maria · Detetives da Poluição · Manual v1.0</p>
+        <p class="footer-note">Detetives da Poluição · Manual v2 · Turma AALG · 2026</p>
       </section>
     </article>
   </body>

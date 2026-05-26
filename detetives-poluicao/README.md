@@ -2,82 +2,80 @@
 
 Jogo educativo de Química ambiental — **2º EM Técnico, Turma AALG** — Colégio Paulo de Tarso.
 
-Interface premium com **cenário 3D**, animações e paleta de cores em fusão (React Three Fiber + Framer Motion).
+Interface **3D premium** (React Three Fiber) · Nota **50/50** · Ranking · QR code · Celebração por desempenho.
 
-**Equipe:** Lucas Lohan · Ana Flávia · André Soares · Gabriel Rosa — **Profª Maria**
+**Equipe:** Lucas Lohan · Dra. Ana Flávia · André Soares · Gabriel Rosa — **Profª Maria**
 
 ---
 
 ## Jogar online
 
-Após publicar na Vercel, acesse o link do projeto (ex.: `https://seu-projeto.vercel.app`).
+**https://detetives-poluicao.vercel.app**
 
-- Senha da turma: `detetive01`
-- PIN professor: `detetive01`
-- QR code: `public/qr-jogo.png` (gerar com `npm run qr`)
+| Item | Valor |
+|------|--------|
+| Senha da turma | `detetive01` |
+| PIN professor | `detetive01` |
+| Turma | AALG |
+
+![QR Code](./public/qr-jogo.png)
 
 ---
 
-## Documentação completa (PDF)
+## Aula sugerida
 
-Toda a documentação escolar está em **`docs/`**:
+- **15 min** — jogo individual (celular ou computador)
+- **10 min** — explicação com os 3 aprendizados na tela final
+- **Nota mensal** até o fim do ano: 50% poluente + 50% descarte
 
-| Documento | Arquivo HTML | PDF (após gerar) |
-|-----------|--------------|------------------|
-| Índice | [docs/index.html](docs/index.html) | `docs/pdf/00-indice-documentacao.pdf` |
-| Documentação do jogo | `docs/01-documentacao-do-jogo.html` | `.pdf` |
-| Manual da professora | `docs/02-manual-professor.html` | `.pdf` |
-| Manual do aluno | `docs/03-manual-aluno.html` | `.pdf` |
-| Relatório do projeto | `docs/04-relatorio-projeto.html` | `.pdf` |
-| Gabaritos | `docs/05-gabaritos-casos.html` | `.pdf` |
-| BNCC | `docs/06-bncc.html` | `.pdf` |
-| Ficha de avaliação | `docs/07-ficha-avaliacao.html` | `.pdf` |
-| Roteiro de aula | `docs/08-roteiro-aula.html` | `.pdf` |
-| Documentação técnica | `docs/09-documentacao-tecnica.html` | `.pdf` |
-| Pôster feira | `docs/10-poster-apresentacao.html` | `.pdf` |
+---
 
-### Gerar todos os PDFs automaticamente
+## Documentação (PDF)
+
+| # | Documento | PDF |
+|---|-----------|-----|
+| 00 | Índice | [docs/pdf/00-indice-documentacao.pdf](docs/pdf/00-indice-documentacao.pdf) |
+| 01 | Documentação do jogo | `docs/pdf/01-...` |
+| 02 | Manual da professora | `docs/pdf/02-...` |
+| 03 | Manual do aluno | `docs/pdf/03-...` |
+| 04 | Relatório do projeto | `docs/pdf/04-...` |
+| 05 | Gabaritos | `docs/pdf/05-...` |
+| 06 | BNCC | `docs/pdf/06-...` |
+| 07 | Ficha de avaliação | `docs/pdf/07-...` |
+| 08 | Roteiro de aula | `docs/pdf/08-...` |
+| 09 | Documentação técnica | `docs/pdf/09-...` |
+| 10 | Pôster + QR | `docs/pdf/10-...` |
+
+**Online:** `/docs/index.html` · **No menu do jogo:** Documentação PDF
+
+### Regenerar PDFs e QR
 
 ```bash
 cd detetives-poluicao
 npm install
-npm run docs:pdf
+npm run qr          # public/qr-jogo.png + docs/assets/
+npm run docs:pdf    # docs/pdf/*.pdf
 ```
-
-Os PDFs ficam em **`docs/pdf/`** — capa azul, tipografia profissional, pronto para imprimir ou entregar.
-
-### Gerar PDF manualmente (sem script)
-
-1. Abra qualquer `docs/*.html` no Chrome  
-2. `Ctrl+P` (ou `Cmd+P`) → **Salvar como PDF**  
-3. Marque **Gráficos de segundo plano**
-
-Online (após deploy): `https://seu-link.vercel.app/docs/index.html`
 
 ---
 
 ## Desenvolvimento
 
 ```bash
-cd detetives-poluicao
 npm install
 npm run dev
-```
-
-## Build e deploy
-
-```bash
 npm run build
 ```
 
-Deploy na **Vercel** com repositório na raiz (`vercel.json` na raiz do repo aponta para `detetives-poluicao/dist`).
+Deploy: repositório na raiz com `vercel.json` → `detetives-poluicao/dist`
 
 ---
 
-## Funcionalidades do jogo
+## Funcionalidades
 
-- 4 casos investigativos com sorteio
-- Dificuldade fácil / médio / difícil
-- Laboratório virtual, dicas, pontuação
-- Modo professor + exportação CSV
-- PWA offline (celular)
+- 4 casos investigativos · Dra. Ana · falas fixas
+- Cenário 3D + celebração (excelente / bom / parcial / reforço)
+- Dica automática ao errar
+- Ranking turma AALG
+- Painel simples da professora (Excel)
+- PWA offline

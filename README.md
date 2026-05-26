@@ -1,21 +1,27 @@
 # Detetives da Poluição
 
-Jogo educativo de Química ambiental — **2º EM Técnico, Turma AALG** — Colégio Paulo de Tarso (UI 3D premium).
+Jogo educativo de Química ambiental — **Turma AALG** — Colégio Paulo de Tarso.
 
-O código do jogo está na pasta [`detetives-poluicao/`](./detetives-poluicao/).
+Código em [`detetives-poluicao/`](./detetives-poluicao/).
 
-## Documentação (PDF)
+## Acesso rápido
 
-Pacote completo em **`detetives-poluicao/docs/`** — manuais, relatório, BNCC, gabaritos, ficha de avaliação e pôster.
+| | |
+|---|---|
+| **Link** | https://detetives-poluicao.vercel.app |
+| **Senha** | `detetive01` |
+| **QR** | `detetives-poluicao/public/qr-jogo.png` |
+
+## Documentação
+
+Pacote completo (PDF + HTML): **`detetives-poluicao/docs/`**
 
 ```bash
 cd detetives-poluicao
-npm run docs:pdf   # gera docs/pdf/*.pdf
+npm run qr && npm run docs:pdf
 ```
 
-No jogo: menu → **Documentação PDF**. Online: `/docs/index.html` (após deploy).
-
-## Início rápido
+## Desenvolvimento
 
 ```bash
 cd detetives-poluicao
@@ -23,11 +29,8 @@ npm install
 npm run dev
 ```
 
-## Deploy na Vercel
-
-- **Root Directory:** `detetives-poluicao`
-- Framework: Vite
+Deploy Vercel: root do repo → `detetives-poluicao/dist`
 
 ## Equipe
 
-Lucas Lohan · Ana Flávia · André Soares · Gabriel Rosa — Profª Maria
+Lucas Lohan · Dra. Ana Flávia · André Soares · Gabriel Rosa — Profª Maria

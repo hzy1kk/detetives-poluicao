@@ -25,37 +25,32 @@
         <table>
           <tr><th>Tecnologia</th><th>Uso</th></tr>
           <tr><td>React 19 + TypeScript</td><td>Interface do jogo</td></tr>
-          <tr><td>Vite 8</td><td>Build e dev server</td></tr>
-          <tr><td>vite-plugin-pwa</td><td>Offline / instalar no celular</td></tr>
-          <tr><td>localStorage</td><td>Perfil, relatórios, config professor</td></tr>
-          <tr><td>GitHub + Vercel</td><td>Publicação na web</td></tr>
+          <tr><td>Three.js + React Three Fiber</td><td>Cenário 3D e celebração pós-jogo</td></tr>
+          <tr><td>Framer Motion</td><td>Animações e transições</td></tr>
+          <tr><td>Vite 8 + PWA</td><td>Build, offline, instalar no celular</td></tr>
+          <tr><td>localStorage</td><td>Perfil, relatórios, ranking local</td></tr>
+          <tr><td>GitHub + Vercel</td><td>https://detetives-poluicao.vercel.app</td></tr>
         </table>
 
         <h3>Estrutura de pastas</h3>
         <pre style="background:#f1f5f9;padding:0.75rem;border-radius:8px;font-size:0.8rem">detetives-poluicao/
-├── src/
-│   ├── components/   # Telas (login, jogo, professor…)
-│   ├── data/         # Casos e config da escola
-│   └── lib/          # Motor do jogo, áudio, storage
-├── public/           # Logo, manual HTML
-├── docs/             # Documentação PDF/HTML
-└── vercel.json</pre>
-
-        <h3>Deploy (Vercel)</h3>
-        <ol>
-          <li>Repositório: github.com/hzy1kk/detetives-poluicao</li>
-          <li>Root: repositório com vercel.json na raiz</li>
-          <li>Build: detetives-poluicao/dist</li>
-          <li>Push em main → redeploy automático</li>
-        </ol>
+├── src/components/scene/  # Scene3D, CelebrationScene
+├── src/data/            # Casos, config (AALG, senhas)
+├── public/qr-jogo.png   # QR para sala de aula
+├── docs/pdf/            # PDFs gerados
+└── scripts/             # generate-pdfs.mjs, generate-qr.mjs</pre>
 
         <h3>Comandos</h3>
         <pre style="background:#f1f5f9;padding:0.75rem;border-radius:8px">npm install
-npm run dev      # desenvolvimento
-npm run build    # produção
-npm run docs:pdf # gerar PDFs da pasta docs/</pre>
+npm run dev        # desenvolvimento
+npm run build      # produção + docs no site
+npm run qr         # gerar QR em public/ e docs/assets/
+npm run docs:pdf   # gerar todos os PDFs</pre>
 
-        <p class="footer-note">Lucas Lohan · Documentação técnica v1.0</p>
+        <h3>Acesso</h3>
+        <p>Senha/PIN: <code>detetive01</code> · Turma: <code>AALG</code></p>
+
+        <p class="footer-note">Equipe Lucas Lohan · Documentação técnica v2.0 · 2026</p>
       </section>
     </article>
   </body>

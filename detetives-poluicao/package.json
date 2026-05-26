@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run docs:sync && tsc -b && vite build",
+    "build": "npm run qr && npm run docs:sync && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "docs:sync": "cp public/logo-escola.png docs/assets/logo-escola.png 2>/dev/null; rm -rf public/docs && cp -R docs public/docs",
