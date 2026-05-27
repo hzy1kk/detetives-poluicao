@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { SCHOOL, TEAM_PASSWORD, TURMA_PADRAO } from '../data/config'
-import type { Difficulty } from '../types'
+import { SCHOOL } from '../data/config'
+import { authenticateStudent, ensureStudentAccountsSeeded } from '../lib/accounts'
+import type { Difficulty, StudentAccount } from '../types'
 import { playClick } from '../lib/audio'
 import { CreditsFooter } from './CreditsFooter'
 
 type Props = {
-  onLogin: (nome: string, turma: string, dificuldade: Difficulty) => void
+  onLogin: (account: StudentAccount, dificuldade: Difficulty) => void
   onTeacherAccess: () => void
   defaultDifficulty: Difficulty
 }
@@ -18,116 +19,145 @@ const DIFF_LABELS: Record<Difficulty, string> = {
 }
 
 export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Props) {
-  const [nome, setNome] = useState('')
+  const [showForm, setShowForm] = useState(false)
+  const [usuario, setUsuario] = useState('')
   const [senha, setSenha] = useState('')
   const [dificuldade, setDificuldade] = useState<Difficulty>(defaultDifficulty)
   const [erro, setErro] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function submit(e: React.FormEvent) {
+  ensureStudentAccountsSeeded()
+
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
     playClick()
-    if (!nome.trim()) {
-      setErro('Informe seu nome completo.')
-      return
-    }
-    if (senha !== TEAM_PASSWORD) {
-      setErro('Senha incorreta.')
-      return
-    }
     setErro('')
-    onLogin(nome.trim(), TURMA_PADRAO, dificuldade)
+    if (!usuario.trim()) {
+      setErro('Informe seu usuário.')
+      return
+    }
+    if (!senha) {
+      setErro('Informe sua senha.')
+      return
+    }
+    setLoading(true)
+    try {
+      const account = await authenticateStudent(usuario, senha)
+      if (!account) {
+        setErro('Usuário ou senha incorretos.')
+        return
+      }
+      onLogin(account, dificuldade)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (!showForm) {
+    return (
+      <div className="quiz-splash">
+        <motion.div
+          className="quiz-splash__hero"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          🌍
+        </motion.div>
+        <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          Detetives da Poluição
+        </motion.h1>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+          Escolha um caso, investigue, use o laboratório e proteja o meio ambiente com Química.
+        </motion.p>
+        <motion.button
+          type="button"
+          className="quiz-slide-cta"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          onClick={() => {
+            playClick()
+            setShowForm(true)
+          }}
+        >
+          <span className="quiz-slide-track">
+            <span className="quiz-slide-knob">→</span>
+            <span className="quiz-slide-text">Deslize para entrar</span>
+          </span>
+        </motion.button>
+        <button type="button" className="quiz-btn-ghost" style={{ marginTop: '1rem' }} onClick={onTeacherAccess}>
+          Acesso da professora
+        </button>
+        <p style={{ fontSize: '0.75rem', color: 'var(--quiz-text-muted)', marginTop: '1.5rem' }}>
+          {SCHOOL.nome}
+        </p>
+      </div>
+    )
   }
 
   return (
-    <motion.div
-      className="login-shell"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45 }}
-    >
-      <aside className="login-brand">
-        <img src="/logo-escola.png" alt="" className="login-brand__logo" />
-        <span className="login-brand__badge">Lab 3D · Investigação</span>
-        <h2>Detetives da Poluição</h2>
-        <p>
-          Investigue casos reais de contaminação, use o laboratório virtual e descubra a solução
-          correta para proteger o meio ambiente.
-        </p>
-        <p style={{ fontSize: '0.82rem', opacity: 0.85 }}>
-          {SCHOOL.nome} · {SCHOOL.disciplina}
-        </p>
-      </aside>
+    <div className="quiz-shell quiz-shell--no-nav">
+      <div className="quiz-back-row">
+        <button type="button" className="quiz-back-btn" onClick={() => setShowForm(false)} aria-label="Voltar">
+          ←
+        </button>
+        <h2 className="quiz-page-title" style={{ margin: 0 }}>
+          Entrar
+        </h2>
+      </div>
 
-      <div className="login-form-panel">
-        <h3>Entrar</h3>
-        <p className="lead">Preencha seus dados para iniciar a missão (~15 min).</p>
-
+      <div className="quiz-card">
+        <p className="quiz-page-lead" style={{ marginBottom: '1rem' }}>
+          Usuário e senha entregues pela Profª Maria.
+        </p>
         <form onSubmit={submit} className="grid">
-          <label>
-            Nome completo
+          <label style={{ display: 'block', marginBottom: '0.85rem' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Usuário</span>
             <input
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              autoComplete="name"
-              placeholder="Ex.: Maria Silva"
+              className="quiz-search"
+              style={{ marginTop: '0.35rem', width: '100%' }}
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              autoComplete="username"
+              placeholder="maria.silva"
             />
           </label>
-
-          <div>
-            <span className="sr-only">Nível</span>
-            <p style={{ margin: '0 0 0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Nível do caso</p>
-            <div className="difficulty-pills difficulty-pills--inst" role="group" aria-label="Dificuldade">
-              {(['facil', 'medio', 'dificil'] as const).map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  className={dificuldade === d ? 'active' : ''}
-                  onClick={() => {
-                    playClick()
-                    setDificuldade(d)
-                  }}
-                >
-                  {DIFF_LABELS[d]}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <label>
-            Senha de acesso
+          <label style={{ display: 'block', marginBottom: '0.85rem' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Senha</span>
             <input
+              className="quiz-search"
+              style={{ marginTop: '0.35rem', width: '100%' }}
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              placeholder="Senha fornecida em sala"
+              autoComplete="current-password"
+              placeholder="••••••••"
             />
           </label>
-
-          {erro && <p className="erro">{erro}</p>}
-
-          <motion.button
-            type="submit"
-            className="btn-tech-primary"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-          >
-            Iniciar missão
-          </motion.button>
+          <p style={{ fontSize: '0.85rem', fontWeight: 600, margin: '0 0 0.4rem' }}>Nível</p>
+          <div className="quiz-tabs" style={{ marginBottom: '1rem' }}>
+            {(['facil', 'medio', 'dificil'] as const).map((d) => (
+              <button
+                key={d}
+                type="button"
+                className={`quiz-tab${dificuldade === d ? ' quiz-tab--active' : ''}`}
+                onClick={() => {
+                  playClick()
+                  setDificuldade(d)
+                }}
+              >
+                {DIFF_LABELS[d]}
+              </button>
+            ))}
+          </div>
+          {erro && <p className="erro quiz-erro">{erro}</p>}
+          <button type="submit" className="quiz-btn-primary" style={{ width: '100%' }} disabled={loading}>
+            {loading ? 'Verificando…' : 'Iniciar missão'}
+          </button>
         </form>
-
-        <button
-          type="button"
-          className="btn-link"
-          onClick={() => {
-            playClick()
-            onTeacherAccess()
-          }}
-        >
-          Acesso da professora
-        </button>
-
-        <CreditsFooter />
       </div>
-    </motion.div>
+      <CreditsFooter />
+    </div>
   )
 }

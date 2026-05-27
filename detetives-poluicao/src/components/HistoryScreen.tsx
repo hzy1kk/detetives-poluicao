@@ -1,40 +1,64 @@
-import { loadProfile, loadReports } from '../lib/storage'
 import { formatTime } from '../lib/gameEngine'
+import { loadProfile, loadReports, normalizeReport } from '../lib/storage'
+import type { Screen, StudentProfile } from '../types'
+import { playClick } from '../lib/audio'
+import { QuizLayout } from './quiz/QuizLayout'
 
 type Props = {
-  onBack: () => void
+  profile: StudentProfile
+  onNavigate: (screen: Screen) => void
 }
 
-export function HistoryScreen({ onBack }: Props) {
-  const profile = loadProfile()
-  const all = loadReports()
-  const mine = profile ? all.filter((r) => r.aluno === profile.nome) : all
+export function HistoryScreen({ profile, onNavigate }: Props) {
+  const p = loadProfile() ?? profile
+  const mine = loadReports()
+    .map(normalizeReport)
+    .filter((r) => r.aluno === p.nome)
+    .reverse()
 
   return (
-    <section className="card">
-      <h2>Meu histórico</h2>
+    <QuizLayout profile={profile} activeNav="menu" onNavigate={onNavigate} showBottomNav>
+      <div className="quiz-back-row">
+        <button
+          type="button"
+          className="quiz-back-btn"
+          onClick={() => {
+            playClick()
+            onNavigate('menu')
+          }}
+          aria-label="Voltar"
+        >
+          ←
+        </button>
+        <h2 className="quiz-page-title" style={{ margin: 0 }}>
+          Histórico
+        </h2>
+      </div>
+
       {mine.length === 0 ? (
-        <p>Você ainda não concluiu nenhuma investigação.</p>
+        <div className="quiz-card">
+          <p style={{ margin: 0, color: 'var(--quiz-text-muted)' }}>Você ainda não concluiu investigações.</p>
+        </div>
       ) : (
-        <ul className="history-list">
-          {mine
-            .slice()
-            .reverse()
-            .map((r) => (
-              <li key={r.id}>
-                <strong>{r.casoNome}</strong>
-                <span>
-                  Nota {(r.notaTotal ?? (r.poluenteCorreto ? 50 : 0) + (r.descarteCorreto ? 50 : 0))}/100 ·{' '}
-                  {formatTime(r.tempoSegundos)} · {'★'.repeat(r.estrelas)}
-                  {r.modoTreino ? ' · treino' : ''}
-                </span>
-              </li>
-            ))}
-        </ul>
+        <div className="quiz-card">
+          {mine.map((r) => {
+            const nota = r.notaTotal ?? (r.poluenteCorreto ? 50 : 0) + (r.descarteCorreto ? 50 : 0)
+            return (
+              <div key={r.id} className="quiz-list-item">
+                <span className="quiz-list-rank">🔎</span>
+                <div style={{ flex: 1 }}>
+                  <strong>{r.casoNome}</strong>
+                  <small style={{ display: 'block', color: 'var(--quiz-text-muted)' }}>
+                    {formatTime(r.tempoSegundos)} · {'★'.repeat(r.estrelas)}
+                    {r.modoTreino ? ' · treino' : ''}
+                  </small>
+                </div>
+                <strong style={{ color: 'var(--quiz-green)' }}>{nota}</strong>
+              </div>
+            )
+          })}
+        </div>
       )}
-      <button type="button" className="btn-primary btn-block" onClick={onBack}>
-        Voltar
-      </button>
-    </section>
+    </QuizLayout>
   )
 }

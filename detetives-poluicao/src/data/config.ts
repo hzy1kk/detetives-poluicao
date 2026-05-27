@@ -14,9 +14,10 @@ export const AUTHORS = [
   { nome: 'Gabriel Rosa', destaque: false, papel: 'Guarda ambiental' },
 ]
 
-/** Senha da turma (alunos) e PIN padrão da professora */
-export const TEAM_PASSWORD = 'detetive01'
+/** PIN padrão da professora (cadastro de alunos no painel) */
 export const TEACHER_PIN_DEFAULT = 'detetive01'
+/** @deprecated Login individual por aluno — mantido só para docs antigos */
+export const TEAM_PASSWORD = 'detetive01'
 export const TURMA_PADRAO = 'AALG'
 
 /** Link do jogo (QR code e pôster) */

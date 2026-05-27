@@ -1,5 +1,10 @@
 /* Painel professor SaaS — tema escuro tech */
 
+html[data-theme='teacher'] body {
+  background: #020810;
+  color: #f0f9ff;
+}
+
 .app--teacher .app-content {
   max-width: 1200px;
 }
@@ -297,4 +302,86 @@
 .qr-panel--saas .qr-panel__url,
 .qr-panel--saas .qr-panel__hint {
   color: var(--tech-muted);
+}
+
+.saas-accounts {
+  margin: 0 1.25rem 1rem;
+  padding: 1rem 1.1rem;
+  background: rgba(2, 12, 28, 0.75);
+  border: 1px solid var(--tech-glass-border);
+  border-radius: 14px;
+}
+
+.saas-accounts h3 {
+  margin: 0 0 0.35rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.saas-accounts-lead {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--tech-muted);
+  line-height: 1.45;
+}
+
+.saas-accounts-form label {
+  color: rgba(200, 220, 255, 0.9);
+  font-size: 0.85rem;
+}
+
+.saas-accounts-form input {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--tech-glass-border);
+  background: rgba(4, 18, 38, 0.9);
+  color: #fff;
+}
+
+.saas-accounts-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.saas-accounts-actions button {
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--tech-glass-border);
+  background: rgba(4, 18, 38, 0.8);
+  color: #4cc9f0;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.saas-accounts-msg {
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+.saas-accounts-hint {
+  font-size: 0.8rem;
+  color: var(--tech-muted);
+  margin: 0 0 0.5rem;
+}
+
+.saas-accounts-table {
+  margin-top: 1rem;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.saas-accounts-row-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.saas-accounts-row-actions button {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.45rem;
 }

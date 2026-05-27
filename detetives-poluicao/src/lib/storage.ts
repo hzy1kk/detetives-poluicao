@@ -9,6 +9,8 @@ const KEYS = {
   lastCase: 'detetives-ultimo-caso',
   fontSize: 'detetives-fonte',
   sound: 'detetives-som',
+  ambient: 'detetives-ambiente',
+  boot: 'detetives-boot-sessao',
 }
 
 export function loadReports(): Report[] {
@@ -69,6 +71,10 @@ export function saveProfile(profile: StudentProfile): void {
   localStorage.setItem(KEYS.profile, JSON.stringify(profile))
 }
 
+export function clearProfile(): void {
+  localStorage.removeItem(KEYS.profile)
+}
+
 export function loadTeacherSettings(): TeacherSettings {
   try {
     const raw = localStorage.getItem(KEYS.teacher)
@@ -120,6 +126,22 @@ export function loadSoundEnabled(): boolean {
 
 export function saveSoundEnabled(on: boolean): void {
   localStorage.setItem(KEYS.sound, on ? '1' : '0')
+}
+
+export function loadAmbientEnabled(): boolean {
+  return localStorage.getItem(KEYS.ambient) !== '0'
+}
+
+export function saveAmbientEnabled(on: boolean): void {
+  localStorage.setItem(KEYS.ambient, on ? '1' : '0')
+}
+
+export function wasBootShownThisSession(): boolean {
+  return sessionStorage.getItem(KEYS.boot) === '1'
+}
+
+export function markBootShown(): void {
+  sessionStorage.setItem(KEYS.boot, '1')
 }
 
 export function encodeReportCode(report: Report): string {

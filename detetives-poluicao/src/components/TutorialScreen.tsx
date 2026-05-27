@@ -1,40 +1,66 @@
 import { motion } from 'framer-motion'
 import { playClick } from '../lib/audio'
-import { AnimatedPanel } from './ui/AnimatedPanel'
+import type { Screen, StudentProfile } from '../types'
+import { QuizLayout } from './quiz/QuizLayout'
 
 type Props = {
+  profile: StudentProfile
   onDone: () => void
+  onNavigate: (screen: Screen) => void
 }
 
-export function TutorialScreen({ onDone }: Props) {
+export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
+  const steps = [
+    'Entre com usuário e senha da professora.',
+    'Jogue um caso sorteado (~15 min).',
+    'Colete pistas — algumas têm pergunta de Química.',
+    'Use o laboratório (testes limitados).',
+    'Acerte poluente e descarte (50% + 50%).',
+    'Veja sua nota e o ranking da turma.',
+  ]
+
   return (
-    <AnimatedPanel className="card">
-      <h2>Como jogar</h2>
-      <ol className="tutorial-list">
-        <li>Faça login com a senha da turma.</li>
-        <li>Receba um caso sorteado (rio, solo ou lagoa).</li>
-        <li>Desbloqueie pistas uma a uma — algumas têm mini-pergunta de Química.</li>
-        <li>Use o laboratório virtual (André) — testes limitados por partida.</li>
-        <li>Peça até 3 dicas (perdem pontos, exceto no treino).</li>
-        <li>Acuse o poluente e escolha o descarte correto — 3 tentativas.</li>
-        <li>Exporte o relatório JSON para a Profª Maria.</li>
-      </ol>
-      <div className="personagens">
-        <p>🕵️ Lucas — investigação</p>
-        <p>👩‍🔬 Ana — química</p>
-        <p>🧪 André — laboratório</p>
-        <p>🌿 Gabriel — meio ambiente</p>
-        <p>💧 Gota Gi — rios e lagos</p>
+    <QuizLayout profile={profile} activeNav="tutorial" onNavigate={onNavigate}>
+      <h2 className="quiz-page-title">Como jogar</h2>
+      <p className="quiz-page-lead">Tudo em 4 passos simples dentro de cada caso.</p>
+
+      <div className="quiz-card">
+        <ol style={{ margin: 0, paddingLeft: '1.15rem', lineHeight: 1.7 }}>
+          {steps.map((s) => (
+            <li key={s} style={{ marginBottom: '0.5rem', color: 'var(--quiz-text)' }}>
+              {s}
+            </li>
+          ))}
+        </ol>
       </div>
+
+      <div className="quiz-grid-2">
+        {[
+          ['🕵️', 'Lucas', 'Investigação'],
+          ['👩‍🔬', 'Ana', 'Química'],
+          ['🧪', 'André', 'Laboratório'],
+          ['🌿', 'Gabriel', 'Ambiente'],
+        ].map(([emoji, nome, papel]) => (
+          <div key={nome} className="quiz-tile quiz-tile--accent" style={{ cursor: 'default' }}>
+            <span className="quiz-tile__icon">{emoji}</span>
+            <strong>{nome}</strong>
+            <small>{papel}</small>
+          </div>
+        ))}
+      </div>
+
       <motion.button
         type="button"
-        className="btn-tech-primary btn-block"
-        whileHover={{ scale: 1.02 }}
+        className="quiz-btn-primary"
+        style={{ width: '100%' }}
         whileTap={{ scale: 0.98 }}
-        onClick={() => { playClick(); onDone() }}
+        onClick={() => {
+          playClick()
+          onDone()
+        }}
       >
         Entendi, vamos lá!
       </motion.button>
-    </AnimatedPanel>
+    </QuizLayout>
   )
 }

@@ -90,7 +90,19 @@ export type Report = {
   codigoExport: string
 }
 
+export type StudentAccount = {
+  id: string
+  login: string
+  nome: string
+  turma: string
+  passwordHash: string
+  ativo: boolean
+  criadoEm: string
+}
+
 export type StudentProfile = {
+  id: string
+  login: string
   nome: string
   turma: string
   serie: string

@@ -13,6 +13,7 @@ import { formatTime } from '../lib/gameEngine'
 import { playClick } from '../lib/audio'
 import type { Report } from '../types'
 import { QrAccessPanel } from './QrAccessPanel'
+import { StudentAccountsPanel } from './teacher/StudentAccountsPanel'
 
 type Props = {
   onBack: () => void
@@ -185,6 +186,8 @@ export function TeacherScreen({ onBack }: Props) {
       </div>
 
       <QrAccessPanel compact />
+
+      <StudentAccountsPanel />
 
       <div className="saas-toolbar">
         <input

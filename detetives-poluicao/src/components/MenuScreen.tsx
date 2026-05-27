@@ -1,7 +1,9 @@
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import type { StudentProfile } from '../types'
+import type { Screen, StudentProfile } from '../types'
 import { playClick } from '../lib/audio'
-import { AnimatedPanel } from './ui/AnimatedPanel'
+import { loadReports, normalizeReport } from '../lib/storage'
+import { QuizLayout } from './quiz/QuizLayout'
 import { CreditsFooter } from './CreditsFooter'
 
 type Props = {
@@ -10,25 +12,12 @@ type Props = {
   fontSize: 'p' | 'm' | 'g'
   onPlay: (treino: boolean) => void
   onTeacher: () => void
-  onAbout: () => void
   onHistory: () => void
-  onRanking: () => void
-  onTutorial: () => void
+  onNavigate: (screen: Screen) => void
   onToggleSound: () => void
   onFontSize: (s: 'p' | 'm' | 'g') => void
   onLogout: () => void
 }
-
-const tiles = [
-  { id: 'play', icon: '🎯', title: 'Nova investigação', sub: 'Caso sorteado', primary: true, action: 'play' as const },
-  { id: 'treino', icon: '📚', title: 'Modo treino', sub: 'Revisar conteúdo', action: 'treino' as const },
-  { id: 'rank', icon: '🏆', title: 'Ranking', sub: 'Melhores notas', action: 'ranking' as const },
-  { id: 'hist', icon: '📊', title: 'Histórico', sub: 'Suas partidas', action: 'history' as const },
-  { id: 'tut', icon: '❓', title: 'Como jogar', sub: 'Tutorial', action: 'tutorial' as const },
-  { id: 'about', icon: 'ℹ️', title: 'Sobre', sub: 'Projeto e BNCC', action: 'about' as const },
-  { id: 'docs', icon: '📄', title: 'Documentação', sub: 'PDFs', action: 'docs' as const },
-  { id: 'teacher', icon: '👩‍🏫', title: 'Professora', sub: 'Painel de notas', action: 'teacher' as const },
-]
 
 export function MenuScreen({
   profile,
@@ -36,103 +25,138 @@ export function MenuScreen({
   fontSize,
   onPlay,
   onTeacher,
-  onAbout,
   onHistory,
-  onRanking,
-  onTutorial,
+  onNavigate,
   onToggleSound,
   onFontSize,
   onLogout,
 }: Props) {
-  function handleTile(action: (typeof tiles)[number]['action']) {
-    playClick()
-    switch (action) {
-      case 'play':
-        onPlay(false)
-        break
-      case 'treino':
-        onPlay(true)
-        break
-      case 'history':
-        onHistory()
-        break
-      case 'ranking':
-        onRanking()
-        break
-      case 'tutorial':
-        onTutorial()
-        break
-      case 'about':
-        onAbout()
-        break
-      case 'teacher':
-        onTeacher()
-        break
-      case 'docs':
-        window.open('/docs/index.html', '_blank', 'noopener,noreferrer')
-        break
-    }
-  }
+  const [search, setSearch] = useState('')
+
+  const stats = useMemo(() => {
+    const mine = loadReports()
+      .map(normalizeReport)
+      .filter((r) => r.aluno === profile.nome && !r.modoTreino)
+    const last = mine.at(-1)
+    const media =
+      mine.length > 0
+        ? Math.round(mine.reduce((s, r) => s + r.notaTotal, 0) / mine.length)
+        : null
+    return { partidas: mine.length, ultima: last?.notaTotal ?? null, media }
+  }, [profile.nome])
+
+  const tiles = [
+    { icon: '📚', title: 'Modo treino', sub: 'Sem nota', action: () => onPlay(true) },
+    { icon: '📊', title: 'Histórico', sub: 'Suas partidas', action: onHistory },
+    { icon: '📄', title: 'Documentos', sub: 'PDFs', action: () => window.open('/docs/index.html', '_blank') },
+    { icon: '👩‍🏫', title: 'Professora', sub: 'Painel', action: onTeacher },
+  ]
 
   return (
-    <div className="menu-stage">
-      <AnimatedPanel className="card card--tech" delay={0.05}>
-        <div className="menu-hero menu-hero--tech">
-          <div className="menu-hero-avatar menu-hero-avatar--tech">🕵️</div>
-          <div>
-            <h2>Olá, {profile.nome}</h2>
-            <p>Pronto para a próxima investigação ambiental?</p>
+    <QuizLayout
+      profile={profile}
+      points={stats.ultima}
+      activeNav="menu"
+      onNavigate={onNavigate}
+    >
+      <div className="quiz-search">
+        <span aria-hidden>🔍</span>
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar caso ou tema…"
+        />
+      </div>
+
+      <motion.article
+        className="quiz-card quiz-card--hero"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="quiz-hero-visual">
+          <div className="quiz-hero-visual__emoji">🧪</div>
+          <span className="quiz-hero-visual__tag">Química ambiental</span>
+        </div>
+        <div className="quiz-hero-body">
+          <h2>Nova investigação</h2>
+          <p>Caso sorteado · ~15 min · nota 50% poluente + 50% descarte</p>
+          <button
+            type="button"
+            className="quiz-btn-primary"
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            onClick={() => {
+              playClick()
+              onPlay(false)
+            }}
+          >
+            <span aria-hidden>▶</span> Jogar agora
+          </button>
+        </div>
+      </motion.article>
+
+      {stats.partidas > 0 && (
+        <div className="quiz-stats-row">
+          <div className="quiz-stat-box">
+            <span>Partidas</span>
+            <strong>{stats.partidas}</strong>
+          </div>
+          <div className="quiz-stat-box">
+            <span>Última</span>
+            <strong>{stats.ultima ?? '—'}</strong>
+          </div>
+          <div className="quiz-stat-box">
+            <span>Média</span>
+            <strong>{stats.media ?? '—'}</strong>
           </div>
         </div>
+      )}
 
-        <div className="menu-grid menu-grid--premium">
-          {tiles.map((t, i) => (
-            <motion.button
-              key={t.id}
+      <div className="quiz-grid-2">
+        {tiles.map((t) => (
+          <button
+            key={t.title}
+            type="button"
+            className="quiz-tile"
+            onClick={() => {
+              playClick()
+              t.action()
+            }}
+          >
+            <span className="quiz-tile__icon">{t.icon}</span>
+            <strong>{t.title}</strong>
+            <small>{t.sub}</small>
+          </button>
+        ))}
+      </div>
+
+      <div className="quiz-card" style={{ padding: '0.85rem 1rem' }}>
+        <label className="toggle" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <input type="checkbox" checked={soundOn} onChange={onToggleSound} />
+          Som {soundOn ? 'ligado' : 'desligado'}
+        </label>
+        <div style={{ marginTop: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.85rem', color: 'var(--quiz-text-muted)' }}>Fonte:</span>
+          {(['p', 'm', 'g'] as const).map((s) => (
+            <button
+              key={s}
               type="button"
-              className={`menu-tile menu-tile--tech ${t.primary ? 'primary' : ''}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.04 * i }}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleTile(t.action)}
+              className={`quiz-tab${fontSize === s ? ' quiz-tab--active' : ''}`}
+              style={{ flex: 'none', padding: '0.35rem 0.75rem' }}
+              onClick={() => {
+                playClick()
+                onFontSize(s)
+              }}
             >
-              <span className="tile-icon">{t.icon}</span>
-              {t.title}
-              <small>{t.sub}</small>
-            </motion.button>
+              {s.toUpperCase()}
+            </button>
           ))}
         </div>
+      </div>
 
-        <div className="prefs">
-          <label className="toggle">
-            <input type="checkbox" checked={soundOn} onChange={onToggleSound} />
-            Som {soundOn ? 'ligado' : 'desligado'}
-          </label>
-          <div className="font-btns">
-            Fonte:
-            {(['p', 'm', 'g'] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                className={fontSize === s ? 'active' : ''}
-                onClick={() => {
-                  playClick()
-                  onFontSize(s)
-                }}
-              >
-                {s.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <CreditsFooter />
-        <button type="button" className="btn-link" onClick={onLogout}>
-          Sair
-        </button>
-      </AnimatedPanel>
-    </div>
+      <CreditsFooter />
+      <button type="button" className="quiz-btn-ghost" style={{ width: '100%', marginTop: '0.5rem' }} onClick={onLogout}>
+        Sair da conta
+      </button>
+    </QuizLayout>
   )
 }

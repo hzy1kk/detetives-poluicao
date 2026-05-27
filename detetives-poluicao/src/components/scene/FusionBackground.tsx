@@ -7,6 +7,8 @@ export function FusionBackground() {
       <div className="tech-bg__orb tech-bg__orb--green" />
       <div className="tech-bg__grid" />
       <div className="tech-bg__scan" />
+      <div className="tech-bg__beam" />
+      <div className="tech-bg__beam tech-bg__beam--2" />
     </div>
   )
 }
