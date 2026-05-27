@@ -275,6 +275,15 @@ html[data-theme='quiz'] .app {
   line-height: 1.5;
 }
 
+.quiz-question-eyebrow {
+  margin: 0 0 0.35rem !important;
+  font-size: 0.68rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--quiz-blue) !important;
+  font-weight: 700;
+}
+
 /* Options */
 .quiz-options {
   display: flex;
@@ -299,6 +308,21 @@ html[data-theme='quiz'] .app {
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
   box-shadow: var(--quiz-shadow-sm);
+}
+
+.quiz-choice-key {
+  min-width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid var(--quiz-border-strong);
+  background: var(--quiz-surface-2);
+  color: var(--quiz-blue);
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
 }
 
 .quiz-option:hover {
@@ -372,6 +396,16 @@ html[data-theme='quiz'] .app {
   cursor: pointer;
   box-shadow: var(--quiz-shadow-sm);
   flex-shrink: 0;
+}
+
+.quiz-hint-btn--text {
+  width: auto;
+  min-width: 88px;
+  border-radius: var(--quiz-radius-pill);
+  padding: 0 1rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--quiz-blue);
 }
 
 .quiz-btn-primary {

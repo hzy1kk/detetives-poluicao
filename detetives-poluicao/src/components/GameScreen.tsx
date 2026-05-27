@@ -190,12 +190,10 @@ export function GameScreen({
   return (
     <div className="quiz-shell quiz-shell--game">
       <div className="quiz-back-row">
-        <button type="button" className="quiz-back-btn" onClick={onQuit} aria-label="Sair">
-          ←
-        </button>
+        <button type="button" className="quiz-back-btn" onClick={onQuit} aria-label="Sair">S</button>
         <div style={{ flex: 1 }}>
           <span className="quiz-pista-chip">
-            {gameCase.emoji} {formatTime(tempoSegundos)}
+            Tempo de investigação: {formatTime(tempoSegundos)}
           </span>
         </div>
       </div>
@@ -213,6 +211,7 @@ export function GameScreen({
       {step === 'caso' && (
         <>
           <div className="quiz-question-card">
+            <p className="quiz-question-eyebrow">Análise do caso</p>
             <h3>{gameCase.nome}</h3>
             <p>{gameCase.intro}</p>
             <p style={{ marginTop: '0.65rem' }}>{gameCase.contexto}</p>
@@ -237,6 +236,7 @@ export function GameScreen({
       {step === 'pistas' && (
         <>
           <div className="quiz-question-card">
+            <p className="quiz-question-eyebrow">Etapa de evidências</p>
             <h3>Leia as evidências</h3>
             <p>Colete todas as pistas antes de ir ao laboratório.</p>
           </div>
@@ -270,6 +270,7 @@ export function GameScreen({
                     <div className="quiz-options">
                       {proximaClue.miniPergunta.opcoes.map((op, idx) => (
                         <QuizOption key={op} onClick={() => responderMini(proximaClue.id, idx)}>
+                          <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
                           {op}
                         </QuizOption>
                       ))}
@@ -285,6 +286,7 @@ export function GameScreen({
       {step === 'lab' && (
         <>
           <div className="quiz-question-card">
+            <p className="quiz-question-eyebrow">Etapa técnica</p>
             <h3>Laboratório do André</h3>
             <p>
               Você tem <strong>{session.labCharges}</strong> carga(s). Cada teste novo gasta 1.
@@ -311,21 +313,24 @@ export function GameScreen({
       {step === 'veredito' && (
         <>
           <div className="quiz-question-card">
+            <p className="quiz-question-eyebrow">Decisão final</p>
             <h3>Qual a conclusão?</h3>
             <p>Poluente e descarte valem 50% da nota cada.</p>
           </div>
           <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Fonte de poluição</p>
           <div className="quiz-options">
-            {suspeitosFiltrados.map((s) => (
+            {suspeitosFiltrados.map((s, idx) => (
               <QuizOption key={s} selected={suspeito === s} onClick={() => setSuspeito(s)}>
+                <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
                 {s}
               </QuizOption>
             ))}
           </div>
           <p style={{ fontWeight: 600, margin: '0.75rem 0 0.5rem', fontSize: '0.85rem' }}>Descarte correto</p>
           <div className="quiz-options">
-            {gameCase.descartes.map((d) => (
+            {gameCase.descartes.map((d, idx) => (
               <QuizOption key={d} selected={descarte === d} onClick={() => setDescarte(d)}>
+                <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
                 {d}
               </QuizOption>
             ))}
@@ -347,13 +352,13 @@ export function GameScreen({
 
       <div className="quiz-footer-actions">
         {step === 'pistas' && (
-          <button type="button" className="quiz-hint-btn" onClick={pedirDica} disabled={session.dicasUsadas >= 3} title="Dica">
-            💡
+          <button type="button" className="quiz-hint-btn quiz-hint-btn--text" onClick={pedirDica} disabled={session.dicasUsadas >= 3} title="Dica">
+            Dica
           </button>
         )}
         {step !== 'caso' && step !== 'pistas' && (
-          <button type="button" className="quiz-hint-btn" onClick={prevStep} title="Voltar">
-            ←
+          <button type="button" className="quiz-hint-btn quiz-hint-btn--text" onClick={prevStep} title="Voltar">
+            Voltar
           </button>
         )}
         <button
