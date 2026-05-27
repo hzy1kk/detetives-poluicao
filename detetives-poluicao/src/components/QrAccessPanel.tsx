@@ -12,7 +12,7 @@ export function QrAccessPanel({ compact }: Props) {
       <div>
         <p className="qr-panel__title">Acesse pelo celular</p>
         <p className="qr-panel__url">{GAME_URL}</p>
-        <p className="qr-panel__hint">Cada aluno usa seu <strong>usuário e senha</strong> pessoais.</p>
+        <p className="qr-panel__hint">Cada aluno usa apenas seu <strong>usuário</strong>.</p>
       </div>
     </div>
   )

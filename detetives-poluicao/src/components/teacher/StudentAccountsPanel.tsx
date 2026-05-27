@@ -72,8 +72,8 @@ export function StudentAccountsPanel() {
     <section className="saas-accounts">
       <h3>Cadastro de alunos (login individual)</h3>
       <p className="saas-accounts-lead">
-        Cada aluno entra com <strong>usuário</strong> e <strong>senha</strong> próprios. Cadastre aqui e
-        distribua os dados em sala (lista impressa ou mensagem).
+        Cada aluno entra apenas com <strong>usuário</strong> próprio. Cadastre aqui e distribua os
+        logins em sala (lista impressa ou mensagem).
       </p>
 
       <form onSubmit={cadastrar} className="saas-accounts-form grid">

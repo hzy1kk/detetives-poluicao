@@ -53,6 +53,13 @@ export async function authenticateStudent(
   return hash === acc.passwordHash ? acc : null
 }
 
+export function getStudentByLogin(login: string): StudentAccount | null {
+  const user = login.trim().toLowerCase()
+  if (!user) return null
+  const acc = loadStudentAccounts().find((a) => a.ativo && a.login.toLowerCase() === user)
+  return acc ?? null
+}
+
 export async function addStudentAccount(input: {
   nome: string
   login?: string
