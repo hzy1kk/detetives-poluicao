@@ -78,7 +78,15 @@ export function clearProfile(): void {
 export function loadTeacherSettings(): TeacherSettings {
   try {
     const raw = localStorage.getItem(KEYS.teacher)
-    if (raw) return JSON.parse(raw) as TeacherSettings
+    if (raw) {
+      const parsed = JSON.parse(raw) as TeacherSettings
+      if (parsed.pin === 'detetive01') {
+        const migrated = { ...parsed, pin: TEACHER_PIN_DEFAULT }
+        localStorage.setItem(KEYS.teacher, JSON.stringify(migrated))
+        return migrated
+      }
+      return parsed
+    }
   } catch {
     /* ignore */
   }

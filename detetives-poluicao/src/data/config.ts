@@ -15,7 +15,7 @@ export const AUTHORS = [
 ]
 
 /** PIN padrão da professora (cadastro de alunos no painel) */
-export const TEACHER_PIN_DEFAULT = 'detetive01'
+export const TEACHER_PIN_DEFAULT = 'acess01'
 /** @deprecated Login individual por aluno — mantido só para docs antigos */
 export const TEAM_PASSWORD = 'detetive01'
 export const TURMA_PADRAO = 'AALG'
