@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SCHOOL } from '../data/config'
-import { ensureStudentAccountsSeeded, getStudentByLogin } from '../lib/accounts'
+import { ensureStudentAccountsSeeded } from '../lib/accounts'
 import type { Difficulty, StudentAccount } from '../types'
 import { playClick } from '../lib/audio'
 import { CreditsFooter } from './CreditsFooter'
@@ -32,10 +32,16 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
       setErro('Informe seu usuário.')
       return
     }
-    const account = getStudentByLogin(usuario)
-    if (!account) {
-      setErro('Usuário não encontrado.')
-      return
+    const login = usuario.trim().toLowerCase()
+    const nome = usuario.trim()
+    const account: StudentAccount = {
+      id: login,
+      login,
+      nome,
+      turma: 'AALG',
+      passwordHash: '',
+      ativo: true,
+      criadoEm: new Date().toISOString(),
     }
     onLogin(account, dificuldade)
   }
