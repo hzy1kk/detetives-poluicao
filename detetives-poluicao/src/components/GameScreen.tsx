@@ -292,7 +292,7 @@ export function GameScreen({
         </label>
         <motion.button
           type="submit"
-          className="btn-fusion btn-block btn-sticky-submit"
+          className="btn-tech-primary btn-block btn-sticky-submit"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

@@ -4,7 +4,7 @@ import { Float, MeshDistortMaterial } from '@react-three/drei'
 import type { Mesh, Points } from 'three'
 import * as THREE from 'three'
 
-const FUSION = ['#00f5d4', '#7b2ff7', '#f72585', '#4cc9f0', '#fee440', '#06d6a0']
+const TECH_COLORS = ['#0eaf61', '#00e5b5', '#118ab2', '#4cc9f0', '#ffffff']
 
 function FusionCore() {
   const ref = useRef<Mesh>(null)
@@ -22,9 +22,9 @@ function FusionCore() {
       <mesh ref={ref}>
         <icosahedronGeometry args={[1.15, 2]} />
         <MeshDistortMaterial
-          color="#0a1628"
-          emissive="#7b2ff7"
-          emissiveIntensity={0.45}
+          color="#041428"
+          emissive="#118ab2"
+          emissiveIntensity={0.55}
           distort={0.42}
           speed={2.5}
           roughness={0.08}
@@ -47,7 +47,7 @@ function OrbitAtoms() {
 
   return (
     <group ref={group}>
-      {FUSION.slice(0, 4).map((color, i) => {
+      {TECH_COLORS.slice(0, 4).map((color, i) => {
         const angle = (i / 4) * Math.PI * 2
         const r = 2.6
         return (
@@ -63,9 +63,9 @@ function OrbitAtoms() {
               <meshStandardMaterial
                 color={color}
                 emissive={color}
-                emissiveIntensity={0.55}
-                metalness={0.85}
-                roughness={0.12}
+                emissiveIntensity={0.6}
+                metalness={0.88}
+                roughness={0.1}
               />
             </mesh>
           </Float>
@@ -90,7 +90,6 @@ function ParticleField({ count }: { count: number }) {
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.y = state.clock.elapsedTime * 0.04
-      ref.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.1) * 0.05
     }
   })
 
@@ -100,10 +99,10 @@ function ParticleField({ count }: { count: number }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.045}
-        color="#4cc9f0"
+        size={0.04}
+        color="#0eaf61"
         transparent
-        opacity={0.75}
+        opacity={0.7}
         sizeAttenuation
         depthWrite={false}
       />
@@ -114,14 +113,14 @@ function ParticleField({ count }: { count: number }) {
 function SceneContent({ lite }: { lite: boolean }) {
   return (
     <>
-      <ambientLight intensity={0.35} />
-      <pointLight position={[6, 4, 5]} intensity={1.4} color="#7b2ff7" />
-      <pointLight position={[-5, -3, 4]} intensity={1.1} color="#00f5d4" />
-      <pointLight position={[0, -4, 2]} intensity={0.6} color="#f72585" />
+      <ambientLight intensity={0.3} />
+      <pointLight position={[6, 4, 5]} intensity={1.3} color="#118ab2" />
+      <pointLight position={[-5, -3, 4]} intensity={1.1} color="#0eaf61" />
+      <pointLight position={[0, 4, 2]} intensity={0.7} color="#ffffff" />
       <FusionCore />
       <OrbitAtoms />
-      {!lite && <ParticleField count={140} />}
-      <fog attach="fog" args={['#030712', 5, 16]} />
+      {!lite && <ParticleField count={120} />}
+      <fog attach="fog" args={['#020810', 5, 16]} />
     </>
   )
 }

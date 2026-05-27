@@ -631,7 +631,7 @@ html[data-screen='menu'] body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: radial-gradient(ellipse at 50% 30%, #0c1a3d 0%, #030712 70%);
+  background: radial-gradient(ellipse at 50% 30%, #041428 0%, #020810 75%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -669,7 +669,7 @@ html[data-screen='menu'] body {
 }
 
 .celebration-title--excelente {
-  background: linear-gradient(135deg, #fee440, #00f5d4, #fff);
+  background: linear-gradient(135deg, #fff, #0eaf61, #4cc9f0);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

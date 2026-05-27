@@ -47,7 +47,7 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
     >
       <aside className="login-brand">
         <img src="/logo-escola.png" alt="" className="login-brand__logo" />
-        <span className="login-brand__badge">Química ambiental</span>
+        <span className="login-brand__badge">Lab 3D · Investigação</span>
         <h2>Detetives da Poluição</h2>
         <p>
           Investigue casos reais de contaminação, use o laboratório virtual e descubra a solução
@@ -107,11 +107,11 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
 
           <motion.button
             type="submit"
-            className="btn-inst-primary"
+            className="btn-tech-primary"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
           >
-            Iniciar investigação
+            Iniciar missão
           </motion.button>
         </form>
 

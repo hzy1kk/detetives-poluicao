@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import './App.css'
 import './styles/premium.css'
@@ -15,6 +15,10 @@ import { AboutScreen } from './components/AboutScreen'
 import { HistoryScreen } from './components/HistoryScreen'
 import { RankingScreen } from './components/RankingScreen'
 import { FusionBackground } from './components/scene/FusionBackground'
+
+const Scene3D = lazy(() =>
+  import('./components/scene/Scene3D').then((m) => ({ default: m.Scene3D })),
+)
 
 import { getCaseById } from './data/cases'
 import { SCHOOL } from './data/config'
@@ -134,7 +138,14 @@ function App() {
 
   return (
     <main className={`app app--${screen}`}>
-      {immersive && <FusionBackground />}
+      {immersive && (
+        <>
+          <FusionBackground />
+          <Suspense fallback={null}>
+            <Scene3D intensity={screen === 'login' ? 'full' : 'lite'} />
+          </Suspense>
+        </>
+      )}
 
       <div className="app-content">
         {screen !== 'teacher' && <Header compact={screen === 'game'} premium={immersive} />}

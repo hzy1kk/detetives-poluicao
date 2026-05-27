@@ -132,7 +132,7 @@ export function TeacherScreen({ onBack }: Props) {
             />
           </label>
           {msg && <p className="erro">{msg}</p>}
-          <button type="submit" className="btn-inst-primary">
+          <button type="submit" className="btn-tech-primary">
             Entrar no painel
           </button>
         </form>

@@ -76,9 +76,9 @@ export function MenuScreen({
 
   return (
     <div className="menu-stage">
-      <AnimatedPanel className="card card--inst" delay={0.05}>
-        <div className="menu-hero menu-hero--inst">
-          <div className="menu-hero-avatar menu-hero-avatar--inst">🕵️</div>
+      <AnimatedPanel className="card card--tech" delay={0.05}>
+        <div className="menu-hero menu-hero--tech">
+          <div className="menu-hero-avatar menu-hero-avatar--tech">🕵️</div>
           <div>
             <h2>Olá, {profile.nome}</h2>
             <p>Pronto para a próxima investigação ambiental?</p>
@@ -90,7 +90,7 @@ export function MenuScreen({
             <motion.button
               key={t.id}
               type="button"
-              className={`menu-tile menu-tile--inst ${t.primary ? 'primary' : ''}`}
+              className={`menu-tile menu-tile--tech ${t.primary ? 'primary' : ''}`}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.04 * i }}

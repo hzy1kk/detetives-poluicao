@@ -19,7 +19,7 @@ const TIER_CONFIG: Record<
   excelente: {
     title: 'PARABÉNS, DETETIVE!',
     subtitle: 'Acertou poluente e descarte · Nota máxima',
-    colors: ['#fee440', '#00f5d4', '#7b2ff7'],
+    colors: ['#ffffff', '#0eaf61', '#118ab2'],
     distort: 0.35,
     speed: 3,
     starCount: 800,
@@ -27,7 +27,7 @@ const TIER_CONFIG: Record<
   bom: {
     title: 'Missão cumprida!',
     subtitle: 'Caso resolvido — ótimo trabalho de Química',
-    colors: ['#00f5d4', '#4cc9f0', '#7b2ff7'],
+    colors: ['#0eaf61', '#4cc9f0', '#118ab2'],
     distort: 0.42,
     speed: 2.5,
     starCount: 500,
@@ -35,7 +35,7 @@ const TIER_CONFIG: Record<
   parcial: {
     title: 'Quase lá!',
     subtitle: '50% na nota — revise o item que faltou',
-    colors: ['#fee440', '#f72585', '#7b2ff7'],
+    colors: ['#4cc9f0', '#0eaf61', '#ffffff'],
     distort: 0.5,
     speed: 2,
     starCount: 350,
@@ -43,7 +43,7 @@ const TIER_CONFIG: Record<
   reforco: {
     title: 'Continue investigando',
     subtitle: 'Revise pistas e laboratório — você consegue na próxima',
-    colors: ['#7b2ff7', '#4cc9f0', '#f72585'],
+    colors: ['#118ab2', '#0c49a7', '#0eaf61'],
     distort: 0.55,
     speed: 1.8,
     starCount: 250,
@@ -139,7 +139,7 @@ export function CelebrationScene({ tier, notaTotal, onContinue }: Props) {
         <p className="celebration-subtitle">{cfg.subtitle}</p>
         <motion.button
           type="button"
-          className="btn-fusion"
+          className="btn-tech-primary"
           onClick={onContinue}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}

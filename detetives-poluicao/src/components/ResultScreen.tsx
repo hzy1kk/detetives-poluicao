@@ -140,7 +140,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
         <div className="acoes acoes-stack">
           <motion.button
             type="button"
-            className="btn-fusion btn-block"
+            className="btn-tech-primary btn-block"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {

@@ -9,7 +9,7 @@ type Props = {
 export function Header({ compact, premium }: Props) {
   return (
     <motion.header
-      className={`topo ${premium ? 'topo--inst' : ''}`}
+      className={`topo ${premium ? 'topo--tech' : ''}`}
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
