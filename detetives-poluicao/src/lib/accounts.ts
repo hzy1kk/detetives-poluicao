@@ -60,6 +60,33 @@ export function getStudentByLogin(login: string): StudentAccount | null {
   return acc ?? null
 }
 
+/** Login só por usuário/nome — sem senha. Usa cadastro da turma se existir. */
+export function resolveStudentForLogin(input: string): StudentAccount | null {
+  const trimmed = input.trim()
+  if (!trimmed) return null
+
+  ensureStudentAccountsSeeded()
+  const login = trimmed.toLowerCase()
+
+  const byLogin = getStudentByLogin(login)
+  if (byLogin) return byLogin
+
+  const byName = loadStudentAccounts().find(
+    (a) => a.ativo && a.nome.trim().toLowerCase() === trimmed.toLowerCase(),
+  )
+  if (byName) return byName
+
+  return {
+    id: login,
+    login,
+    nome: trimmed,
+    turma: TURMA_PADRAO,
+    passwordHash: '',
+    ativo: true,
+    criadoEm: new Date().toISOString(),
+  }
+}
+
 export async function addStudentAccount(input: {
   nome: string
   login?: string
