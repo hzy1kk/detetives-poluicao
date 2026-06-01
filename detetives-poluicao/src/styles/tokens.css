@@ -1,0 +1,66 @@
+/* Detetives da Poluição — design tokens (primitive → semantic → component) */
+
+:root {
+  --color-fusion-cyan: #00f5d4;
+  --color-fusion-violet: #7b2ff7;
+  --color-fusion-magenta: #f72585;
+  --color-fusion-blue: #4cc9f0;
+  --color-fusion-gold: #fee440;
+  --color-fusion-deep: #030712;
+  --color-fusion-mid: #0f172a;
+  --color-text-primary: #e8f4ff;
+  --color-text-muted: #94a3b8;
+  --color-success: #00f5a0;
+  --color-error: #ff6b9d;
+
+  --fusion-cyan: var(--color-fusion-cyan);
+  --fusion-violet: var(--color-fusion-violet);
+  --fusion-magenta: var(--color-fusion-magenta);
+  --fusion-blue: var(--color-fusion-blue);
+  --fusion-gold: var(--color-fusion-gold);
+  --fusion-deep: var(--color-fusion-deep);
+  --fusion-mid: var(--color-fusion-mid);
+  --glass-bg: rgba(8, 18, 42, 0.78);
+  --glass-border: rgba(124, 200, 255, 0.22);
+  --glass-glow: rgba(0, 245, 212, 0.14);
+  --font-display: 'Space Grotesk', 'Outfit', system-ui, sans-serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+
+  --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-ui: 200ms;
+  --duration-screen: 280ms;
+
+  --quiz-bg: var(--fusion-deep);
+  --quiz-bg-soft: var(--fusion-mid);
+  --quiz-surface: var(--glass-bg);
+  --quiz-surface-2: rgba(15, 31, 60, 0.65);
+  --quiz-border: var(--glass-border);
+  --quiz-border-strong: rgba(0, 245, 212, 0.35);
+  --quiz-text: var(--color-text-primary);
+  --quiz-text-muted: var(--color-text-muted);
+  --quiz-green: var(--color-fusion-cyan);
+  --quiz-green-dark: #00c9a7;
+  --quiz-green-soft: rgba(0, 245, 212, 0.12);
+  --quiz-blue: var(--color-fusion-blue);
+  --quiz-sky: var(--color-fusion-cyan);
+  --quiz-blue-soft: rgba(76, 201, 240, 0.12);
+  --quiz-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --quiz-shadow-sm: 0 6px 24px rgba(0, 0, 0, 0.35);
+  --quiz-shadow-glow: 0 0 24px var(--glass-glow);
+  --quiz-radius-xl: 28px;
+  --quiz-radius-lg: 22px;
+  --quiz-radius-md: 16px;
+  --quiz-radius-pill: 999px;
+  --quiz-font: var(--font-body);
+  --quiz-font-display: var(--font-display);
+  --quiz-nav-h: 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fusion-bg__orb,
+  .fusion-bg__mesh,
+  .particle-canvas {
+    animation: none !important;
+  }
+}

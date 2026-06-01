@@ -7,7 +7,7 @@ import { downloadJson } from '../lib/storage'
 import { GOOGLE_FORMS_URL } from '../data/config'
 import { CelebrationScene } from './scene/CelebrationScene'
 
-const CONFETTI_COLORS = ['#0eaf61', '#118ab2', '#4cc9f0', '#ffffff', '#06d6a0']
+const CONFETTI_COLORS = ['#00f5d4', '#7b2ff7', '#f72585', '#4cc9f0', '#fee440']
 
 type Props = {
   report: Report

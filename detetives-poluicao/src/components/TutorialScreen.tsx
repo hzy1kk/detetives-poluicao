@@ -26,10 +26,16 @@ export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
 
       <div className="quiz-card">
         <ol style={{ margin: 0, paddingLeft: '1.15rem', lineHeight: 1.7 }}>
-          {steps.map((s) => (
-            <li key={s} style={{ marginBottom: '0.5rem', color: 'var(--quiz-text)' }}>
+          {steps.map((s, i) => (
+            <motion.li
+              key={s}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06, duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              style={{ marginBottom: '0.5rem', color: 'var(--quiz-text)' }}
+            >
               {s}
-            </li>
+            </motion.li>
           ))}
         </ol>
       </div>
@@ -53,7 +59,7 @@ export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
         type="button"
         className="quiz-btn-primary"
         style={{ width: '100%' }}
-        whileTap={{ scale: 0.98 }}
+        whileTap={{ scale: 0.97 }}
         onClick={() => {
           playClick()
           onDone()

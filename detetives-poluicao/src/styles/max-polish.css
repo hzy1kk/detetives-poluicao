@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at 50% 30%, #041428 0%, #020810 100%);
+  background: radial-gradient(ellipse at 50% 30%, #0c1a3d 0%, var(--fusion-deep, #030712) 100%);
 }
 
 .boot-splash__inner {
@@ -59,9 +59,9 @@
 
 .boot-splash__bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #0eaf61, #118ab2, #4cc9f0);
+  background: linear-gradient(90deg, var(--fusion-cyan), var(--fusion-violet), var(--fusion-magenta));
   border-radius: 999px;
-  box-shadow: 0 0 12px rgba(14, 175, 97, 0.6);
+  box-shadow: 0 0 12px var(--glass-glow);
 }
 
 .page-transition {

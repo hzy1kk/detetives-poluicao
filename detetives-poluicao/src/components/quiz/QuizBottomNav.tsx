@@ -1,3 +1,4 @@
+import { BookOpen, Home, Info, Trophy } from 'lucide-react'
 import type { Screen } from '../../types'
 import { playClick } from '../../lib/audio'
 
@@ -8,28 +9,34 @@ type Props = {
   onNavigate: (screen: Screen) => void
 }
 
-const items: { id: QuizNavId; screen: Screen; icon: string; label: string }[] = [
-  { id: 'menu', screen: 'menu', icon: '🏠', label: 'Início' },
-  { id: 'ranking', screen: 'ranking', icon: '🏆', label: 'Ranking' },
-  { id: 'tutorial', screen: 'tutorial', icon: '📖', label: 'Aprender' },
-  { id: 'about', screen: 'about', icon: '👤', label: 'Sobre' },
+const items: {
+  id: QuizNavId
+  screen: Screen
+  Icon: typeof Home
+  label: string
+}[] = [
+  { id: 'menu', screen: 'menu', Icon: Home, label: 'Início' },
+  { id: 'ranking', screen: 'ranking', Icon: Trophy, label: 'Ranking' },
+  { id: 'tutorial', screen: 'tutorial', Icon: BookOpen, label: 'Aprender' },
+  { id: 'about', screen: 'about', Icon: Info, label: 'Sobre' },
 ]
 
 export function QuizBottomNav({ active, onNavigate }: Props) {
   return (
     <nav className="quiz-bottom-nav" aria-label="Menu principal">
-      {items.map((item) => (
+      {items.map(({ id, screen, Icon, label }) => (
         <button
-          key={item.id}
+          key={id}
           type="button"
-          className={`quiz-nav-item${active === item.id ? ' quiz-nav-item--active' : ''}`}
+          className={`quiz-nav-item${active === id ? ' quiz-nav-item--active' : ''}`}
+          aria-current={active === id ? 'page' : undefined}
           onClick={() => {
             playClick()
-            onNavigate(item.screen)
+            onNavigate(screen)
           }}
         >
-          <span aria-hidden>{item.icon}</span>
-          <span>{item.label}</span>
+          <Icon aria-hidden strokeWidth={2} />
+          <span>{label}</span>
         </button>
       ))}
     </nav>

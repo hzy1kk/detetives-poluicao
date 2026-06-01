@@ -1,8 +1,15 @@
-/* Painel professor SaaS — tema escuro tech */
+/* Painel professor SaaS — alinhado aos tokens fusion */
+
+html[data-theme='teacher'] {
+  --tech-glass: var(--glass-bg);
+  --tech-glass-border: var(--glass-border);
+  --tech-sky: var(--fusion-cyan);
+  --tech-muted: var(--color-text-muted);
+}
 
 html[data-theme='teacher'] body {
-  background: #020810;
-  color: #f0f9ff;
+  background: var(--fusion-deep);
+  color: var(--color-text-primary);
 }
 
 .app--teacher .app-content {

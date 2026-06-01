@@ -20,7 +20,7 @@ export function PageTransition({ children, screenKey }: Props) {
       initial="initial"
       animate="animate"
       exit="exit"
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
       className="page-transition"
     >
       {children}

@@ -1,3 +1,4 @@
+import { Star, User } from 'lucide-react'
 import type { StudentProfile } from '../../types'
 
 type Props = {
@@ -11,7 +12,7 @@ export function QuizTopBar({ profile, points }: Props) {
   return (
     <header className="quiz-topbar">
       <div className="quiz-avatar" aria-hidden>
-        🕵️
+        <User strokeWidth={2} />
       </div>
       <div className="quiz-topbar__text">
         <p className="quiz-topbar__hello">Olá,</p>
@@ -19,7 +20,7 @@ export function QuizTopBar({ profile, points }: Props) {
       </div>
       {points != null && (
         <div className="quiz-points-pill" title="Sua última nota">
-          <span aria-hidden>⭐</span>
+          <Star aria-hidden size={16} strokeWidth={2} />
           {points}
         </div>
       )}

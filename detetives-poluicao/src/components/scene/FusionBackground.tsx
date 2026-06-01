@@ -1,14 +1,14 @@
-/** Fundo tech escuro — verde, azul e branco */
+/** Fundo premium fusion — orbs, mesh, grid */
 export function FusionBackground() {
   return (
-    <div className="tech-bg" aria-hidden>
-      <div className="tech-bg__gradient" />
-      <div className="tech-bg__orb tech-bg__orb--blue" />
-      <div className="tech-bg__orb tech-bg__orb--green" />
-      <div className="tech-bg__grid" />
-      <div className="tech-bg__scan" />
-      <div className="tech-bg__beam" />
-      <div className="tech-bg__beam tech-bg__beam--2" />
+    <div className="fusion-bg" aria-hidden>
+      <div className="fusion-bg__orb fusion-bg__orb--1" />
+      <div className="fusion-bg__orb fusion-bg__orb--2" />
+      <div className="fusion-bg__orb fusion-bg__orb--3" />
+      <div className="fusion-bg__orb fusion-bg__orb--4" />
+      <div className="fusion-bg__mesh" />
+      <div className="fusion-bg__grid" />
+      <div className="fusion-bg__scanline" />
     </div>
   )
 }

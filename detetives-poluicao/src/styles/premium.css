@@ -1,22 +1,8 @@
 /* —— Design system premium: fusão cromática + glass 3D —— */
 
-:root {
-  --fusion-cyan: #00f5d4;
-  --fusion-violet: #7b2ff7;
-  --fusion-magenta: #f72585;
-  --fusion-blue: #4cc9f0;
-  --fusion-gold: #fee440;
-  --fusion-deep: #030712;
-  --fusion-mid: #0f172a;
-  --glass-bg: rgba(8, 18, 42, 0.72);
-  --glass-border: rgba(124, 200, 255, 0.22);
-  --glass-glow: rgba(0, 245, 212, 0.12);
-  --font-display: 'Space Grotesk', 'Outfit', system-ui, sans-serif;
-  --font-body: 'Outfit', 'Inter', system-ui, sans-serif;
-}
+/* Fusion background + legacy premium (tokens em tokens.css) */
 
-html[data-screen='login'] body,
-html[data-screen='menu'] body {
+html[data-theme='quiz'] body {
   background: var(--fusion-deep);
   color: #e8f4ff;
 }

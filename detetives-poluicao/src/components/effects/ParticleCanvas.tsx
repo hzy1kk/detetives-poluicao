@@ -9,7 +9,11 @@ type Particle = {
   color: string
 }
 
-const COLORS = ['rgba(14, 175, 97, 0.7)', 'rgba(76, 201, 240, 0.65)', 'rgba(255, 255, 255, 0.35)']
+const COLORS = [
+  'rgba(0, 245, 212, 0.65)',
+  'rgba(123, 47, 247, 0.55)',
+  'rgba(76, 201, 240, 0.45)',
+]
 
 type Props = {
   density?: number
@@ -20,6 +24,8 @@ export function ParticleCanvas({ density = 55, connect = true }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
     const canvasEl = canvasRef.current
     if (!canvasEl) return
     const context = canvasEl.getContext('2d')

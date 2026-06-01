@@ -12,7 +12,7 @@ export function QuizOption({ selected, onClick, children }: Props) {
       type="button"
       className={`quiz-option${selected ? ' quiz-option--selected' : ''}`}
       onClick={onClick}
-      whileTap={{ scale: 0.99 }}
+      whileTap={{ scale: 0.97 }}
     >
       <span className="quiz-option__radio" aria-hidden />
       <span>{children}</span>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
+import { BookOpen, FileText, GraduationCap, History, Play, Search } from 'lucide-react'
 import type { Screen, StudentProfile } from '../types'
 import { playClick } from '../lib/audio'
 import { loadReports, normalizeReport } from '../lib/storage'
@@ -18,6 +19,8 @@ type Props = {
   onFontSize: (s: 'p' | 'm' | 'g') => void
   onLogout: () => void
 }
+
+const tileMotion = { whileTap: { scale: 0.97 } }
 
 export function MenuScreen({
   profile,
@@ -46,10 +49,10 @@ export function MenuScreen({
   }, [profile.nome])
 
   const tiles = [
-    { icon: '📚', title: 'Modo treino', sub: 'Sem nota', action: () => onPlay(true) },
-    { icon: '📊', title: 'Histórico', sub: 'Suas partidas', action: onHistory },
-    { icon: '📄', title: 'Documentos', sub: 'PDFs', action: () => window.open('/docs/index.html', '_blank') },
-    { icon: '👩‍🏫', title: 'Professora', sub: 'Painel', action: onTeacher },
+    { Icon: BookOpen, title: 'Modo treino', sub: 'Sem nota', action: () => onPlay(true) },
+    { Icon: History, title: 'Histórico', sub: 'Suas partidas', action: onHistory },
+    { Icon: FileText, title: 'Documentos', sub: 'PDFs', action: () => window.open('/docs/index.html', '_blank') },
+    { Icon: GraduationCap, title: 'Professora', sub: 'Painel', action: onTeacher },
   ]
 
   return (
@@ -60,11 +63,12 @@ export function MenuScreen({
       onNavigate={onNavigate}
     >
       <div className="quiz-search">
-        <span aria-hidden>🔍</span>
+        <Search aria-hidden size={18} strokeWidth={2} />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar caso ou tema…"
+          aria-label="Buscar caso ou tema"
         />
       </div>
 
@@ -80,17 +84,18 @@ export function MenuScreen({
         <div className="quiz-hero-body">
           <h2>Nova investigação</h2>
           <p>Caso sorteado · ~15 min · nota 50% poluente + 50% descarte</p>
-          <button
+          <motion.button
             type="button"
             className="quiz-btn-primary"
             style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            {...tileMotion}
             onClick={() => {
               playClick()
               onPlay(false)
             }}
           >
-            <span aria-hidden>▶</span> Jogar agora
-          </button>
+            <Play aria-hidden size={20} strokeWidth={2.5} fill="currentColor" /> Jogar agora
+          </motion.button>
         </div>
       </motion.article>
 
@@ -113,24 +118,27 @@ export function MenuScreen({
 
       <div className="quiz-grid-2">
         {tiles.map((t) => (
-          <button
+          <motion.button
             key={t.title}
             type="button"
             className="quiz-tile"
+            {...tileMotion}
             onClick={() => {
               playClick()
               t.action()
             }}
           >
-            <span className="quiz-tile__icon">{t.icon}</span>
+            <span className="quiz-tile__icon">
+              <t.Icon strokeWidth={2} />
+            </span>
             <strong>{t.title}</strong>
             <small>{t.sub}</small>
-          </button>
+          </motion.button>
         ))}
       </div>
 
       <div className="quiz-card" style={{ padding: '0.85rem 1rem' }}>
-        <label className="toggle" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <label className="toggle" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
           <input type="checkbox" checked={soundOn} onChange={onToggleSound} />
           Som {soundOn ? 'ligado' : 'desligado'}
         </label>

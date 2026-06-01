@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import './App.css'
-import './styles/quiz-ui.css'
+import './styles/tokens.css'
 import './styles/premium.css'
+import './styles/quiz-ui.css'
 import './styles/teacher-saas.css'
 import './styles/max-polish.css'
 import { ensureStudentAccountsSeeded } from './lib/accounts'
@@ -18,6 +19,9 @@ import { RankingScreen } from './components/RankingScreen'
 import { BootSplash } from './components/effects/BootSplash'
 import { PageTransition } from './components/effects/PageTransition'
 import { SoundFAB } from './components/effects/SoundFAB'
+import { FusionBackground } from './components/scene/FusionBackground'
+import { ParticleCanvas } from './components/effects/ParticleCanvas'
+import { CursorGlow } from './components/effects/CursorGlow'
 
 import { getCaseById } from './data/cases'
 import { SCHOOL } from './data/config'
@@ -193,15 +197,20 @@ function App() {
   if (booting) {
     return (
       <>
-        <div className="quiz-bg-soft" aria-hidden />
+        <FusionBackground />
         <BootSplash onDone={finishBoot} />
       </>
     )
   }
 
+  const showParticles =
+    isQuiz && (screen === 'menu' || screen === 'result')
+
   return (
     <main className={`app app--${screen}`}>
-      {isQuiz && <div className="quiz-bg-soft" aria-hidden />}
+      {isQuiz && <FusionBackground />}
+      {isQuiz && <CursorGlow />}
+      {showParticles && <ParticleCanvas density={48} />}
 
       {isQuiz && screen !== 'game' && (
         <SoundFAB

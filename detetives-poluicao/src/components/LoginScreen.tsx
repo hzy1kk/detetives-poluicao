@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { FlaskConical } from 'lucide-react'
 import { SCHOOL } from '../data/config'
 import { ensureStudentAccountsSeeded } from '../lib/accounts'
 import type { Difficulty, StudentAccount } from '../types'
@@ -48,6 +50,15 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
 
   return (
     <div className="quiz-shell quiz-shell--no-nav">
+      <motion.div
+        className="quiz-login-hero"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        aria-hidden
+      >
+        <FlaskConical size={56} strokeWidth={1.5} />
+      </motion.div>
       <h1 className="quiz-page-title">Detetives da Poluição</h1>
       <p className="quiz-page-lead" style={{ marginBottom: '0.9rem' }}>
         Acesso rápido sem senha.
@@ -61,8 +72,7 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
           <label style={{ display: 'block', marginBottom: '0.85rem' }}>
             <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Usuário</span>
             <input
-              className="quiz-search"
-              style={{ marginTop: '0.35rem', width: '100%' }}
+              className="quiz-input"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               autoComplete="username"
@@ -86,9 +96,14 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
             ))}
           </div>
           {erro && <p className="erro quiz-erro">{erro}</p>}
-          <button type="submit" className="quiz-btn-primary" style={{ width: '100%' }}>
+          <motion.button
+            type="submit"
+            className="quiz-btn-primary"
+            style={{ width: '100%' }}
+            whileTap={{ scale: 0.97 }}
+          >
             Iniciar missão
-          </button>
+          </motion.button>
         </form>
       </div>
       <button type="button" className="quiz-btn-ghost" style={{ marginTop: '0.25rem' }} onClick={onTeacherAccess}>

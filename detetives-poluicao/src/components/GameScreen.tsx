@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { ChevronLeft, Clock } from 'lucide-react'
 import { SegmentProgress } from './quiz/SegmentProgress'
 import { QuizOption } from './quiz/QuizOption'
 import {
@@ -188,12 +189,15 @@ export function GameScreen({
   }
 
   return (
-    <div className="quiz-shell quiz-shell--game">
+    <div className="quiz-shell quiz-shell--game quiz-game-hud">
       <div className="quiz-back-row">
-        <button type="button" className="quiz-back-btn" onClick={onQuit} aria-label="Sair">S</button>
-        <div style={{ flex: 1 }}>
-          <span className="quiz-pista-chip">
-            Tempo de investigação: {formatTime(tempoSegundos)}
+        <button type="button" className="quiz-back-btn" onClick={onQuit} aria-label="Sair">
+          <ChevronLeft aria-hidden size={22} strokeWidth={2} />
+        </button>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+          <span className="quiz-timer-pill">
+            <Clock aria-hidden size={16} strokeWidth={2} />
+            {formatTime(tempoSegundos)}
           </span>
         </div>
       </div>

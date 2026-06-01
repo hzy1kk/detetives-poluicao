@@ -13,8 +13,8 @@ export default defineConfig({
         name: 'Detetives da Poluicao',
         short_name: 'Detetives',
         description: 'Jogo educativo de Quimica Ambiental - 2o EM Tecnico',
-        theme_color: '#001d7e',
-        background_color: '#fefefe',
+        theme_color: '#030712',
+        background_color: '#030712',
         display: 'standalone',
         start_url: '/',
         icons: [
