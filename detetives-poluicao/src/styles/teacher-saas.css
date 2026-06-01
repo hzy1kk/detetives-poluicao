@@ -73,9 +73,9 @@ html[data-theme='teacher'] body {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(90deg, #001d7e, #0c49a7 50%, #118ab2);
+  background: linear-gradient(90deg, rgba(123, 47, 247, 0.85), rgba(0, 245, 212, 0.35));
   color: #fff;
-  border-bottom: 1px solid var(--tech-green-border);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .saas-topbar h2 {

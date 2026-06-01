@@ -111,7 +111,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
           </p>
           <p style={{ lineHeight: 1.5, fontSize: '0.9rem' }}>{gameCase.explicacao}</p>
           {!report.correto && (
-            <p style={{ fontSize: '0.88rem', color: 'var(--quiz-green-dark)' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--fusion-cyan)' }}>
               <strong>Gabarito:</strong> {gameCase.gabarito.suspeito} + {gameCase.gabarito.descarte}
             </p>
           )}
@@ -149,7 +149,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
           type="button"
           className="quiz-btn-primary"
           style={{ width: '100%', marginBottom: '0.5rem' }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => {
             playClick()
             onPlayAgain()

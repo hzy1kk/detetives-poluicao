@@ -11,7 +11,7 @@ type Props = {
 
 export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
   const steps = [
-    'Entre com usuário e senha da professora.',
+    'Na tela inicial, digite seu usuário (sem senha).',
     'Jogue um caso sorteado (~15 min).',
     'Colete pistas — algumas têm pergunta de Química.',
     'Use o laboratório (testes limitados).',

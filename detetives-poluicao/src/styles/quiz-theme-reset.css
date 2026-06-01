@@ -1,0 +1,86 @@
+/* Neutraliza App.css legado no fluxo do aluno (tema quiz) */
+
+html[data-theme='quiz'] .app {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+}
+
+html[data-theme='quiz'] .app-content {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+html[data-theme='quiz'] .quiz-shell label {
+  display: block;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--quiz-text);
+}
+
+html[data-theme='quiz'] .quiz-shell .toggle {
+  color: var(--quiz-text);
+  font-size: 0.9rem;
+}
+
+html[data-theme='quiz'] .quiz-shell .toggle input[type='checkbox'] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--fusion-cyan);
+  margin: 0;
+}
+
+html[data-theme='quiz'] .quiz-shell input:not([type='checkbox']):not(.quiz-search input),
+html[data-theme='quiz'] .quiz-shell select,
+html[data-theme='quiz'] .quiz-shell textarea {
+  border-radius: var(--quiz-radius-md);
+  border: 1px solid var(--quiz-border);
+  background: rgba(2, 8, 20, 0.85);
+  color: var(--quiz-text);
+  padding: 0.65rem 1rem;
+  font-size: inherit;
+  font-family: inherit;
+  box-shadow: var(--quiz-shadow-sm);
+  transition: border-color var(--duration-ui) var(--ease-cinema), box-shadow var(--duration-ui);
+}
+
+html[data-theme='quiz'] .quiz-shell input:not([type='checkbox']):focus,
+html[data-theme='quiz'] .quiz-shell select:focus,
+html[data-theme='quiz'] .quiz-shell textarea:focus {
+  outline: none;
+  border-color: var(--fusion-cyan);
+  box-shadow: 0 0 0 3px var(--glass-glow);
+}
+
+html[data-theme='quiz'] .quiz-shell button:hover {
+  transform: none;
+}
+
+html[data-theme='quiz'] .quiz-btn-primary:not(:disabled):hover {
+  filter: brightness(1.1);
+  box-shadow:
+    0 10px 36px rgba(0, 245, 212, 0.45),
+    0 0 28px rgba(123, 47, 247, 0.28);
+}
+
+html[data-theme='quiz'] .quiz-btn-secondary:hover {
+  border-color: var(--fusion-cyan);
+  color: var(--fusion-cyan);
+}
+
+html[data-theme='quiz'] a.quiz-btn-secondary {
+  color: var(--fusion-cyan);
+}
+
+html[data-theme='quiz'] .quiz-btn-ghost {
+  color: var(--quiz-text-muted);
+}
+
+html[data-theme='quiz'] .quiz-btn-ghost:hover {
+  color: var(--fusion-cyan);
+}
+
+html[data-theme='quiz'] .erro:not(.quiz-erro) {
+  color: #ff8fab;
+}

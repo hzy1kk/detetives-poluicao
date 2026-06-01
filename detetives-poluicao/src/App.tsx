@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import './App.css'
 import './styles/tokens.css'
+import './styles/quiz-theme-reset.css'
 import './styles/premium.css'
 import './styles/quiz-ui.css'
 import './styles/teacher-saas.css'
@@ -57,14 +58,18 @@ import type { Difficulty, GameSession, Report, Screen, StudentAccount, StudentPr
 
 function App() {
   const [booting, setBooting] = useState(() => !wasBootShownThisSession())
-  const [screen, setScreen] = useState<Screen>('login')
-  const [profile, setProfile] = useState<StudentProfile | null>(loadProfile)
+  const [screen, setScreen] = useState<Screen>(() => {
+    const p = loadProfile()
+    if (!p?.login) return 'login'
+    return wasTutorialSeen() ? 'menu' : 'tutorial'
+  })
+  const [profile, setProfile] = useState<StudentProfile | null>(() => loadProfile())
   const [difficulty, setDifficulty] = useState<Difficulty>(
     () => loadTeacherSettings().dificuldadePadrao,
   )
   const [session, setSession] = useState<GameSession | null>(null)
   const [report, setReport] = useState<Report | null>(null)
-  const [, setTick] = useState(0)
+  const [elapsedSec, setElapsedSec] = useState(0)
   const [soundOn, setSoundOn] = useState(loadSoundEnabled)
   const [ambientOn, setAmbientOn] = useState(loadAmbientEnabled)
   const [fontSize, setFontSize] = useState<FontSize>(loadFontSize)
@@ -75,12 +80,6 @@ function App() {
 
   useEffect(() => {
     ensureStudentAccountsSeeded()
-    const p = loadProfile()
-    if (!p?.login) return
-    setProfile(p)
-    const next: Screen = wasTutorialSeen() ? 'menu' : 'tutorial'
-    setScreen(next)
-    prevScreen.current = next
   }, [])
 
   useEffect(() => {
@@ -123,14 +122,18 @@ function App() {
   }, [fontSize])
 
   useEffect(() => {
-    if (screen !== 'game' || !session || session.finalizado) return
-    const id = window.setInterval(() => setTick((t) => t + 1), 1000)
+    if (screen !== 'game' || !session || session.finalizado) {
+      setElapsedSec(0)
+      return
+    }
+    const tick = () =>
+      setElapsedSec(Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000)))
+    tick()
+    const id = window.setInterval(tick, 1000)
     return () => clearInterval(id)
   }, [screen, session])
 
-  const tempoSegundos = session
-    ? Math.floor((Date.now() - session.startedAt) / 1000)
-    : 0
+  const tempoSegundos = elapsedSec
 
   const startGame = useCallback(
     (treino: boolean) => {
@@ -250,13 +253,11 @@ function App() {
             <PageTransition screenKey="menu">
               <MenuScreen
                 profile={profile}
-                soundOn={soundOn}
                 fontSize={fontSize}
                 onPlay={startGame}
                 onTeacher={() => goTo('teacher')}
                 onHistory={() => goTo('history')}
                 onNavigate={goTo}
-                onToggleSound={() => setSoundOn((v) => !v)}
                 onFontSize={setFontSize}
                 onLogout={logout}
               />

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Volume2, VolumeX, Waves } from 'lucide-react'
 import { playClick } from '../../lib/audio'
 
 type Props = {
@@ -21,8 +22,9 @@ export function SoundFAB({ soundOn, ambientOn, onToggleSound, onToggleAmbient }:
           onToggleAmbient()
         }}
         aria-label="Som ambiente"
+        aria-pressed={ambientOn}
       >
-        🌊
+        <Waves aria-hidden size={20} strokeWidth={2} />
       </motion.button>
       <motion.button
         type="button"
@@ -34,8 +36,13 @@ export function SoundFAB({ soundOn, ambientOn, onToggleSound, onToggleAmbient }:
           onToggleSound()
         }}
         aria-label="Efeitos sonoros"
+        aria-pressed={soundOn}
       >
-        {soundOn ? '🔊' : '🔇'}
+        {soundOn ? (
+          <Volume2 aria-hidden size={20} strokeWidth={2} />
+        ) : (
+          <VolumeX aria-hidden size={20} strokeWidth={2} />
+        )}
       </motion.button>
     </div>
   )

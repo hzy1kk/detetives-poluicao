@@ -1,3 +1,4 @@
+import { ChevronLeft, Search } from 'lucide-react'
 import { formatTime } from '../lib/gameEngine'
 import { loadProfile, loadReports, normalizeReport } from '../lib/storage'
 import type { Screen, StudentProfile } from '../types'
@@ -28,7 +29,7 @@ export function HistoryScreen({ profile, onNavigate }: Props) {
           }}
           aria-label="Voltar"
         >
-          ←
+          <ChevronLeft aria-hidden size={22} strokeWidth={2} />
         </button>
         <h2 className="quiz-page-title" style={{ margin: 0 }}>
           Histórico
@@ -45,7 +46,9 @@ export function HistoryScreen({ profile, onNavigate }: Props) {
             const nota = r.notaTotal ?? (r.poluenteCorreto ? 50 : 0) + (r.descarteCorreto ? 50 : 0)
             return (
               <div key={r.id} className="quiz-list-item">
-                <span className="quiz-list-rank">🔎</span>
+                <span className="quiz-list-rank quiz-list-rank--icon" aria-hidden>
+                  <Search size={16} strokeWidth={2} />
+                </span>
                 <div style={{ flex: 1 }}>
                   <strong>{r.casoNome}</strong>
                   <small style={{ display: 'block', color: 'var(--quiz-text-muted)' }}>

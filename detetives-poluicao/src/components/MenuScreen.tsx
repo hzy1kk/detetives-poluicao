@@ -9,13 +9,11 @@ import { CreditsFooter } from './CreditsFooter'
 
 type Props = {
   profile: StudentProfile
-  soundOn: boolean
   fontSize: 'p' | 'm' | 'g'
   onPlay: (treino: boolean) => void
   onTeacher: () => void
   onHistory: () => void
   onNavigate: (screen: Screen) => void
-  onToggleSound: () => void
   onFontSize: (s: 'p' | 'm' | 'g') => void
   onLogout: () => void
 }
@@ -24,13 +22,11 @@ const tileMotion = { whileTap: { scale: 0.97 } }
 
 export function MenuScreen({
   profile,
-  soundOn,
   fontSize,
   onPlay,
   onTeacher,
   onHistory,
   onNavigate,
-  onToggleSound,
   onFontSize,
   onLogout,
 }: Props) {
@@ -137,13 +133,10 @@ export function MenuScreen({
         ))}
       </div>
 
-      <div className="quiz-card" style={{ padding: '0.85rem 1rem' }}>
-        <label className="toggle" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-          <input type="checkbox" checked={soundOn} onChange={onToggleSound} />
-          Som {soundOn ? 'ligado' : 'desligado'}
-        </label>
-        <div style={{ marginTop: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--quiz-text-muted)' }}>Fonte:</span>
+      <div className="quiz-card quiz-card--settings" style={{ padding: '0.85rem 1rem' }}>
+        <p className="quiz-settings-label">Acessibilidade</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.85rem', color: 'var(--quiz-text-muted)' }}>Tamanho da fonte</span>
           {(['p', 'm', 'g'] as const).map((s) => (
             <button
               key={s}

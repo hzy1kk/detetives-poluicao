@@ -28,10 +28,11 @@
   width: 88px;
   height: 88px;
   object-fit: contain;
-  background: #fff;
+  background: rgba(8, 18, 42, 0.9);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 0.4rem;
-  box-shadow: 0 0 40px rgba(14, 175, 97, 0.4);
+  box-shadow: 0 0 40px var(--glass-glow);
 }
 
 .boot-splash h1 {
@@ -82,20 +83,25 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(76, 201, 240, 0.35);
-  background: rgba(4, 20, 40, 0.9);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
-  font-size: 1.2rem;
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--quiz-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  opacity: 0.75;
-  transition: opacity 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: var(--quiz-shadow-sm);
+  opacity: 0.85;
+  transition: opacity 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s;
 }
 
 .sound-fab.on {
   opacity: 1;
-  border-color: rgba(14, 175, 97, 0.55);
-  box-shadow: 0 0 20px rgba(14, 175, 97, 0.25);
+  color: var(--fusion-cyan);
+  border-color: rgba(0, 245, 212, 0.45);
+  box-shadow: 0 0 20px var(--glass-glow);
 }
 
 .cursor-glow {

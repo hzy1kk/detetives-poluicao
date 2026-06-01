@@ -143,9 +143,9 @@ html[data-theme='quiz'] body {
   z-index: 2;
 }
 
-.app--login,
-.app--menu {
-  max-width: 1100px;
+html[data-theme='quiz'] .app--login,
+html[data-theme='quiz'] .app--menu {
+  max-width: 100%;
 }
 
 /* Header premium */

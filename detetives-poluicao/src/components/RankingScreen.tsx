@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Trophy } from 'lucide-react'
 import { SCHOOL } from '../data/config'
 import { buildRanking, getPlayerRank } from '../lib/ranking'
 import type { Screen, StudentProfile } from '../types'
@@ -14,7 +15,7 @@ type Tab = 'all' | 'top' | 'me'
 
 export function RankingScreen({ profile, onNavigate }: Props) {
   const [tab, setTab] = useState<Tab>('all')
-  const rows = buildRanking(profile.turma, 30)
+  const rows = useMemo(() => buildRanking(profile.turma, 30), [profile.turma])
   const mine = getPlayerRank(profile.nome, profile.turma)
 
   const podium = rows.slice(0, 3)
@@ -26,7 +27,10 @@ export function RankingScreen({ profile, onNavigate }: Props) {
 
   return (
     <QuizLayout profile={profile} activeNav="ranking" onNavigate={onNavigate}>
-      <h2 className="quiz-page-title">🏆 Ranking</h2>
+      <h2 className="quiz-page-title quiz-page-title--row">
+        <Trophy aria-hidden size={28} strokeWidth={2} className="quiz-title-icon" />
+        Ranking
+      </h2>
       <p className="quiz-page-lead">Melhores notas neste aparelho · turma {profile.turma}</p>
 
       <div className="quiz-tabs">
@@ -74,11 +78,9 @@ export function RankingScreen({ profile, onNavigate }: Props) {
           )}
 
           {mine && (
-            <div className="quiz-card" style={{ marginBottom: '1rem', background: 'var(--quiz-green-soft)' }}>
+            <div className="quiz-card quiz-card--highlight">
               <strong>Sua posição: #{mine.posicao}</strong>
-              <span style={{ marginLeft: '0.5rem', color: 'var(--quiz-green-dark)' }}>
-                {mine.notaTotal}/100
-              </span>
+              <span className="quiz-highlight-score">{mine.notaTotal}/100</span>
             </div>
           )}
 
