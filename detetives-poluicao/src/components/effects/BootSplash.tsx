@@ -28,19 +28,21 @@ export function BootSplash({ onDone }: Props) {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         />
         <motion.h1
+          className="retro"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.5 }}
         >
-          Detetives da Poluição
+          LOADING...
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55 }}
-          className="boot-splash__sub"
+          className="boot-splash__sub retro"
+          style={{ fontSize: '0.5rem' }}
         >
-          Carregando laboratório virtual…
+          DETETIVES DA POLUICAO
         </motion.p>
         <div className="boot-splash__bar">
           <motion.div

@@ -1,6 +1,4 @@
 import { useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
-import { BookOpen, FileText, GraduationCap, History, Play, Search } from 'lucide-react'
 import type { Screen, StudentProfile } from '../types'
 import { playClick } from '../lib/audio'
 import { loadReports, normalizeReport } from '../lib/storage'
@@ -18,7 +16,11 @@ type Props = {
   onLogout: () => void
 }
 
-const tileMotion = { whileTap: { scale: 0.97 } }
+type MenuEntry = {
+  id: string
+  label: string
+  action: () => void
+}
 
 export function MenuScreen({
   profile,
@@ -30,7 +32,7 @@ export function MenuScreen({
   onFontSize,
   onLogout,
 }: Props) {
-  const [search, setSearch] = useState('')
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const stats = useMemo(() => {
     const mine = loadReports()
@@ -44,120 +46,101 @@ export function MenuScreen({
     return { partidas: mine.length, ultima: last?.notaTotal ?? null, media }
   }, [profile.nome])
 
-  const tiles = [
-    { Icon: BookOpen, title: 'Modo treino', sub: 'Sem nota', action: () => onPlay(true) },
-    { Icon: History, title: 'Histórico', sub: 'Suas partidas', action: onHistory },
-    { Icon: FileText, title: 'Documentos', sub: 'PDFs', action: () => window.open('/docs/index.html', '_blank') },
-    { Icon: GraduationCap, title: 'Professora', sub: 'Painel', action: onTeacher },
+  const menuItems: MenuEntry[] = [
+    { id: 'start', label: 'START GAME', action: () => onPlay(false) },
+    { id: 'train', label: 'TRAINING MODE', action: () => onPlay(true) },
+    { id: 'rank', label: 'HIGH SCORES', action: () => onNavigate('ranking') },
+    { id: 'hist', label: 'HISTORY', action: onHistory },
+    { id: 'learn', label: 'HOW TO PLAY', action: () => onNavigate('tutorial') },
+    { id: 'docs', label: 'DOCUMENTS', action: () => window.open('/docs/index.html', '_blank') },
+    { id: 'teacher', label: 'TEACHER', action: onTeacher },
   ]
 
+  function runItem(index: number) {
+    playClick()
+    menuItems[index]?.action()
+  }
+
   return (
-    <QuizLayout
-      profile={profile}
-      points={stats.ultima}
-      activeNav="menu"
-      onNavigate={onNavigate}
-    >
-      <div className="quiz-search">
-        <Search aria-hidden size={18} strokeWidth={2} />
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar caso ou tema…"
-          aria-label="Buscar caso ou tema"
-        />
-      </div>
+    <QuizLayout profile={profile} points={stats.ultima} activeNav="menu" onNavigate={onNavigate}>
+      <div className="bit-menu-screen">
+        <div className="bit-menu-card bit-box bit-box--blue">
+          <p className="bit-subtitle retro">Quimica Ambiental</p>
+          <h1 className="bit-title retro">DETETIVES</h1>
+          <h1 className="bit-title retro" style={{ marginTop: '0.25rem', fontSize: '0.7rem' }}>
+            DA POLUICAO
+          </h1>
+          <p className="bit-tagline">
+            Ola, {profile.nome.split(' ')[0]}! Escolha uma opcao:
+          </p>
 
-      <motion.article
-        className="quiz-card quiz-card--hero"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="quiz-hero-visual">
-          <div className="quiz-hero-visual__emoji">🧪</div>
-          <span className="quiz-hero-visual__tag">Química ambiental</span>
+          <ul className="bit-menu-list" role="menu">
+            {menuItems.map((item, i) => (
+              <li key={item.id} role="none">
+                <button
+                  type="button"
+                  role="menuitem"
+                  className={`bit-menu-item retro${activeIndex === i ? ' bit-menu-item--active' : ''}`}
+                  onMouseEnter={() => setActiveIndex(i)}
+                  onFocus={() => setActiveIndex(i)}
+                  onClick={() => runItem(i)}
+                >
+                  {activeIndex === i && (
+                    <span className="bit-menu-item__arrow" aria-hidden>
+                      ▶
+                    </span>
+                  )}
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="quiz-hero-body">
-          <h2>Nova investigação</h2>
-          <p>Caso sorteado · ~15 min · nota 50% poluente + 50% descarte</p>
-          <motion.button
-            type="button"
-            className="quiz-btn-primary"
-            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-            {...tileMotion}
-            onClick={() => {
-              playClick()
-              onPlay(false)
-            }}
-          >
-            <Play aria-hidden size={20} strokeWidth={2.5} fill="currentColor" /> Jogar agora
-          </motion.button>
-        </div>
-      </motion.article>
 
-      {stats.partidas > 0 && (
-        <div className="quiz-stats-row">
-          <div className="quiz-stat-box">
-            <span>Partidas</span>
-            <strong>{stats.partidas}</strong>
+        {stats.partidas > 0 && (
+          <div className="bit-hud-stats">
+            <div className="bit-stat retro">
+              <span>PLAYS</span>
+              {stats.partidas}
+            </div>
+            <div className="bit-stat retro">
+              <span>LAST</span>
+              {stats.ultima ?? '--'}
+            </div>
+            <div className="bit-stat retro">
+              <span>AVG</span>
+              {stats.media ?? '--'}
+            </div>
           </div>
-          <div className="quiz-stat-box">
-            <span>Última</span>
-            <strong>{stats.ultima ?? '—'}</strong>
-          </div>
-          <div className="quiz-stat-box">
-            <span>Média</span>
-            <strong>{stats.media ?? '—'}</strong>
+        )}
+
+        <div className="bit-box" style={{ width: '100%', padding: '0.75rem 1rem', marginBottom: '0.75rem' }}>
+          <p className="quiz-settings-label retro" style={{ margin: '0 0 0.5rem', fontSize: '0.45rem' }}>
+            FONT SIZE
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {(['p', 'm', 'g'] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={`bit-menu-item retro${fontSize === s ? ' bit-menu-item--active' : ''}`}
+                style={{ flex: 1, textAlign: 'center', padding: '0.5rem' }}
+                onClick={() => {
+                  playClick()
+                  onFontSize(s)
+                }}
+              >
+                {s.toUpperCase()}
+              </button>
+            ))}
           </div>
         </div>
-      )}
 
-      <div className="quiz-grid-2">
-        {tiles.map((t) => (
-          <motion.button
-            key={t.title}
-            type="button"
-            className="quiz-tile"
-            {...tileMotion}
-            onClick={() => {
-              playClick()
-              t.action()
-            }}
-          >
-            <span className="quiz-tile__icon">
-              <t.Icon strokeWidth={2} />
-            </span>
-            <strong>{t.title}</strong>
-            <small>{t.sub}</small>
-          </motion.button>
-        ))}
+        <CreditsFooter />
+        <button type="button" className="quiz-btn-ghost retro" style={{ width: '100%' }} onClick={onLogout}>
+          LOGOUT
+        </button>
       </div>
-
-      <div className="quiz-card quiz-card--settings" style={{ padding: '0.85rem 1rem' }}>
-        <p className="quiz-settings-label">Acessibilidade</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--quiz-text-muted)' }}>Tamanho da fonte</span>
-          {(['p', 'm', 'g'] as const).map((s) => (
-            <button
-              key={s}
-              type="button"
-              className={`quiz-tab${fontSize === s ? ' quiz-tab--active' : ''}`}
-              style={{ flex: 'none', padding: '0.35rem 0.75rem' }}
-              onClick={() => {
-                playClick()
-                onFontSize(s)
-              }}
-            >
-              {s.toUpperCase()}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <CreditsFooter />
-      <button type="button" className="quiz-btn-ghost" style={{ width: '100%', marginTop: '0.5rem' }} onClick={onLogout}>
-        Sair da conta
-      </button>
     </QuizLayout>
   )
 }

@@ -1,43 +1,32 @@
-# Design System Master — Detetives da Poluição
+# Detetives da Poluição — Design System (8-bit)
 
-> **Override:** Este projeto usa **Premium Dark Fusion**, não o tema claro sugerido automaticamente pela skill.
+**Style:** Pixel Art (UI UX Pro Max) · Reference: OrcDev 8bitcn main-menu
 
-## Paleta (primitive)
+## Palette (NES / Arcade)
 
-| Token | Hex |
-|-------|-----|
-| fusion-cyan | `#00f5d4` |
-| fusion-violet | `#7b2ff7` |
-| fusion-magenta | `#f72585` |
-| fusion-deep | `#030712` |
-| text-primary | `#e8f4ff` |
-| text-muted | `#94a3b8` |
+| Token | Hex | Use |
+|-------|-----|-----|
+| `--8bit-bg` | #1a1c2e | Screen background |
+| `--8bit-blue` | #29adff | Primary actions, menu hover |
+| `--8bit-green` | #00e436 | START / success |
+| `--8bit-yellow` | #ffec27 | Titles |
+| `--8bit-red` | #ff0044 | Errors |
+| `--8bit-black` | #000000 | Pixel borders |
 
-## Estilo
+## Typography
 
-- **Modern Dark Cinema** + glassmorphism
-- Fundo: `FusionBackground` (orbs + mesh + grid)
-- Cards: `rgba(8, 18, 42, 0.78)` + blur 12–16px
+- **Press Start 2P** — titles, buttons, menu (`.retro`)
+- **VT323** — body, descriptions
 
-## Tipografia
+## Rules
 
-- Display: Space Grotesk
-- Body: Outfit
+- No border-radius (sharp pixels)
+- Borders: 4px solid black + offset box-shadow
+- Menu: vertical list with ▶ on active item
+- `image-rendering: pixelated` on icons
+- `prefers-reduced-motion`: disable star twinkle and title blink
 
-## Motion
+## Anti-patterns
 
-- UI: 150–300ms, `cubic-bezier(0.16, 1, 0.3, 1)`
-- Press: `scale(0.97)`
-- `prefers-reduced-motion`: sem orbs, partículas, scanline
-
-## Ícones
-
-- Lucide React (nav, tiles, HUD)
-- Emojis apenas em narrativa dos casos
-
-## Checklist pré-deploy
-
-- [ ] Contraste 4.5:1 em texto muted
-- [ ] Focus ring em botões
-- [ ] Touch targets ≥ 44px
-- [ ] Teste 375px mobile
+- Glassmorphism, soft gradients (removed)
+- Rounded pills, emoji as nav icons on main menu

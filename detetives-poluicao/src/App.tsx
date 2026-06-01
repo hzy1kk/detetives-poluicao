@@ -5,6 +5,7 @@ import './styles/tokens.css'
 import './styles/quiz-theme-reset.css'
 import './styles/premium.css'
 import './styles/quiz-ui.css'
+import './styles/8bit-theme.css'
 import './styles/teacher-saas.css'
 import './styles/max-polish.css'
 import { ensureStudentAccountsSeeded } from './lib/accounts'
@@ -20,9 +21,8 @@ import { RankingScreen } from './components/RankingScreen'
 import { BootSplash } from './components/effects/BootSplash'
 import { PageTransition } from './components/effects/PageTransition'
 import { SoundFAB } from './components/effects/SoundFAB'
-import { FusionBackground } from './components/scene/FusionBackground'
+import { PixelBackground } from './components/scene/PixelBackground'
 import { ParticleCanvas } from './components/effects/ParticleCanvas'
-import { CursorGlow } from './components/effects/CursorGlow'
 
 import { getCaseById } from './data/cases'
 import { SCHOOL } from './data/config'
@@ -200,7 +200,7 @@ function App() {
   if (booting) {
     return (
       <>
-        <FusionBackground />
+        <PixelBackground />
         <BootSplash onDone={finishBoot} />
       </>
     )
@@ -211,9 +211,8 @@ function App() {
 
   return (
     <main className={`app app--${screen}`}>
-      {isQuiz && <FusionBackground />}
-      {isQuiz && <CursorGlow />}
-      {showParticles && <ParticleCanvas density={48} />}
+      {isQuiz && <PixelBackground />}
+      {showParticles && <ParticleCanvas density={32} />}
 
       {isQuiz && screen !== 'game' && (
         <SoundFAB

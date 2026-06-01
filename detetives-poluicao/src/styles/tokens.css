@@ -1,66 +1,74 @@
-/* Detetives da Poluição — design tokens (primitive → semantic → component) */
+/* 8-bit / NES palette — UI UX Pro Max (Pixel Art + Arcade) */
 
 :root {
-  --color-fusion-cyan: #00f5d4;
-  --color-fusion-violet: #7b2ff7;
-  --color-fusion-magenta: #f72585;
-  --color-fusion-blue: #4cc9f0;
-  --color-fusion-gold: #fee440;
-  --color-fusion-deep: #030712;
-  --color-fusion-mid: #0f172a;
-  --color-text-primary: #e8f4ff;
-  --color-text-muted: #94a3b8;
-  --color-success: #00f5a0;
-  --color-error: #ff6b9d;
+  --8bit-bg: #1a1c2e;
+  --8bit-bg-alt: #262b44;
+  --8bit-surface: #3b5dc9;
+  --8bit-surface-dark: #1d2b53;
+  --8bit-red: #ff0044;
+  --8bit-blue: #29adff;
+  --8bit-green: #00e436;
+  --8bit-yellow: #ffec27;
+  --8bit-purple: #7e2553;
+  --8bit-white: #ffffff;
+  --8bit-black: #000000;
+  --8bit-muted: #8b9bb4;
+  --8bit-shadow: #0f0f1a;
 
-  --fusion-cyan: var(--color-fusion-cyan);
-  --fusion-violet: var(--color-fusion-violet);
-  --fusion-magenta: var(--color-fusion-magenta);
-  --fusion-blue: var(--color-fusion-blue);
-  --fusion-gold: var(--color-fusion-gold);
-  --fusion-deep: var(--color-fusion-deep);
-  --fusion-mid: var(--color-fusion-mid);
-  --glass-bg: rgba(8, 18, 42, 0.78);
-  --glass-border: rgba(124, 200, 255, 0.22);
-  --glass-glow: rgba(0, 245, 212, 0.14);
-  --font-display: 'Space Grotesk', 'Outfit', system-ui, sans-serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-retro: 'VT323', monospace;
 
-  --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 150ms;
-  --duration-ui: 200ms;
-  --duration-screen: 280ms;
+  --pixel: 4px;
+  --ease-step: steps(4, end);
 
-  --quiz-bg: var(--fusion-deep);
-  --quiz-bg-soft: var(--fusion-mid);
-  --quiz-surface: var(--glass-bg);
-  --quiz-surface-2: rgba(15, 31, 60, 0.65);
-  --quiz-border: var(--glass-border);
-  --quiz-border-strong: rgba(0, 245, 212, 0.35);
-  --quiz-text: var(--color-text-primary);
-  --quiz-text-muted: var(--color-text-muted);
-  --quiz-green: var(--color-fusion-cyan);
-  --quiz-green-dark: #00c9a7;
-  --quiz-green-soft: rgba(0, 245, 212, 0.12);
-  --quiz-blue: var(--color-fusion-blue);
-  --quiz-sky: var(--color-fusion-cyan);
-  --quiz-blue-soft: rgba(76, 201, 240, 0.12);
-  --quiz-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  --quiz-shadow-sm: 0 6px 24px rgba(0, 0, 0, 0.35);
-  --quiz-shadow-glow: 0 0 24px var(--glass-glow);
-  --quiz-radius-xl: 28px;
-  --quiz-radius-lg: 22px;
-  --quiz-radius-md: 16px;
-  --quiz-radius-pill: 999px;
-  --quiz-font: var(--font-body);
-  --quiz-font-display: var(--font-display);
-  --quiz-nav-h: 72px;
+  /* Aliases usados pelo app (quiz-*) */
+  --fusion-cyan: var(--8bit-blue);
+  --fusion-violet: var(--8bit-purple);
+  --fusion-magenta: var(--8bit-red);
+  --fusion-blue: var(--8bit-blue);
+  --fusion-gold: var(--8bit-yellow);
+  --fusion-deep: var(--8bit-bg);
+  --fusion-mid: var(--8bit-bg-alt);
+  --glass-bg: var(--8bit-surface-dark);
+  --glass-border: var(--8bit-black);
+  --glass-glow: transparent;
+  --font-display: var(--font-pixel);
+  --font-body: var(--font-retro);
+
+  --quiz-bg: var(--8bit-bg);
+  --quiz-bg-soft: var(--8bit-bg-alt);
+  --quiz-surface: var(--8bit-surface-dark);
+  --quiz-surface-2: var(--8bit-bg-alt);
+  --quiz-border: var(--8bit-black);
+  --quiz-border-strong: var(--8bit-white);
+  --quiz-text: var(--8bit-white);
+  --quiz-text-muted: var(--8bit-muted);
+  --quiz-green: var(--8bit-green);
+  --quiz-green-dark: #00b82e;
+  --quiz-green-soft: var(--8bit-surface-dark);
+  --quiz-blue: var(--8bit-blue);
+  --quiz-sky: var(--8bit-blue);
+  --quiz-blue-soft: var(--8bit-surface-dark);
+  --quiz-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+  --quiz-shadow-sm: var(--pixel) var(--pixel) 0 var(--8bit-black);
+  --quiz-shadow-glow: none;
+  --quiz-radius-xl: 0;
+  --quiz-radius-lg: 0;
+  --quiz-radius-md: 0;
+  --quiz-radius-pill: 0;
+  --quiz-font: var(--font-retro);
+  --quiz-font-display: var(--font-pixel);
+  --quiz-nav-h: 64px;
+
+  --ease-cinema: steps(6, end);
+  --duration-fast: 80ms;
+  --duration-ui: 100ms;
+  --duration-screen: 200ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fusion-bg__orb,
-  .fusion-bg__mesh,
-  .particle-canvas {
+  .pixel-bg__star,
+  .pixel-bg__scan {
     animation: none !important;
   }
 }

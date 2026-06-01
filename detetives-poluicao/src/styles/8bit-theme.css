@@ -1,0 +1,443 @@
+/* Tema 8-bit — inspirado em OrcDev / 8bitcn main-menu */
+
+html[data-theme='quiz'] {
+  image-rendering: pixelated;
+}
+
+html[data-theme='quiz'] body {
+  background: var(--8bit-bg);
+  color: var(--8bit-white);
+  font-family: var(--font-retro);
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.retro,
+.bit-title,
+.bit-menu-item,
+.quiz-btn-primary,
+.quiz-btn-secondary,
+.quiz-nav-item span,
+.quiz-topbar__name,
+.quiz-page-title,
+.boot-splash h1 {
+  font-family: var(--font-pixel) !important;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+/* Pixel box mixin via class */
+.bit-box {
+  background: var(--8bit-surface-dark);
+  border: var(--pixel) solid var(--8bit-black);
+  box-shadow:
+    var(--pixel) var(--pixel) 0 0 var(--8bit-black),
+    inset calc(var(--pixel) * -1) calc(var(--pixel) * -1) 0 0 rgba(0, 0, 0, 0.35),
+    inset var(--pixel) var(--pixel) 0 0 rgba(255, 255, 255, 0.12);
+}
+
+.bit-box--blue {
+  background: var(--8bit-surface);
+}
+
+/* Botões pixel */
+.bit-btn,
+.quiz-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-pixel) !important;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  color: var(--8bit-white) !important;
+  background: var(--8bit-blue) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  border-radius: 0 !important;
+  box-shadow:
+    var(--pixel) var(--pixel) 0 0 var(--8bit-black),
+    inset calc(var(--pixel) * -1) calc(var(--pixel) * -1) 0 0 #1a6fb5,
+    inset var(--pixel) var(--pixel) 0 0 #5cc4ff !important;
+  cursor: pointer;
+  transition: transform var(--duration-ui) var(--ease-step), box-shadow var(--duration-ui) var(--ease-step);
+  text-shadow: none;
+  -webkit-text-fill-color: var(--8bit-white) !important;
+}
+
+.bit-btn:hover,
+.quiz-btn-primary:not(:disabled):hover {
+  filter: brightness(1.15);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--8bit-black) !important;
+}
+
+.bit-btn:active,
+.quiz-btn-primary:not(:disabled):active {
+  transform: translate(var(--pixel), var(--pixel));
+  box-shadow: 0 0 0 0 var(--8bit-black) !important;
+}
+
+.bit-btn--green,
+.quiz-btn-primary.bit-btn--green {
+  background: var(--8bit-green) !important;
+  color: var(--8bit-black) !important;
+  -webkit-text-fill-color: var(--8bit-black) !important;
+  box-shadow:
+    var(--pixel) var(--pixel) 0 0 var(--8bit-black),
+    inset calc(var(--pixel) * -1) calc(var(--pixel) * -1) 0 0 #00b82e,
+    inset var(--pixel) var(--pixel) 0 0 #5dff7a !important;
+}
+
+.quiz-btn-secondary {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.55rem;
+  color: var(--8bit-white) !important;
+  background: var(--8bit-surface-dark) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--pixel) var(--pixel) 0 0 var(--8bit-black);
+  min-height: 44px;
+}
+
+.quiz-btn-ghost {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.5rem;
+  color: var(--8bit-muted) !important;
+  text-decoration: none;
+}
+
+/* Main menu OrcDev-style */
+.bit-menu-screen {
+  min-height: calc(100dvh - var(--quiz-nav-h) - 1rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0 1rem;
+}
+
+.bit-menu-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.25rem 1rem 1rem;
+  text-align: center;
+}
+
+.bit-title {
+  margin: 0;
+  font-size: clamp(0.85rem, 3.5vw, 1rem);
+  color: var(--8bit-yellow);
+  text-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+  animation: bit-blink-title 2s steps(2, end) infinite;
+}
+
+.bit-subtitle {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 0.5rem;
+  color: var(--8bit-blue);
+  text-transform: uppercase;
+}
+
+.bit-tagline {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-retro) !important;
+  font-size: 1.1rem;
+  color: var(--8bit-muted);
+}
+
+@keyframes bit-blink-title {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.85;
+  }
+}
+
+.bit-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bit-menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 0.75rem;
+  font-size: 0.55rem;
+  color: var(--8bit-white);
+  background: var(--8bit-bg-alt);
+  border: var(--pixel) solid var(--8bit-black);
+  box-shadow: var(--pixel) var(--pixel) 0 0 var(--8bit-black);
+  cursor: pointer;
+  transition: background var(--duration-ui) var(--ease-step), transform var(--duration-ui) var(--ease-step);
+}
+
+.bit-menu-item:hover,
+.bit-menu-item--active {
+  background: var(--8bit-blue);
+  color: var(--8bit-black);
+  transform: translateX(4px);
+  box-shadow:
+    var(--pixel) var(--pixel) 0 0 var(--8bit-black),
+    inset 0 0 0 2px var(--8bit-yellow);
+}
+
+.bit-menu-item__arrow {
+  color: var(--8bit-yellow);
+  margin-right: 0.25rem;
+}
+
+.bit-hud-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--pixel);
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.bit-stat {
+  padding: 0.5rem 0.25rem;
+  font-family: var(--font-pixel) !important;
+  font-size: 0.45rem;
+  text-align: center;
+  background: var(--8bit-black);
+  border: 2px solid var(--8bit-muted);
+  color: var(--8bit-green);
+}
+
+.bit-stat span {
+  display: block;
+  color: var(--8bit-muted);
+  font-size: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Cards / shell */
+.quiz-card,
+.quiz-question-card,
+.quiz-tile,
+.quiz-stat-box,
+.quiz-search,
+.quiz-bottom-nav,
+.quiz-topbar .quiz-avatar,
+.quiz-points-pill {
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.quiz-card,
+.quiz-question-card {
+  background: var(--8bit-surface-dark) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  box-shadow: var(--pixel) var(--pixel) 0 0 var(--8bit-black) !important;
+}
+
+.quiz-page-title {
+  background: none !important;
+  -webkit-text-fill-color: var(--8bit-yellow) !important;
+  color: var(--8bit-yellow) !important;
+  text-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+  font-size: 0.75rem !important;
+}
+
+.quiz-page-lead {
+  font-family: var(--font-retro) !important;
+  font-size: 1.15rem;
+}
+
+.quiz-hero-visual {
+  background: var(--8bit-surface) !important;
+  border-bottom: var(--pixel) solid var(--8bit-black);
+}
+
+.quiz-hero-visual__tag {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.45rem !important;
+  background: var(--8bit-yellow) !important;
+  color: var(--8bit-black) !important;
+  border: 2px solid var(--8bit-black) !important;
+}
+
+.quiz-bottom-nav {
+  background: var(--8bit-black) !important;
+  border: var(--pixel) solid var(--8bit-white) !important;
+  box-shadow: 0 calc(var(--pixel) * -1) 0 0 var(--8bit-blue) !important;
+  height: 56px;
+}
+
+.quiz-nav-item {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.4rem !important;
+  color: var(--8bit-muted) !important;
+}
+
+.quiz-nav-item--active {
+  color: var(--8bit-yellow) !important;
+  background: var(--8bit-surface-dark) !important;
+  box-shadow: inset 0 0 0 2px var(--8bit-blue) !important;
+}
+
+.quiz-nav-item svg {
+  image-rendering: pixelated;
+  color: currentColor;
+}
+
+.quiz-topbar__hello {
+  font-family: var(--font-retro) !important;
+  font-size: 1rem !important;
+}
+
+.quiz-topbar__name {
+  font-size: 0.55rem !important;
+  color: var(--8bit-yellow) !important;
+}
+
+.quiz-avatar {
+  border-radius: 0 !important;
+  background: var(--8bit-blue) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black) !important;
+}
+
+.quiz-segment--done {
+  background: var(--8bit-green) !important;
+}
+
+.quiz-segment--active {
+  background: var(--8bit-yellow) !important;
+}
+
+.quiz-option {
+  border-radius: 0 !important;
+  font-family: var(--font-retro) !important;
+  font-size: 1.1rem !important;
+}
+
+.quiz-option--selected {
+  background: var(--8bit-blue) !important;
+  color: var(--8bit-black) !important;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black) !important;
+}
+
+.quiz-footer-actions {
+  background: var(--8bit-black) !important;
+  border: var(--pixel) solid var(--8bit-white) !important;
+  border-radius: 0 !important;
+}
+
+.fusion-bg {
+  display: none !important;
+}
+
+.sound-fab {
+  border-radius: 0 !important;
+  background: var(--8bit-surface-dark) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  color: var(--8bit-yellow) !important;
+}
+
+.sound-fab.on {
+  background: var(--8bit-blue) !important;
+  color: var(--8bit-black) !important;
+}
+
+.boot-splash.quiz-boot {
+  background: var(--8bit-bg) !important;
+}
+
+.boot-splash.quiz-boot h1 {
+  -webkit-text-fill-color: var(--8bit-yellow) !important;
+  color: var(--8bit-yellow) !important;
+  font-size: 0.7rem !important;
+}
+
+.boot-splash__logo {
+  border-radius: 0 !important;
+  background: var(--8bit-surface-dark) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  image-rendering: pixelated;
+}
+
+.boot-splash__bar-fill {
+  background: var(--8bit-green) !important;
+  box-shadow: none !important;
+}
+
+.cursor-glow {
+  display: none !important;
+}
+
+.particle-canvas {
+  opacity: 0.35;
+}
+
+/* Fundo pixel */
+.pixel-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, #262b44 0%, var(--8bit-bg) 40%, #0f1020 100%);
+  overflow: hidden;
+}
+
+.pixel-bg__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(41, 173, 255, 0.08) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(41, 173, 255, 0.08) 2px, transparent 2px);
+  background-size: 16px 16px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 10%, transparent 75%);
+}
+
+.pixel-bg__stars {
+  position: absolute;
+  inset: 0;
+}
+
+.pixel-bg__star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--8bit-white);
+  box-shadow: 4px 0 0 var(--8bit-white);
+  animation: bit-star-twinkle 2s steps(2, end) infinite;
+}
+
+@keyframes bit-star-twinkle {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.2;
+  }
+}
+
+.pixel-bg__scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(0, 0, 0, 0.12) 4px
+  );
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bit-title {
+    animation: none;
+  }
+}

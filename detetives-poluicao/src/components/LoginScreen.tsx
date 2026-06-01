@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { FlaskConical } from 'lucide-react'
 import { SCHOOL } from '../data/config'
 import { ensureStudentAccountsSeeded } from '../lib/accounts'
 import type { Difficulty, StudentAccount } from '../types'
@@ -14,9 +13,9 @@ type Props = {
 }
 
 const DIFF_LABELS: Record<Difficulty, string> = {
-  facil: 'Fácil',
-  medio: 'Médio',
-  dificil: 'Difícil',
+  facil: 'EASY',
+  medio: 'NORMAL',
+  dificil: 'HARD',
 }
 
 export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Props) {
@@ -31,7 +30,7 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
     playClick()
     setErro('')
     if (!usuario.trim()) {
-      setErro('Informe seu usuário.')
+      setErro('DIGITE SEU USUARIO.')
       return
     }
     const login = usuario.trim().toLowerCase()
@@ -49,43 +48,39 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
   }
 
   return (
-    <div className="quiz-shell quiz-shell--no-nav">
-      <motion.div
-        className="quiz-login-hero"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        aria-hidden
-      >
-        <FlaskConical size={56} strokeWidth={1.5} />
-      </motion.div>
-      <h1 className="quiz-page-title">Detetives da Poluição</h1>
-      <p className="quiz-page-lead" style={{ marginBottom: '0.9rem' }}>
-        Acesso rápido sem senha.
-      </p>
+    <div className="quiz-shell quiz-shell--no-nav bit-menu-screen">
+      <div className="bit-menu-card bit-box bit-box--blue" style={{ width: '100%' }}>
+        <p className="bit-subtitle retro">Press Start</p>
+        <h1 className="bit-title retro">DETETIVES</h1>
+        <h1 className="bit-title retro" style={{ fontSize: '0.65rem', marginTop: '0.35rem' }}>
+          DA POLUICAO
+        </h1>
+        <p className="bit-tagline">Digite seu usuario para comecar.</p>
 
-      <div className="quiz-card">
-        <p className="quiz-page-lead" style={{ marginBottom: '1rem' }}>
-          Digite apenas seu usuário para iniciar.
-        </p>
-        <form onSubmit={submit} className="grid">
-          <label style={{ display: 'block', marginBottom: '0.85rem' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Usuário</span>
+        <form onSubmit={submit} className="grid" style={{ textAlign: 'left' }}>
+          <label style={{ display: 'block', marginBottom: '1rem' }}>
+            <span className="retro" style={{ fontSize: '0.45rem', display: 'block', marginBottom: '0.5rem' }}>
+              PLAYER NAME
+            </span>
             <input
-              className="quiz-input"
+              className="quiz-input retro"
+              style={{ fontSize: '1.25rem' }}
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               autoComplete="username"
               placeholder="maria.silva"
             />
           </label>
-          <p style={{ fontSize: '0.85rem', fontWeight: 600, margin: '0 0 0.4rem' }}>Nível</p>
-          <div className="quiz-tabs" style={{ marginBottom: '1rem' }}>
+
+          <p className="retro" style={{ fontSize: '0.45rem', margin: '0 0 0.5rem' }}>
+            DIFFICULTY
+          </p>
+          <div className="bit-menu-list" style={{ marginBottom: '1rem' }}>
             {(['facil', 'medio', 'dificil'] as const).map((d) => (
               <button
                 key={d}
                 type="button"
-                className={`quiz-tab${dificuldade === d ? ' quiz-tab--active' : ''}`}
+                className={`bit-menu-item retro${dificuldade === d ? ' bit-menu-item--active' : ''}`}
                 onClick={() => {
                   playClick()
                   setDificuldade(d)
@@ -95,21 +90,19 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
               </button>
             ))}
           </div>
-          {erro && <p className="erro quiz-erro">{erro}</p>}
-          <motion.button
-            type="submit"
-            className="quiz-btn-primary"
-            style={{ width: '100%' }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Iniciar missão
+
+          {erro && <p className="erro quiz-erro retro" style={{ fontSize: '0.5rem' }}>{erro}</p>}
+
+          <motion.button type="submit" className="quiz-btn-primary bit-btn bit-btn--green retro" style={{ width: '100%' }} whileTap={{ scale: 0.98 }}>
+            ▶ START
           </motion.button>
         </form>
       </div>
-      <button type="button" className="quiz-btn-ghost" style={{ marginTop: '0.25rem' }} onClick={onTeacherAccess}>
-        Acesso da professora
+
+      <button type="button" className="quiz-btn-ghost retro" onClick={onTeacherAccess}>
+        TEACHER LOGIN
       </button>
-      <p style={{ fontSize: '0.75rem', color: 'var(--quiz-text-muted)', marginTop: '0.5rem' }}>
+      <p className="bit-tagline" style={{ marginTop: '0.5rem', fontSize: '1rem' }}>
         {SCHOOL.nome}
       </p>
       <CreditsFooter />

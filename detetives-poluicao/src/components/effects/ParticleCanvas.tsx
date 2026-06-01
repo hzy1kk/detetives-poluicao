@@ -9,11 +9,7 @@ type Particle = {
   color: string
 }
 
-const COLORS = [
-  'rgba(0, 245, 212, 0.65)',
-  'rgba(123, 47, 247, 0.55)',
-  'rgba(76, 201, 240, 0.45)',
-]
+const COLORS = ['#ffec27', '#29adff', '#00e436', '#ffffff']
 
 type Props = {
   density?: number
@@ -51,7 +47,7 @@ export function ParticleCanvas({ density = 55, connect = true }: Props) {
         y: Math.random() * h,
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
-        r: Math.random() * 2 + 0.8,
+        r: 2,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
       }))
     }
@@ -65,12 +61,10 @@ export function ParticleCanvas({ density = 55, connect = true }: Props) {
         if (p.x > w) p.x = 0
         if (p.y < 0) p.y = h
         if (p.y > h) p.y = 0
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
         ctx.fillStyle = p.color
-        ctx.fill()
+        ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.r, p.r)
       }
-      if (connect) {
+      if (false && connect) {
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const a = particles[i]
