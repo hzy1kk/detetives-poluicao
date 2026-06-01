@@ -15,10 +15,10 @@ const items: {
   Icon: typeof Home
   label: string
 }[] = [
-  { id: 'menu', screen: 'menu', Icon: Home, label: 'Início' },
-  { id: 'ranking', screen: 'ranking', Icon: Trophy, label: 'Ranking' },
-  { id: 'tutorial', screen: 'tutorial', Icon: BookOpen, label: 'Aprender' },
-  { id: 'about', screen: 'about', Icon: Info, label: 'Sobre' },
+  { id: 'menu', screen: 'menu', Icon: Home, label: 'HOME' },
+  { id: 'ranking', screen: 'ranking', Icon: Trophy, label: 'SCORE' },
+  { id: 'tutorial', screen: 'tutorial', Icon: BookOpen, label: 'HELP' },
+  { id: 'about', screen: 'about', Icon: Info, label: 'INFO' },
 ]
 
 export function QuizBottomNav({ active, onNavigate }: Props) {
@@ -35,7 +35,7 @@ export function QuizBottomNav({ active, onNavigate }: Props) {
             onNavigate(screen)
           }}
         >
-          <Icon aria-hidden strokeWidth={2} />
+          <Icon aria-hidden strokeWidth={2.5} />
           <span>{label}</span>
         </button>
       ))}

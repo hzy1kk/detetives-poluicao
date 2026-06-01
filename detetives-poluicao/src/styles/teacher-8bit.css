@@ -1,0 +1,153 @@
+/* Painel professor — tema 8-bit alinhado ao aluno */
+
+html[data-theme='teacher'] {
+  font-family: var(--font-retro);
+}
+
+html[data-theme='teacher'] .btn-tech-primary,
+html[data-theme='teacher'] .saas-import .btn-inst-secondary {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  color: var(--8bit-white) !important;
+  background: var(--8bit-blue) !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+}
+
+html[data-theme='teacher'] .btn-tech-primary {
+  background: var(--8bit-green) !important;
+  color: var(--8bit-black) !important;
+}
+
+html[data-theme='teacher'] .btn-inst-secondary,
+html[data-theme='teacher'] .saas-topbar-actions button,
+html[data-theme='teacher'] .saas-toolbar button,
+html[data-theme='teacher'] .saas-accounts-actions button {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.45rem;
+  border-radius: 0 !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  box-shadow: 2px 2px 0 var(--8bit-black);
+  background: var(--8bit-surface-dark) !important;
+  color: var(--8bit-blue) !important;
+  cursor: pointer;
+}
+
+html[data-theme='teacher'] .saas-login,
+html[data-theme='teacher'] .saas-dashboard,
+html[data-theme='teacher'] .saas-kpi,
+html[data-theme='teacher'] .saas-table-wrap,
+html[data-theme='teacher'] .saas-accounts {
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+}
+
+html[data-theme='teacher'] .saas-login h2,
+html[data-theme='teacher'] .saas-topbar h2,
+html[data-theme='teacher'] .saas-accounts h3 {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.65rem;
+  color: var(--8bit-yellow) !important;
+  -webkit-text-fill-color: var(--8bit-yellow) !important;
+  background: none !important;
+}
+
+html[data-theme='teacher'] .saas-topbar {
+  background: var(--8bit-surface) !important;
+  border-bottom: var(--pixel) solid var(--8bit-black) !important;
+}
+
+html[data-theme='teacher'] .saas-dashboard {
+  border: var(--pixel) solid var(--8bit-black) !important;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black) !important;
+}
+
+html[data-theme='teacher'] .saas-kpi {
+  border: 2px solid var(--8bit-black) !important;
+  background: var(--8bit-bg-alt) !important;
+}
+
+html[data-theme='teacher'] .saas-kpi strong.green {
+  color: var(--8bit-green) !important;
+  text-shadow: none !important;
+}
+
+html[data-theme='teacher'] .saas-login input,
+html[data-theme='teacher'] .saas-toolbar input,
+html[data-theme='teacher'] .saas-import textarea,
+html[data-theme='teacher'] .saas-accounts-form input {
+  border-radius: 0 !important;
+  border: 2px solid var(--8bit-black) !important;
+  background: var(--8bit-black) !important;
+  color: var(--8bit-white) !important;
+  font-family: var(--font-retro) !important;
+  font-size: 1.1rem;
+}
+
+html[data-theme='teacher'] .saas-login label,
+html[data-theme='teacher'] .saas-accounts-form label {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.42rem;
+  color: var(--8bit-muted) !important;
+}
+
+html[data-theme='teacher'] .saas-table th,
+html[data-theme='teacher'] .saas-table td {
+  font-family: var(--font-retro);
+  border-color: var(--8bit-black) !important;
+}
+
+html[data-theme='teacher'] .saas-table th {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.4rem;
+  background: var(--8bit-surface) !important;
+  color: var(--8bit-black) !important;
+}
+
+html[data-theme='teacher'] .qr-panel--saas {
+  border-radius: 0 !important;
+  border: var(--pixel) solid var(--8bit-black) !important;
+  background: var(--8bit-bg-alt) !important;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+}
+
+html[data-theme='teacher'] .qr-panel--saas .qr-panel__title {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.5rem !important;
+  color: var(--8bit-yellow) !important;
+}
+
+html[data-theme='teacher'] .qr-panel__img {
+  border: 2px solid var(--8bit-black);
+  image-rendering: pixelated;
+}
+
+html[data-theme='teacher'] .btn-link,
+html[data-theme='teacher'] .saas-login .lead,
+html[data-theme='teacher'] .saas-topbar p {
+  font-family: var(--font-retro) !important;
+  color: var(--8bit-muted) !important;
+}
+
+html[data-theme='teacher'] .btn-link {
+  font-size: 1rem !important;
+  color: var(--8bit-blue) !important;
+  text-decoration: underline;
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+}
+
+html[data-theme='teacher'] .saas-btn-export {
+  background: var(--8bit-yellow) !important;
+  color: var(--8bit-black) !important;
+}
+
+html[data-theme='teacher'] .erro {
+  font-family: var(--font-retro);
+  color: var(--8bit-red) !important;
+}
