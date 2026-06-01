@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Trophy } from 'lucide-react'
 import { SCHOOL } from '../data/config'
 import { buildRanking, getPlayerRank } from '../lib/ranking'
 import type { Screen, StudentProfile } from '../types'
@@ -25,26 +24,24 @@ export function RankingScreen({ profile, onNavigate }: Props) {
     return rows
   }, [rows, tab, profile.nome])
 
+  const tabs: { id: Tab; label: string }[] = [
+    { id: 'all', label: 'ALL' },
+    { id: 'top', label: 'TOP 10' },
+    { id: 'me', label: 'ME' },
+  ]
+
   return (
     <QuizLayout profile={profile} activeNav="ranking" onNavigate={onNavigate}>
-      <h2 className="quiz-page-title quiz-page-title--row">
-        <Trophy aria-hidden size={28} strokeWidth={2} className="quiz-title-icon" />
-        Ranking
-      </h2>
-      <p className="quiz-page-lead">Melhores notas neste aparelho · turma {profile.turma}</p>
+      <h2 className="quiz-page-title retro">HIGH SCORES</h2>
+      <p className="quiz-page-lead">Turma {profile.turma} · neste aparelho</p>
 
-      <div className="quiz-tabs">
-        {(
-          [
-            ['all', 'Geral'],
-            ['top', 'Top 10'],
-            ['me', 'Eu'],
-          ] as const
-        ).map(([id, label]) => (
+      <div className="bit-tab-row">
+        {tabs.map(({ id, label }) => (
           <button
             key={id}
             type="button"
-            className={`quiz-tab${tab === id ? ' quiz-tab--active' : ''}`}
+            className={`bit-menu-item retro${tab === id ? ' bit-menu-item--active' : ''}`}
+            style={{ flex: 1, textAlign: 'center', padding: '0.5rem 0.25rem' }}
             onClick={() => setTab(id)}
           >
             {label}
@@ -53,24 +50,23 @@ export function RankingScreen({ profile, onNavigate }: Props) {
       </div>
 
       {rows.length === 0 ? (
-        <div className="quiz-card">
-          <p style={{ margin: 0, color: 'var(--quiz-text-muted)' }}>
-            Nenhuma partida valendo nota ainda. Seja o primeiro!
+        <div className="quiz-card bit-box">
+          <p className="bit-tagline" style={{ margin: 0 }}>
+            Nenhuma partida com nota ainda. Seja o primeiro!
           </p>
         </div>
       ) : (
         <>
           {tab === 'all' && podium.length > 0 && (
-            <div className="quiz-podium">
+            <div className="bit-podium">
               {[podium[1], podium[0], podium[2]].filter(Boolean).map((r, i) => {
                 const place = i === 0 ? 2 : i === 1 ? 1 : 3
-                const medals = ['🥈', '🥇', '🥉']
+                const medals = ['2ND', '1ST', '3RD']
                 return (
-                  <div key={r!.aluno} className={`quiz-podium__place quiz-podium__place--${place}`}>
-                    <div className="quiz-podium__avatar">{medals[i]}</div>
-                    <span className="quiz-podium__name">{r!.aluno.split(' ')[0]}</span>
-                    <span className="quiz-podium__score">{r!.notaTotal} pts</span>
-                    <div className="quiz-podium__block" />
+                  <div key={r!.aluno} className={`bit-podium__slot bit-podium__slot--${place}`}>
+                    <span className="retro bit-podium__medal">{medals[i]}</span>
+                    <span className="bit-podium__name">{r!.aluno.split(' ')[0]}</span>
+                    <strong className="retro bit-podium__score">{r!.notaTotal}</strong>
                   </div>
                 )
               })}
@@ -78,13 +74,15 @@ export function RankingScreen({ profile, onNavigate }: Props) {
           )}
 
           {mine && (
-            <div className="quiz-card quiz-card--highlight">
-              <strong>Sua posição: #{mine.posicao}</strong>
-              <span className="quiz-highlight-score">{mine.notaTotal}/100</span>
+            <div className="quiz-card quiz-card--highlight bit-box">
+              <strong className="retro" style={{ fontSize: '0.5rem' }}>
+                RANK #{mine.posicao}
+              </strong>
+              <span className="quiz-highlight-score retro">{mine.notaTotal}/100</span>
             </div>
           )}
 
-          <div className="quiz-card">
+          <div className="quiz-card bit-box">
             {list.map((r) => (
               <motion.div
                 key={r.aluno + r.posicao}
@@ -92,24 +90,26 @@ export function RankingScreen({ profile, onNavigate }: Props) {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
               >
-                <span
-                  className={`quiz-list-rank${r.posicao <= 3 ? ' quiz-list-rank--top' : ''}`}
-                >
-                  {r.posicao}
+                <span className={`quiz-list-rank retro${r.posicao <= 3 ? ' quiz-list-rank--top' : ''}`}>
+                  {String(r.posicao).padStart(2, '0')}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <strong style={{ display: 'block' }}>{r.aluno}</strong>
+                  <strong style={{ display: 'block', fontFamily: 'var(--font-retro)', fontSize: '1.1rem' }}>
+                    {r.aluno}
+                  </strong>
                   <small style={{ color: 'var(--quiz-text-muted)' }}>{r.casoNome}</small>
                 </div>
-                <strong style={{ color: 'var(--quiz-green)' }}>{r.notaTotal}</strong>
+                <strong className="retro" style={{ color: 'var(--8bit-green)', fontSize: '0.55rem' }}>
+                  {r.notaTotal}
+                </strong>
               </motion.div>
             ))}
           </div>
         </>
       )}
 
-      <p style={{ fontSize: '0.75rem', color: 'var(--quiz-text-muted)', textAlign: 'center' }}>
-        {SCHOOL.professora} · 50% poluente + 50% descarte
+      <p className="bit-tagline" style={{ textAlign: 'center', fontSize: '1rem' }}>
+        {SCHOOL.professora} · 50+50
       </p>
     </QuizLayout>
   )

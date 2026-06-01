@@ -9,55 +9,61 @@ type Props = {
   onNavigate: (screen: Screen) => void
 }
 
-export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
-  const steps = [
-    'Na tela inicial, digite seu usuário (sem senha).',
-    'Jogue um caso sorteado (~15 min).',
-    'Colete pistas — algumas têm pergunta de Química.',
-    'Use o laboratório (testes limitados).',
-    'Acerte poluente e descarte (50% + 50%).',
-    'Veja sua nota e o ranking da turma.',
-  ]
+const STEPS = [
+  'Tela inicial: digite seu usuario (sem senha).',
+  'Um caso novo a cada partida (~15 min).',
+  'Colete pistas — algumas tem quiz de Quimica.',
+  'Laboratorio: testes limitados.',
+  'Acerte poluente + descarte (50% + 50%).',
+  'Veja nota e ranking da turma.',
+]
 
+const CREW = [
+  { nome: 'LUCAS', papel: 'INVESTIGACAO', color: 'var(--8bit-blue)' },
+  { nome: 'ANA', papel: 'QUIMICA', color: 'var(--8bit-green)' },
+  { nome: 'ANDRE', papel: 'LAB', color: 'var(--8bit-yellow)' },
+  { nome: 'GABRIEL', papel: 'AMBIENTE', color: 'var(--8bit-red)' },
+]
+
+export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
   return (
     <QuizLayout profile={profile} activeNav="tutorial" onNavigate={onNavigate}>
-      <h2 className="quiz-page-title">Como jogar</h2>
-      <p className="quiz-page-lead">Tudo em 4 passos simples dentro de cada caso.</p>
+      <h2 className="quiz-page-title retro">HOW TO PLAY</h2>
+      <p className="quiz-page-lead">4 fases por caso: caso → pistas → lab → veredito.</p>
 
-      <div className="quiz-card">
-        <ol style={{ margin: 0, paddingLeft: '1.15rem', lineHeight: 1.7 }}>
-          {steps.map((s, i) => (
+      <div className="quiz-card bit-box">
+        <ol className="bit-step-list">
+          {STEPS.map((s, i) => (
             <motion.li
               key={s}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06, duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              style={{ marginBottom: '0.5rem', color: 'var(--quiz-text)' }}
+              className="bit-step-list__item"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.15 }}
             >
+              <span className="bit-step-list__num retro">{String(i + 1).padStart(2, '0')}</span>
               {s}
             </motion.li>
           ))}
         </ol>
       </div>
 
-      <div className="quiz-grid-2">
-        {[
-          ['🕵️', 'Lucas', 'Investigação'],
-          ['👩‍🔬', 'Ana', 'Química'],
-          ['🧪', 'André', 'Laboratório'],
-          ['🌿', 'Gabriel', 'Ambiente'],
-        ].map(([emoji, nome, papel]) => (
-          <div key={nome} className="quiz-tile quiz-tile--accent" style={{ cursor: 'default' }}>
-            <span className="quiz-tile__icon">{emoji}</span>
-            <strong>{nome}</strong>
-            <small>{papel}</small>
+      <div className="bit-crew-grid">
+        {CREW.map((c) => (
+          <div key={c.nome} className="bit-crew-card bit-box" style={{ borderColor: c.color }}>
+            <strong className="retro" style={{ color: c.color, fontSize: '0.5rem' }}>
+              {c.nome}
+            </strong>
+            <small className="retro" style={{ fontSize: '0.4rem' }}>
+              {c.papel}
+            </small>
           </div>
         ))}
       </div>
 
       <motion.button
         type="button"
-        className="quiz-btn-primary"
+        className="quiz-btn-primary bit-btn bit-btn--green retro"
         style={{ width: '100%' }}
         whileTap={{ scale: 0.97 }}
         onClick={() => {
@@ -65,7 +71,7 @@ export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
           onDone()
         }}
       >
-        Entendi, vamos lá!
+        ▶ CONTINUE
       </motion.button>
     </QuizLayout>
   )

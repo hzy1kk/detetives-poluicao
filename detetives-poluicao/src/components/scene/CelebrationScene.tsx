@@ -17,33 +17,33 @@ const TIER_CONFIG: Record<
   }
 > = {
   excelente: {
-    title: 'PARABÉNS, DETETIVE!',
-    subtitle: 'Acertou poluente e descarte · Nota máxima',
-    colors: ['#00f5d4', '#7b2ff7', '#4cc9f0'],
+    title: 'PERFECT SCORE!',
+    subtitle: 'Polluter + disposal correct',
+    colors: ['#ffec27', '#00e436', '#29adff'],
     distort: 0.35,
     speed: 3,
     starCount: 800,
   },
   bom: {
-    title: 'Missão cumprida!',
-    subtitle: 'Caso resolvido — ótimo trabalho de Química',
-    colors: ['#00f5d4', '#4cc9f0', '#7b2ff7'],
+    title: 'STAGE CLEAR!',
+    subtitle: 'Case solved — great chemistry',
+    colors: ['#29adff', '#00e436', '#ffec27'],
     distort: 0.42,
     speed: 2.5,
     starCount: 500,
   },
   parcial: {
-    title: 'Quase lá!',
-    subtitle: '50% na nota — revise o item que faltou',
-    colors: ['#4cc9f0', '#00f5d4', '#fee440'],
+    title: 'HALF CLEAR',
+    subtitle: '50 pts — review what you missed',
+    colors: ['#29adff', '#ffec27', '#00e436'],
     distort: 0.5,
     speed: 2,
     starCount: 350,
   },
   reforco: {
-    title: 'Continue investigando',
-    subtitle: 'Revise pistas e laboratório — você consegue na próxima',
-    colors: ['#7b2ff7', '#4cc9f0', '#00f5d4'],
+    title: 'TRY AGAIN',
+    subtitle: 'Check clues and lab — next case!',
+    colors: ['#ff0044', '#29adff', '#ffec27'],
     distort: 0.55,
     speed: 1.8,
     starCount: 250,
@@ -134,17 +134,16 @@ export function CelebrationScene({ tier, notaTotal, onContinue }: Props) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
-        <p className="celebration-tier-badge">Nota {notaTotal}/100</p>
-        <h2 className={`celebration-title celebration-title--${tier}`}>{cfg.title}</h2>
+        <p className="celebration-tier-badge retro">SCORE {notaTotal}/100</p>
+        <h2 className={`celebration-title celebration-title--${tier} retro`}>{cfg.title}</h2>
         <p className="celebration-subtitle">{cfg.subtitle}</p>
         <motion.button
           type="button"
-          className="btn-tech-primary"
+          className="quiz-btn-primary bit-btn retro"
           onClick={onContinue}
-          whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          Ver resultado completo
+          VIEW RESULT
         </motion.button>
       </motion.div>
     </motion.div>

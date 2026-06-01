@@ -25,10 +25,10 @@ type Props = {
 type GameStep = 'caso' | 'pistas' | 'lab' | 'veredito'
 
 const STEPS: { id: GameStep; title: string }[] = [
-  { id: 'caso', title: 'Caso' },
-  { id: 'pistas', title: 'Pistas' },
-  { id: 'lab', title: 'Laboratório' },
-  { id: 'veredito', title: 'Resposta' },
+  { id: 'caso', title: 'CASE' },
+  { id: 'pistas', title: 'CLUES' },
+  { id: 'lab', title: 'LAB' },
+  { id: 'veredito', title: 'VERDICT' },
 ]
 
 const STEP_NUM: Record<GameStep, number> = { caso: 1, pistas: 2, lab: 3, veredito: 4 }
@@ -215,7 +215,7 @@ export function GameScreen({
       {step === 'caso' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow">Análise do caso</p>
+            <p className="quiz-question-eyebrow retro">STAGE 01 · CASE FILE</p>
             <h3>{gameCase.nome}</h3>
             <p>{gameCase.intro}</p>
             <p style={{ marginTop: '0.65rem' }}>{gameCase.contexto}</p>
@@ -240,8 +240,8 @@ export function GameScreen({
       {step === 'pistas' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow">Etapa de evidências</p>
-            <h3>Leia as evidências</h3>
+            <p className="quiz-question-eyebrow retro">STAGE 02 · CLUES</p>
+            <h3>Collect evidence</h3>
             <p>Colete todas as pistas antes de ir ao laboratório.</p>
           </div>
           {pistas.length === 0 ? (
@@ -290,8 +290,8 @@ export function GameScreen({
       {step === 'lab' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow">Etapa técnica</p>
-            <h3>Laboratório do André</h3>
+            <p className="quiz-question-eyebrow retro">STAGE 03 · LAB</p>
+            <h3>Andre lab tests</h3>
             <p>
               Você tem <strong>{session.labCharges}</strong> carga(s). Cada teste novo gasta 1.
             </p>
@@ -317,8 +317,8 @@ export function GameScreen({
       {step === 'veredito' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow">Decisão final</p>
-            <h3>Qual a conclusão?</h3>
+            <p className="quiz-question-eyebrow retro">STAGE 04 · VERDICT</p>
+            <h3>Final answer</h3>
             <p>Poluente e descarte valem 50% da nota cada.</p>
           </div>
           <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Fonte de poluição</p>
@@ -376,10 +376,10 @@ export function GameScreen({
           }}
         >
           {step === 'veredito'
-            ? 'Enviar resposta'
+            ? 'SUBMIT'
             : step === 'pistas' && session.cluesRevealed < totalPistas
-              ? `Coletar pista (${visibleIds.length}/${totalPistas})`
-              : 'Continuar'}
+              ? `CLUE ${visibleIds.length}/${totalPistas}`
+              : 'NEXT >>'}
         </button>
       </div>
     </div>

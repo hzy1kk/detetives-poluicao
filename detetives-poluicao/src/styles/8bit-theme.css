@@ -436,6 +436,205 @@ html[data-theme='quiz'] body {
   opacity: 0.5;
 }
 
+/* Tutorial */
+.bit-step-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bit-step-list__item {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  margin-bottom: 0.65rem;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.bit-step-list__num {
+  flex-shrink: 0;
+  font-size: 0.45rem;
+  color: var(--8bit-yellow);
+  min-width: 1.5rem;
+}
+
+.bit-crew-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.bit-crew-card {
+  padding: 0.65rem;
+  text-align: center;
+}
+
+.bit-crew-card strong {
+  display: block;
+}
+
+.bit-crew-card small {
+  color: var(--8bit-muted);
+}
+
+/* Ranking */
+.bit-tab-row {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.bit-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 120px;
+}
+
+.bit-podium__slot {
+  flex: 1;
+  max-width: 100px;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  background: var(--8bit-bg-alt);
+  border: var(--pixel) solid var(--8bit-black);
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+}
+
+.bit-podium__slot--1 {
+  min-height: 100px;
+  background: var(--8bit-yellow);
+  color: var(--8bit-black);
+}
+
+.bit-podium__slot--2 {
+  min-height: 72px;
+  background: var(--8bit-blue);
+  color: var(--8bit-black);
+}
+
+.bit-podium__slot--3 {
+  min-height: 52px;
+  background: var(--8bit-green);
+  color: var(--8bit-black);
+}
+
+.bit-podium__medal {
+  display: block;
+  font-size: 0.45rem;
+  margin-bottom: 0.25rem;
+}
+
+.bit-podium__name {
+  font-family: var(--font-retro);
+  font-size: 1rem;
+  display: block;
+}
+
+.bit-podium__score {
+  font-size: 0.5rem;
+}
+
+/* Result */
+.bit-result-badge {
+  margin: 0 0 0.5rem;
+  font-size: 0.45rem;
+  color: var(--8bit-green);
+}
+
+.bit-stars {
+  margin: 0;
+  font-size: 0.65rem;
+  color: var(--8bit-yellow);
+  letter-spacing: 0.15em;
+}
+
+.quiz-score-grid .bit-stat {
+  padding: 0.65rem 0.35rem;
+}
+
+.quiz-score-box--total.bit-stat {
+  background: var(--8bit-yellow) !important;
+  color: var(--8bit-black) !important;
+  border-color: var(--8bit-black) !important;
+}
+
+.quiz-score-box--total.bit-stat strong {
+  color: var(--8bit-black) !important;
+}
+
+.quiz-score-box--fail.bit-stat strong {
+  color: var(--8bit-red) !important;
+}
+
+/* Game HUD */
+.quiz-question-eyebrow {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.45rem !important;
+  color: var(--8bit-yellow) !important;
+}
+
+.quiz-game-hud .quiz-stat-box {
+  font-family: var(--font-pixel) !important;
+}
+
+.quiz-game-hud .quiz-stat-box span {
+  font-size: 0.38rem;
+}
+
+.quiz-game-hud .quiz-stat-box strong {
+  font-size: 0.5rem;
+  color: var(--8bit-green);
+}
+
+.quiz-timer-pill {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.45rem !important;
+  border-radius: 0 !important;
+  background: var(--8bit-black) !important;
+  color: var(--8bit-yellow) !important;
+  border: 2px solid var(--8bit-yellow) !important;
+}
+
+/* Celebration overlay */
+.celebration-overlay {
+  background: rgba(26, 28, 46, 0.92) !important;
+}
+
+.celebration-tier-badge {
+  font-size: 0.5rem !important;
+  color: var(--8bit-green) !important;
+}
+
+.celebration-title {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.7rem !important;
+  text-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+}
+
+.celebration-subtitle {
+  font-family: var(--font-retro) !important;
+  font-size: 1.2rem !important;
+}
+
+.celebration-text .quiz-btn-primary {
+  margin-top: 1rem;
+}
+
+.quiz-tabs {
+  border-radius: 0 !important;
+}
+
+.quiz-tab {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.4rem !important;
+  border-radius: 0 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bit-title {
     animation: none;

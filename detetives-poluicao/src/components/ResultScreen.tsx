@@ -7,7 +7,7 @@ import { downloadJson } from '../lib/storage'
 import { GOOGLE_FORMS_URL } from '../data/config'
 import { CelebrationScene } from './scene/CelebrationScene'
 
-const CONFETTI_COLORS = ['#00f5d4', '#7b2ff7', '#f72585', '#4cc9f0', '#fee440']
+const CONFETTI_COLORS = ['#ffec27', '#29adff', '#00e436', '#ff0044', '#ffffff']
 
 type Props = {
   report: Report
@@ -65,28 +65,30 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
           </div>
         )}
 
-        <div className="quiz-result-hero">
-          <div className="quiz-result-hero__emoji">
-            {report.correto ? '🎉' : '📋'}
-          </div>
-          <h2 className="quiz-page-title" style={{ marginBottom: '0.25rem' }}>
-            {report.correto ? 'Caso resolvido!' : 'Investigação encerrada'}
+        <div className="quiz-result-hero bit-box" style={{ padding: '1rem', marginBottom: '1rem' }}>
+          <p className="retro bit-result-badge">
+            {report.correto ? 'STAGE CLEAR' : 'GAME OVER'}
+          </p>
+          <h2 className="quiz-page-title retro" style={{ marginBottom: '0.5rem' }}>
+            {report.correto ? 'CASE SOLVED' : 'TRY AGAIN'}
           </h2>
-          <p style={{ margin: 0, fontSize: '1.25rem', letterSpacing: 2 }}>{stars}</p>
+          <p className="retro bit-stars" aria-label={`${report.estrelas} estrelas`}>
+            {stars}
+          </p>
         </div>
 
         <div className="quiz-score-grid">
-          <div className={`quiz-score-box${report.poluenteCorreto ? '' : ' quiz-score-box--fail'}`}>
-            <span>Poluente</span>
-            <strong>{report.notaPoluente}/50</strong>
+          <div className={`quiz-score-box bit-stat${report.poluenteCorreto ? '' : ' quiz-score-box--fail'}`}>
+            <span className="retro">POLLUTER</span>
+            <strong>{report.notaPoluente}</strong>
           </div>
-          <div className={`quiz-score-box${report.descarteCorreto ? '' : ' quiz-score-box--fail'}`}>
-            <span>Descarte</span>
-            <strong>{report.notaDescarte}/50</strong>
+          <div className={`quiz-score-box bit-stat${report.descarteCorreto ? '' : ' quiz-score-box--fail'}`}>
+            <span className="retro">DISPOSE</span>
+            <strong>{report.notaDescarte}</strong>
           </div>
-          <div className="quiz-score-box quiz-score-box--total">
-            <span>Total</span>
-            <strong>{report.notaTotal}/100</strong>
+          <div className="quiz-score-box quiz-score-box--total bit-stat">
+            <span className="retro">SCORE</span>
+            <strong>{report.notaTotal}</strong>
           </div>
         </div>
 
@@ -147,7 +149,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
 
         <motion.button
           type="button"
-          className="quiz-btn-primary"
+          className="quiz-btn-primary bit-btn bit-btn--green retro"
           style={{ width: '100%', marginBottom: '0.5rem' }}
           whileTap={{ scale: 0.97 }}
           onClick={() => {
@@ -155,10 +157,18 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
             onPlayAgain()
           }}
         >
-          Novo caso
+          ▶ NEW CASE
         </motion.button>
-        <button type="button" className="quiz-btn-secondary" style={{ width: '100%' }} onClick={() => { playClick(); onMenu() }}>
-          Voltar ao início
+        <button
+          type="button"
+          className="quiz-btn-secondary retro"
+          style={{ width: '100%' }}
+          onClick={() => {
+            playClick()
+            onMenu()
+          }}
+        >
+          MAIN MENU
         </button>
       </div>
     </>

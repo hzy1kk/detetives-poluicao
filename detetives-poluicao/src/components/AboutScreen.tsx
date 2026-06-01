@@ -11,21 +11,26 @@ type Props = {
 export function AboutScreen({ profile, onNavigate }: Props) {
   return (
     <QuizLayout profile={profile} activeNav="about" onNavigate={onNavigate}>
-      <h2 className="quiz-page-title">Sobre</h2>
+      <h2 className="quiz-page-title retro">ABOUT</h2>
       <p className="quiz-page-lead">
         {SCHOOL.nome} · {SCHOOL.professora}
       </p>
 
-      <div className="quiz-card">
-        <p style={{ margin: 0, lineHeight: 1.55 }}>
-          <strong>Detetives da Poluição</strong> é um jogo de Química ambiental para o {SCHOOL.serie}.
-          Investigue contaminações reais e aprenda descarte correto.
+      <div className="quiz-card bit-box">
+        <p style={{ margin: 0, lineHeight: 1.5, fontSize: '1.15rem' }}>
+          <strong className="retro" style={{ fontSize: '0.5rem', color: 'var(--8bit-yellow)' }}>
+            DETETIVES DA POLUICAO
+          </strong>
+          <br />
+          Jogo de Quimica ambiental — {SCHOOL.serie}. Investigue contaminacoes reais.
         </p>
       </div>
 
-      <div className="quiz-card">
-        <h3 style={{ margin: '0 0 0.5rem', fontSize: '0.95rem' }}>Equipe</h3>
-        <ul style={{ margin: 0, paddingLeft: '1rem', lineHeight: 1.6 }}>
+      <div className="quiz-card bit-box">
+        <h3 className="retro" style={{ margin: '0 0 0.5rem', fontSize: '0.5rem', color: 'var(--8bit-blue)' }}>
+          TEAM
+        </h3>
+        <ul style={{ margin: 0, paddingLeft: '1rem', lineHeight: 1.6, fontSize: '1.1rem' }}>
           {AUTHORS.map((a) => (
             <li key={a.nome}>
               <strong>{a.nome}</strong> — {a.papel}
@@ -34,9 +39,11 @@ export function AboutScreen({ profile, onNavigate }: Props) {
         </ul>
       </div>
 
-      <div className="quiz-card">
-        <h3 style={{ margin: '0 0 0.5rem', fontSize: '0.95rem' }}>Casos ({CASES.length})</h3>
-        <ul style={{ margin: 0, paddingLeft: '1rem', lineHeight: 1.6 }}>
+      <div className="quiz-card bit-box">
+        <h3 className="retro" style={{ margin: '0 0 0.5rem', fontSize: '0.5rem', color: 'var(--8bit-blue)' }}>
+          CASES ({CASES.length})
+        </h3>
+        <ul style={{ margin: 0, paddingLeft: '1rem', lineHeight: 1.6, fontSize: '1.05rem' }}>
           {CASES.map((c) => (
             <li key={c.id}>
               {c.emoji} {c.nome}
@@ -45,8 +52,8 @@ export function AboutScreen({ profile, onNavigate }: Props) {
         </ul>
       </div>
 
-      <p style={{ fontSize: '0.75rem', color: 'var(--quiz-text-muted)', textAlign: 'center' }}>
-        PWA · {new Date().getFullYear()} · BNCC Ensino Médio
+      <p className="bit-tagline" style={{ textAlign: 'center', fontSize: '1rem' }}>
+        PWA · {new Date().getFullYear()} · BNCC EM
       </p>
     </QuizLayout>
   )
