@@ -10,9 +10,9 @@ export function QrAccessPanel({ compact }: Props) {
     <div className={`qr-panel qr-panel--saas ${compact ? 'qr-panel--compact' : ''}`}>
       <img src="/qr-jogo.png" alt="QR Code para abrir o jogo" className="qr-panel__img" width={160} height={160} />
       <div>
-        <p className="qr-panel__title">SCAN QR CODE</p>
+        <p className="qr-panel__title">ESCANEIE O QR</p>
         <p className="qr-panel__url">{GAME_URL}</p>
-        <p className="qr-panel__hint">Each player uses their own login only.</p>
+        <p className="qr-panel__hint">Cada aluno usa apenas seu login e senha.</p>
       </div>
     </div>
   )

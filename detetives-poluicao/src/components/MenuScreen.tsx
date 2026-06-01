@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
 import type { Screen, StudentProfile } from '../types'
 import { playClick } from '../lib/audio'
+import { getCaseBadges, getCaseProgressLabel } from '../lib/caseProgress'
 import { loadReports, normalizeReport } from '../lib/storage'
 import { QuizLayout } from './quiz/QuizLayout'
 import { CreditsFooter } from './CreditsFooter'
+import { PwaInstallBanner } from './PwaInstallBanner'
 
 type Props = {
   profile: StudentProfile
@@ -46,14 +48,17 @@ export function MenuScreen({
     return { partidas: mine.length, ultima: last?.notaTotal ?? null, media }
   }, [profile.nome])
 
+  const caseProgress = getCaseProgressLabel(profile.nome)
+  const badges = getCaseBadges(profile.nome)
+
   const menuItems: MenuEntry[] = [
-    { id: 'start', label: 'START GAME', action: () => onPlay(false) },
-    { id: 'train', label: 'TRAINING MODE', action: () => onPlay(true) },
-    { id: 'rank', label: 'HIGH SCORES', action: () => onNavigate('ranking') },
-    { id: 'hist', label: 'HISTORY', action: onHistory },
-    { id: 'learn', label: 'HOW TO PLAY', action: () => onNavigate('tutorial') },
+    { id: 'start', label: 'NOVA INVESTIGACAO', action: () => onPlay(false) },
+    { id: 'train', label: 'MODO TREINO', action: () => onPlay(true) },
+    { id: 'rank', label: 'RANKING', action: () => onNavigate('ranking') },
+    { id: 'hist', label: 'HISTORICO', action: onHistory },
+    { id: 'learn', label: 'COMO JOGAR', action: () => onNavigate('tutorial') },
     { id: 'docs', label: 'DOCUMENTS', action: () => window.open('/docs/index.html', '_blank') },
-    { id: 'teacher', label: 'TEACHER', action: onTeacher },
+    { id: 'teacher', label: 'PROFESSORA', action: onTeacher },
   ]
 
   function runItem(index: number) {
@@ -71,8 +76,20 @@ export function MenuScreen({
             DA POLUICAO
           </h1>
           <p className="bit-tagline">
-            Ola, {profile.nome.split(' ')[0]}! Escolha uma opcao:
+            Ola, {profile.nome.split(' ')[0]}! Casos resolvidos: {caseProgress}
           </p>
+
+          <div className="case-badges-row">
+            {badges.map((b) => (
+              <span
+                key={b.id}
+                className={`case-badge${b.done ? ' case-badge--done' : ''}`}
+                title={b.nome}
+              >
+                {b.emoji}
+              </span>
+            ))}
+          </div>
 
           <ul className="bit-menu-list" role="menu">
             {menuItems.map((item, i) => (
@@ -136,9 +153,10 @@ export function MenuScreen({
           </div>
         </div>
 
+        <PwaInstallBanner />
         <CreditsFooter />
         <button type="button" className="quiz-btn-ghost retro" style={{ width: '100%' }} onClick={onLogout}>
-          LOGOUT
+          SAIR
         </button>
       </div>
     </QuizLayout>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { SCHOOL } from '../data/config'
-import { ensureStudentAccountsSeeded } from '../lib/accounts'
+import { authenticateStudent, ensureStudentAccountsSeeded } from '../lib/accounts'
 import type { Difficulty, StudentAccount } from '../types'
 import { playClick } from '../lib/audio'
 import { CreditsFooter } from './CreditsFooter'
@@ -13,19 +13,21 @@ type Props = {
 }
 
 const DIFF_LABELS: Record<Difficulty, string> = {
-  facil: 'EASY',
+  facil: 'FACIL',
   medio: 'NORMAL',
-  dificil: 'HARD',
+  dificil: 'DIFICIL',
 }
 
 export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Props) {
   const [usuario, setUsuario] = useState('')
+  const [senha, setSenha] = useState('')
   const [dificuldade, setDificuldade] = useState<Difficulty>(defaultDifficulty)
   const [erro, setErro] = useState('')
+  const [loading, setLoading] = useState(false)
 
   ensureStudentAccountsSeeded()
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
     playClick()
     setErro('')
@@ -33,16 +35,16 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
       setErro('DIGITE SEU USUARIO.')
       return
     }
-    const login = usuario.trim().toLowerCase()
-    const nome = usuario.trim()
-    const account: StudentAccount = {
-      id: login,
-      login,
-      nome,
-      turma: 'AALG',
-      passwordHash: '',
-      ativo: true,
-      criadoEm: new Date().toISOString(),
+    if (!senha.trim()) {
+      setErro('DIGITE SUA SENHA.')
+      return
+    }
+    setLoading(true)
+    const account = await authenticateStudent(usuario, senha)
+    setLoading(false)
+    if (!account) {
+      setErro('USUARIO OU SENHA INVALIDOS.')
+      return
     }
     onLogin(account, dificuldade)
   }
@@ -55,12 +57,12 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
         <h1 className="bit-title retro" style={{ fontSize: '0.65rem', marginTop: '0.35rem' }}>
           DA POLUICAO
         </h1>
-        <p className="bit-tagline">Digite seu usuario para comecar.</p>
+        <p className="bit-tagline">Login da turma {SCHOOL.turma} (demo: aluno.demo1 / demo01)</p>
 
         <form onSubmit={submit} className="grid" style={{ textAlign: 'left' }}>
           <label style={{ display: 'block', marginBottom: '1rem' }}>
             <span className="retro" style={{ fontSize: '0.45rem', display: 'block', marginBottom: '0.5rem' }}>
-              PLAYER NAME
+              USUARIO
             </span>
             <input
               className="quiz-input retro"
@@ -72,8 +74,23 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
             />
           </label>
 
+          <label style={{ display: 'block', marginBottom: '1rem' }}>
+            <span className="retro" style={{ fontSize: '0.45rem', display: 'block', marginBottom: '0.5rem' }}>
+              SENHA
+            </span>
+            <input
+              className="quiz-input retro"
+              style={{ fontSize: '1.25rem' }}
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              autoComplete="current-password"
+              placeholder="••••••"
+            />
+          </label>
+
           <p className="retro" style={{ fontSize: '0.45rem', margin: '0 0 0.5rem' }}>
-            DIFFICULTY
+            DIFICULDADE
           </p>
           <div className="bit-menu-list" style={{ marginBottom: '1rem' }}>
             {(['facil', 'medio', 'dificil'] as const).map((d) => (
@@ -93,14 +110,20 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
 
           {erro && <p className="erro quiz-erro retro" style={{ fontSize: '0.5rem' }}>{erro}</p>}
 
-          <motion.button type="submit" className="quiz-btn-primary bit-btn bit-btn--green retro" style={{ width: '100%' }} whileTap={{ scale: 0.98 }}>
-            ▶ START
+          <motion.button
+            type="submit"
+            className="quiz-btn-primary bit-btn bit-btn--green retro"
+            style={{ width: '100%' }}
+            whileTap={{ scale: 0.98 }}
+            disabled={loading}
+          >
+            ▶ {loading ? '...' : 'ENTRAR'}
           </motion.button>
         </form>
       </div>
 
       <button type="button" className="quiz-btn-ghost retro" onClick={onTeacherAccess}>
-        TEACHER LOGIN
+        PAINEL PROFESSORA
       </button>
       <p className="bit-tagline" style={{ marginTop: '0.5rem', fontSize: '1rem' }}>
         {SCHOOL.nome}

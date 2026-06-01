@@ -12,12 +12,18 @@ export const CASES: GameCase[] = [
     contexto:
       'Peixes aparecem com escamas brilhantes e há cheiro forte perto de uma ponte com oficinas nas margens.',
     intro:
-      '🕵️ Lucas: “Gota Gi ligou — o rio está estranho.” · 💧 Gota Gi: “Tem brilho na água perto da ponte.” · 🔬 Dra. Ana: “pH quase neutro afasta ácido forte; foquem no aspecto oleoso.”',
+      'Lucas: "Gota Gi ligou — o rio está estranho." · Gota Gi: "Tem brilho na água perto da ponte." · Dra. Ana: "pH quase neutro afasta ácido forte; foquem no aspecto oleoso."',
+    mapaLocais: [
+      { id: 'ponte', label: 'Ponte', emoji: '🌉' },
+      { id: 'margem', label: 'Margem', emoji: '🌿' },
+      { id: 'oficina', label: 'Oficinas', emoji: '🔧' },
+    ],
     pistas: [
       {
         id: 'a1',
         texto: 'pH medido: 7,1 — quase neutro.',
         miniPergunta: {
+          tipo: 'escolha',
           pergunta: 'pH 7,1 sugere principalmente:',
           opcoes: ['Água fortemente ácida', 'Água próxima da neutralidade', 'Água muito básica'],
           correta: 1,
@@ -26,32 +32,30 @@ export const CASES: GameCase[] = [
       {
         id: 'a2',
         texto: 'Filme iridescente na superfície da água.',
+        miniPergunta: {
+          tipo: 'parear',
+          pergunta: 'Associe o sinal à hipótese mais provável:',
+          pares: [
+            { esquerda: 'Filme iridescente', direita: 'Hidrocarbonetos (óleo)' },
+            { esquerda: 'Plantas murchas', direita: 'Metais pesados' },
+            { esquerda: 'pH 3,5', direita: 'Efluente ácido' },
+          ],
+        },
       },
-      {
-        id: 'a3',
-        texto: 'Plantas na margem com resíduo viscoso escuro.',
-      },
+      { id: 'a3', texto: 'Plantas na margem com resíduo viscoso escuro.' },
       {
         id: 'a4',
         texto: 'Teste rápido de metais pesados: negativo.',
         miniPergunta: {
+          tipo: 'escolha',
           pergunta: 'Metal pesado negativo afasta qual hipótese?',
           opcoes: ['Descarte de pilhas', 'Descarte de óleo', 'Microplásticos'],
           correta: 0,
         },
       },
-      {
-        id: 'a5',
-        texto: 'Moradores relatam descarte de líquido na área de oficinas.',
-      },
-      {
-        id: 'a6',
-        texto: 'Aves aquáticas com penas engorduradas.',
-      },
-      {
-        id: 'a7',
-        texto: 'Turbidez baixa, mas odor de hidrocarboneto detectado.',
-      },
+      { id: 'a5', texto: 'Moradores relatam descarte de líquido na área de oficinas.' },
+      { id: 'a6', texto: 'Aves aquáticas com penas engorduradas.' },
+      { id: 'a7', texto: 'Turbidez baixa, mas odor de hidrocarboneto detectado.' },
     ],
     suspeitos: [
       'Descarte de óleo lubrificante de oficina',
@@ -71,20 +75,30 @@ export const CASES: GameCase[] = [
         nome: 'Teste de pH',
         personagem: 'Dra. Ana',
         resultado: 'pH ≈ 7. Não indica efluente fortemente ácido.',
+        eliminaSuspeitos: ['Efluente ácido industrial'],
       },
       {
         id: 'metais',
         nome: 'Teste de metais',
         personagem: 'André',
         resultado: 'Sem Pb/Hg relevantes. Fonte provável não é bateria.',
+        eliminaSuspeitos: ['Microplásticos de embalagens'],
       },
       {
         id: 'oleo',
         nome: 'Teste de filme superficial',
         personagem: 'André',
         resultado: 'Positivo para camada oleosa (hidrocarbonetos).',
+        eliminaSuspeitos: [
+          'Fertilizante agrícola',
+          'Efluente ácido industrial',
+          'Microplásticos de embalagens',
+        ],
+        destacaSuspeitos: ['Descarte de óleo lubrificante de oficina'],
+        testeChave: true,
       },
     ],
+    testeChaveId: 'oleo',
     gabarito: {
       suspeito: 'Descarte de óleo lubrificante de oficina',
       descarte: 'Levar óleo para ecoponto/coleta especializada',
@@ -114,41 +128,41 @@ export const CASES: GameCase[] = [
     contexto:
       'Plantas murcham em um terreno perto de lixeira comum onde aparecem pilhas e baterias.',
     intro:
-      '🔬 Dra. Ana: “Chumbo no solo não some com chuva — vamos ao teste de metais.” · 🕵️ Lucas: “A lixeira do bairro é nossa primeira pista.” · 🌿 Gabriel: “Plantas murchando é sinal de contaminação.”',
+      'Dra. Ana: "Chumbo no solo não some com chuva — vamos ao teste de metais." · Lucas: "A lixeira do bairro é nossa primeira pista." · Gabriel: "Plantas murchando é sinal de contaminação."',
+    mapaLocais: [
+      { id: 'lixeira', label: 'Lixeira', emoji: '🗑️' },
+      { id: 'terreno', label: 'Terreno', emoji: '🌱' },
+      { id: 'bairro', label: 'Bairro', emoji: '🏘️' },
+    ],
     pistas: [
       {
         id: 'b1',
         texto: 'Análise indica presença de chumbo (Pb) no solo.',
         miniPergunta: {
+          tipo: 'escolha',
           pergunta: 'Chumbo no solo costuma estar ligado a:',
           opcoes: ['Pilhas e baterias', 'Apenas plástico PET', 'Somente CO₂'],
           correta: 0,
         },
       },
-      {
-        id: 'b2',
-        texto: 'pH local levemente ácido (5,8).',
-      },
+      { id: 'b2', texto: 'pH local levemente ácido (5,8).' },
       {
         id: 'b3',
         texto: 'Crianças relatam pilhas no lixo comum.',
+        miniPergunta: {
+          tipo: 'parear',
+          pergunta: 'Relacione resíduo ao risco ambiental:',
+          pares: [
+            { esquerda: 'Pilhas no lixo comum', direita: 'Metais pesados no solo' },
+            { esquerda: 'Garrafa PET', direita: 'Microplástico (outro foco)' },
+            { esquerda: 'Tinta seca', direita: 'Solventes (menos Pb)' },
+          ],
+        },
       },
-      {
-        id: 'b4',
-        texto: 'Sem odor de hidrocarboneto forte.',
-      },
-      {
-        id: 'b5',
-        texto: 'Raízes das plantas com coloração escura anormal.',
-      },
-      {
-        id: 'b6',
-        texto: 'Lixeira sem coleta seletiva de eletrônicos.',
-      },
-      {
-        id: 'b7',
-        texto: 'Resíduo não biodegradável acumulado há meses.',
-      },
+      { id: 'b4', texto: 'Sem odor de hidrocarboneto forte.' },
+      { id: 'b5', texto: 'Raízes das plantas com coloração escura anormal.' },
+      { id: 'b6', texto: 'Lixeira sem coleta seletiva de eletrônicos.' },
+      { id: 'b7', texto: 'Resíduo não biodegradável acumulado há meses.' },
     ],
     suspeitos: [
       'Descarte irregular de pilhas e baterias',
@@ -168,20 +182,26 @@ export const CASES: GameCase[] = [
         nome: 'Teste de metais pesados',
         personagem: 'André',
         resultado: 'Pb detectado. Compatível com pilhas/baterias.',
+        eliminaSuspeitos: ['Fábrica de tintas', 'Pesticida agrícola', 'Garrafas PET'],
+        destacaSuspeitos: ['Descarte irregular de pilhas e baterias'],
+        testeChave: true,
       },
       {
         id: 'ph',
         nome: 'Teste de pH do solo',
         personagem: 'Dra. Ana',
         resultado: 'pH ácido leve. Pode agravar mobilidade de metais.',
+        eliminaSuspeitos: [],
       },
       {
         id: 'plastico',
         nome: 'Teste de polímero',
         personagem: 'André',
         resultado: 'PET presente, mas não explica Pb elevado sozinho.',
+        eliminaSuspeitos: ['Garrafas PET'],
       },
     ],
+    testeChaveId: 'metais',
     gabarito: {
       suspeito: 'Descarte irregular de pilhas e baterias',
       descarte: 'Ponto de coleta de eletrônicos / logística reversa',
@@ -211,12 +231,18 @@ export const CASES: GameCase[] = [
     contexto:
       'Após festa na margem, peixes apresentam micropartículas no trato digestivo.',
     intro:
-      '🌿 Gabriel: “Depois da festa, a lagoa ganhou grãos invisíveis.” · 🕵️ Lucas: “Microplástico é pista séria.” · 🔬 Dra. Ana: “Vamos identificar o polímero — PET é suspeito.”',
+      'Gabriel: "Depois da festa, a lagoa ganhou grãos invisíveis." · Lucas: "Microplástico é pista séria." · Dra. Ana: "Vamos identificar o polímero — PET é suspeito."',
+    mapaLocais: [
+      { id: 'margem', label: 'Margem', emoji: '🏖️' },
+      { id: 'festa', label: 'Área da festa', emoji: '🎉' },
+      { id: 'rede', label: 'Rede de pesca', emoji: '🎣' },
+    ],
     pistas: [
       {
         id: 'c1',
         texto: 'Microscópio: partículas sintéticas < 5 mm.',
         miniPergunta: {
+          tipo: 'escolha',
           pergunta: 'Partículas plásticas menores que 5 mm são chamadas de:',
           opcoes: ['Microplásticos', 'Íons metálicos', 'Gases nobres'],
           correta: 0,
@@ -225,27 +251,21 @@ export const CASES: GameCase[] = [
       {
         id: 'c2',
         texto: 'Identificação de polímero PET nas margens.',
+        miniPergunta: {
+          tipo: 'parear',
+          pergunta: 'Associe material ao impacto:',
+          pares: [
+            { esquerda: 'PET fragmentado', direita: 'Microplásticos na água' },
+            { esquerda: 'pH 3,5', direita: 'Efluente ácido' },
+            { esquerda: 'Óleo de cozinha', direita: 'Camada oleosa' },
+          ],
+        },
       },
-      {
-        id: 'c3',
-        texto: 'pH da lagoa: 7,0 (neutro).',
-      },
-      {
-        id: 'c4',
-        texto: 'Muitos copos e garrafas descartáveis na área.',
-      },
-      {
-        id: 'c5',
-        texto: 'Sem sinais de efluente ácido.',
-      },
-      {
-        id: 'c6',
-        texto: 'Rede de pesca com fibras plásticas antigas.',
-      },
-      {
-        id: 'c7',
-        texto: 'Detergente encontrado, mas concentração baixa.',
-      },
+      { id: 'c3', texto: 'pH da lagoa: 7,0 (neutro).' },
+      { id: 'c4', texto: 'Muitos copos e garrafas descartáveis na área.' },
+      { id: 'c5', texto: 'Sem sinais de efluente ácido.' },
+      { id: 'c6', texto: 'Rede de pesca com fibras plásticas antigas.' },
+      { id: 'c7', texto: 'Detergente encontrado, mas concentração baixa.' },
     ],
     suspeitos: [
       'Descarte irregular de plásticos (PET)',
@@ -265,20 +285,27 @@ export const CASES: GameCase[] = [
         nome: 'Microscópio de plástico',
         personagem: 'André',
         resultado: 'Microplásticos confirmados. Origem: degradação de plástico.',
+        eliminaSuspeitos: ['Efluente ácido de indústria', 'Óleo de cozinha', 'Fertilizante nitrogenado'],
+        destacaSuspeitos: ['Descarte irregular de plásticos (PET)'],
+        testeChave: true,
       },
       {
         id: 'ph',
         nome: 'Teste de pH',
         personagem: 'Dra. Ana',
         resultado: 'Neutro. Pouco compatível com ácido industrial forte.',
+        eliminaSuspeitos: ['Efluente ácido de indústria'],
       },
       {
         id: 'polimero',
         nome: 'Teste de polímero',
         personagem: 'André',
         resultado: 'PET identificado nas amostras da margem.',
+        eliminaSuspeitos: ['Óleo de cozinha', 'Fertilizante nitrogenado'],
+        destacaSuspeitos: ['Descarte irregular de plásticos (PET)'],
       },
     ],
+    testeChaveId: 'micro',
     gabarito: {
       suspeito: 'Descarte irregular de plásticos (PET)',
       descarte: 'Reduzir descartáveis + reciclar PET',
@@ -308,41 +335,41 @@ export const CASES: GameCase[] = [
     contexto:
       'Algas morrem em trecho próximo a tubulação; moradores culpam “chuva ácida” sem evidência.',
     intro:
-      '🔬 Dra. Ana: “pH 3,5 mata algas — isso não é chuva comum.” · 🕵️ Lucas: “Tubulação a montante merece inspeção.” · 🧪 André: “Sulfatos reforçam hipótese industrial.”',
+      'Dra. Ana: "pH 3,5 mata algas — isso não é chuva comum." · Lucas: "Tubulação a montante merece inspeção." · André: "Sulfatos reforçam hipótese industrial."',
+    mapaLocais: [
+      { id: 'foz', label: 'Foz do córrego', emoji: '💧' },
+      { id: 'tubo', label: 'Tubulação', emoji: '🔩' },
+      { id: 'fabrica', label: 'Fábrica', emoji: '🏭' },
+    ],
     pistas: [
       {
         id: 'd1',
         texto: 'pH medido: 3,5 — fortemente ácido.',
         miniPergunta: {
+          tipo: 'escolha',
           pergunta: 'pH 3,5 indica meio:',
           opcoes: ['Ácido', 'Neutro', 'Básico'],
           correta: 0,
         },
       },
-      {
-        id: 'd2',
-        texto: 'Mortandade de algas e peixes pequenos.',
-      },
+      { id: 'd2', texto: 'Mortandade de algas e peixes pequenos.' },
       {
         id: 'd3',
         texto: 'Sulfatos detectados na amostra.',
+        miniPergunta: {
+          tipo: 'parear',
+          pergunta: 'Associe evidência à origem provável:',
+          pares: [
+            { esquerda: 'Sulfatos elevados', direita: 'Efluente industrial' },
+            { esquerda: 'Chuva isolada', direita: 'pH variável regional' },
+            { esquerda: 'Sal de cozinha', direita: 'Contaminação salina' },
+          ],
+        },
       },
-      {
-        id: 'd4',
-        texto: 'Tubulação industrial a montante.',
-      },
-      {
-        id: 'd5',
-        texto: 'Chuva recente não alterou pH em áreas vizinhas.',
-      },
-      {
-        id: 'd6',
-        texto: 'Cheiro de produtos químicos de limpeza industrial.',
-      },
-      {
-        id: 'd7',
-        texto: 'Neutralização parcial relatada pela fábrica vizinha.',
-      },
+      { id: 'd4', texto: 'Tubulação industrial a montante.' },
+      { id: 'd5', texto: 'Chuva recente não alterou pH em áreas vizinhas.' },
+      { id: 'd6', texto: 'Cheiro de produtos químicos de limpeza industrial.' },
+      { id: 'd7', texto: 'Neutralização parcial relatada pela fábrica vizinha.' },
     ],
     suspeitos: [
       'Efluente ácido industrial sem tratamento',
@@ -362,20 +389,26 @@ export const CASES: GameCase[] = [
         nome: 'Teste de pH',
         personagem: 'Dra. Ana',
         resultado: 'pH 3,5. Fortemente ácido — incompatível com vida aquática.',
+        eliminaSuspeitos: ['Chuva ácida isolada', 'Suinocultura', 'Descarte de sal de cozinha'],
+        destacaSuspeitos: ['Efluente ácido industrial sem tratamento'],
+        testeChave: true,
       },
       {
         id: 'sulfato',
         nome: 'Teste de sulfatos',
         personagem: 'André',
         resultado: 'Sulfatos elevados. Comum em efluentes industriais.',
+        eliminaSuspeitos: ['Chuva ácida isolada', 'Suinocultura', 'Descarte de sal de cozinha'],
       },
       {
         id: 'metais',
         nome: 'Teste de metais',
         personagem: 'André',
         resultado: 'Metais detectáveis, mas pH é o dano principal aqui.',
+        eliminaSuspeitos: ['Descarte de sal de cozinha'],
       },
     ],
+    testeChaveId: 'ph',
     gabarito: {
       suspeito: 'Efluente ácido industrial sem tratamento',
       descarte: 'Tratamento/neutralização do efluente + fiscalização',

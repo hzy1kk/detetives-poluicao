@@ -20,7 +20,6 @@ export type Screen =
   | 'about'
   | 'history'
 
-/** Desempenho para celebração 3D */
 export type PerformanceTier = 'excelente' | 'bom' | 'parcial' | 'reforco'
 
 export type LabTest = {
@@ -28,16 +27,43 @@ export type LabTest = {
   nome: string
   resultado: string
   personagem: string
+  eliminaSuspeitos?: string[]
+  destacaSuspeitos?: string[]
+  testeChave?: boolean
 }
+
+export type MiniPerguntaEscolha = {
+  tipo: 'escolha'
+  pergunta: string
+  opcoes: string[]
+  correta: number
+}
+
+export type MiniPerguntaParear = {
+  tipo: 'parear'
+  pergunta: string
+  pares: { esquerda: string; direita: string }[]
+}
+
+export type MiniPerguntaOrdenar = {
+  tipo: 'ordenar'
+  pergunta: string
+  itens: string[]
+  ordemCorreta: number[]
+}
+
+export type MiniPergunta = MiniPerguntaEscolha | MiniPerguntaParear | MiniPerguntaOrdenar
 
 export type Clue = {
   id: string
   texto: string
-  miniPergunta?: {
-    pergunta: string
-    opcoes: string[]
-    correta: number
-  }
+  miniPergunta?: MiniPergunta
+}
+
+export type MapHotspot = {
+  id: string
+  label: string
+  emoji: string
 }
 
 export type GameCase = {
@@ -50,13 +76,14 @@ export type GameCase = {
   bnccTexto: string
   contexto: string
   intro: string
+  mapaLocais: MapHotspot[]
   pistas: Clue[]
   suspeitos: string[]
   descartes: string[]
   testes: LabTest[]
+  testeChaveId: string
   gabarito: { suspeito: string; descarte: string }
   explicacao: string
-  /** 3 aprendizados para os ~10 min de explicação em sala */
   aprendizados: [string, string, string]
   dicas: [string, string, string]
   suspeitoEliminarDica3: string
@@ -78,7 +105,6 @@ export type Report = {
   poluenteCorreto: boolean
   descarteCorreto: boolean
   correto: boolean
-  /** Nota mensal: 50% poluente + 50% descarte */
   notaPoluente: number
   notaDescarte: number
   notaTotal: number
@@ -86,6 +112,10 @@ export type Report = {
   dicasUsadas: number
   tentativas: number
   pistasVistas: number
+  testesFeitosCount: number
+  usouTesteChave: boolean
+  investigouSemTeste: boolean
+  teoriaAlinhada: boolean
   dataISO: string
   codigoExport: string
 }
@@ -127,5 +157,8 @@ export type GameSession = {
   labCharges: number
   startedAt: number
   miniRespostas: Record<string, boolean>
+  pistaSuspeito: Record<string, string | null>
+  locaisVisitados: string[]
+  suspeitosEliminadosLab: string[]
   finalizado: boolean
 }

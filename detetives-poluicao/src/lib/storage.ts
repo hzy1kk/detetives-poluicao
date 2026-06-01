@@ -42,6 +42,10 @@ export function normalizeReport(r: Report): Report {
     performanceTier:
       r.performanceTier ??
       (r.correto ? 'bom' : notaTotal >= 50 ? 'parcial' : 'reforco'),
+    testesFeitosCount: r.testesFeitosCount ?? 0,
+    usouTesteChave: r.usouTesteChave ?? false,
+    investigouSemTeste: r.investigouSemTeste ?? false,
+    teoriaAlinhada: r.teoriaAlinhada ?? true,
   }
 }
 

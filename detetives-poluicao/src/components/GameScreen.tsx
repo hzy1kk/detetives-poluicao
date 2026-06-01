@@ -2,12 +2,21 @@ import { useMemo, useState } from 'react'
 import { ChevronLeft, Clock } from 'lucide-react'
 import { SegmentProgress } from './quiz/SegmentProgress'
 import { QuizOption } from './quiz/QuizOption'
+import { CaseMap } from './game/CaseMap'
+import { CluePuzzle } from './game/CluePuzzle'
+import { EvidenceBoard } from './game/EvidenceBoard'
 import {
+  applyLabTest,
+  getActiveSuspeitos,
   getClueCount,
   getErrorHint,
   getHintText,
+  getSuspeitoComMaisPistas,
   getVisibleClueIds,
   formatTime,
+  isTeoriaAlinhada,
+  requiresLabBeforeVerdict,
+  requiresTheoryPins,
 } from '../lib/gameEngine'
 import { playClick, playError, playReveal, playSuccess, playUnlock } from '../lib/audio'
 import { vibrateError, vibrateSuccess } from '../lib/haptics'
@@ -24,11 +33,11 @@ type Props = {
 
 type GameStep = 'caso' | 'pistas' | 'lab' | 'veredito'
 
-const STEPS: { id: GameStep; title: string }[] = [
-  { id: 'caso', title: 'CASE' },
-  { id: 'pistas', title: 'CLUES' },
-  { id: 'lab', title: 'LAB' },
-  { id: 'veredito', title: 'VERDICT' },
+const STEPS: { id: GameStep; title: string; label: string }[] = [
+  { id: 'caso', title: 'CASO', label: 'Arquivo' },
+  { id: 'pistas', title: 'PISTAS', label: 'Cena' },
+  { id: 'lab', title: 'LAB', label: 'Laboratorio' },
+  { id: 'veredito', title: 'VEREDITO', label: 'Acusacao' },
 ]
 
 const STEP_NUM: Record<GameStep, number> = { caso: 1, pistas: 2, lab: 3, veredito: 4 }
@@ -48,6 +57,7 @@ export function GameScreen({
   const [miniAtiva, setMiniAtiva] = useState<string | null>(null)
   const [feedback, setFeedback] = useState('')
   const [suspeitosOcultos, setSuspeitosOcultos] = useState<string[]>([])
+  const [destacados, setDestacados] = useState<string[]>([])
 
   const totalPistas = getClueCount(session.difficulty)
   const visibleIds = getVisibleClueIds(session, gameCase)
@@ -64,13 +74,23 @@ export function GameScreen({
     ? gameCase.pistas.find((p) => p.id === proximaPistaId)
     : null
 
-  const suspeitosFiltrados = gameCase.suspeitos.filter((s) => !suspeitosOcultos.includes(s))
+  const suspeitosFiltrados = getActiveSuspeitos(gameCase, session, suspeitosOcultos)
   const stepNum = STEP_NUM[step]
-  const stepTitle = STEPS.find((s) => s.id === step)?.title ?? ''
+  const stepMeta = STEPS.find((s) => s.id === step)!
+
+  const teoriaTop = getSuspeitoComMaisPistas(gameCase, session)
 
   function nextStep() {
     const i = STEPS.findIndex((s) => s.id === step)
     if (i < STEPS.length - 1) {
+      if (step === 'pistas' && session.cluesRevealed < totalPistas) {
+        setFeedback(`Colete todas as ${totalPistas} pistas no mapa antes do laboratorio.`)
+        return
+      }
+      if (step === 'lab' && requiresLabBeforeVerdict(session)) {
+        setFeedback('Rode pelo menos 1 teste no laboratorio antes do veredito.')
+        return
+      }
       playClick()
       setStep(STEPS[i + 1].id)
       setFeedback('')
@@ -86,47 +106,50 @@ export function GameScreen({
     }
   }
 
-  function pedirDesbloqueio() {
-    playClick()
+  function visitHotspot(hotspotId: string) {
+    if (session.cluesRevealed >= totalPistas) return
+
+    const allVisited = gameCase.mapaLocais.every((l) => session.locaisVisitados.includes(l.id))
+    let locais = session.locaisVisitados
+    if (allVisited && session.cluesRevealed < totalPistas) {
+      locais = []
+    }
+    if (locais.includes(hotspotId) && !allVisited) return
+
+    const nextLocais = [...locais, hotspotId]
+    onUpdateSession({ ...session, locaisVisitados: nextLocais })
+
     if (!proximaClue) return
     if (proximaClue.miniPergunta && !session.miniRespostas[proximaClue.id]) {
       setMiniAtiva(proximaClue.id)
       return
     }
-    unlockNext()
+    unlockNext(nextLocais)
   }
 
-  function unlockNext() {
+  function unlockNext(locais = session.locaisVisitados) {
     playUnlock()
     playReveal()
     onUpdateSession({
       ...session,
+      locaisVisitados: locais,
       cluesRevealed: Math.min(session.cluesRevealed + 1, totalPistas),
     })
     setMiniAtiva(null)
-    setFeedback('Nova pista desbloqueada!')
+    setFeedback('Nova pista coletada!')
   }
 
-  function responderMini(clueId: string, idx: number) {
-    const clue = gameCase.pistas.find((p) => p.id === clueId)
-    if (!clue?.miniPergunta) return
-    const ok = clue.miniPergunta.correta === idx
-    if (ok) {
-      playSuccess()
-      playReveal()
-      vibrateSuccess()
-      onUpdateSession({
-        ...session,
-        miniRespostas: { ...session.miniRespostas, [clueId]: true },
-        cluesRevealed: Math.min(session.cluesRevealed + 1, totalPistas),
-      })
-      setMiniAtiva(null)
-      setFeedback('Correto! Pista liberada.')
-    } else {
-      playError()
-      vibrateError()
-      setFeedback('Incorreto. Tente outra opção.')
-    }
+  function onPuzzleSuccess() {
+    if (!proximaClue) return
+    playSuccess()
+    vibrateSuccess()
+    onUpdateSession({
+      ...session,
+      miniRespostas: { ...session.miniRespostas, [proximaClue.id]: true },
+      cluesRevealed: Math.min(session.cluesRevealed + 1, totalPistas),
+    })
+    setMiniAtiva(null)
+    setFeedback('Correto! Pista liberada.')
   }
 
   function pedirDica() {
@@ -147,20 +170,32 @@ export function GameScreen({
   function rodarTeste(testId: string, resultado: string) {
     playClick()
     if (session.labCharges <= 0 && !session.testesFeitos.includes(testId)) {
-      setFeedback('Sem cargas no laboratório.')
+      setFeedback('Sem cargas no laboratorio.')
       return
     }
-    const jaFeito = session.testesFeitos.includes(testId)
-    onUpdateSession({
-      ...session,
-      testesFeitos: jaFeito ? session.testesFeitos : [...session.testesFeitos, testId],
-      labCharges: jaFeito ? session.labCharges : session.labCharges - 1,
-    })
+    const { session: next, eliminados, destacados: dest } = applyLabTest(gameCase, session, testId)
+    onUpdateSession(next)
     setResultadoLab(resultado)
+    if (dest.length) setDestacados((d) => [...new Set([...d, ...dest])])
+    if (eliminados.length > 0 && !session.testesFeitos.includes(testId)) {
+      setFeedback(`TESTE OK — ${eliminados.length} suspeito(s) eliminado(s).`)
+    }
   }
 
   function enviar() {
     playClick()
+    if (requiresLabBeforeVerdict(session)) {
+      setFeedback('Faca pelo menos 1 teste no laboratorio.')
+      return
+    }
+    if (requiresTheoryPins(session)) {
+      const pins = Object.values(session.pistaSuspeito).filter(Boolean).length
+      if (pins > 0 && !isTeoriaAlinhada(gameCase, session, suspeito)) {
+        setFeedback('Sua teoria no quadro nao combina com o poluente escolhido. Revise as pistas.')
+        return
+      }
+    }
+
     const tent = session.tentativas + 1
     const polOk = suspeito === gameCase.gabarito.suspeito
     const descOk = descarte === gameCase.gabarito.descarte
@@ -188,6 +223,26 @@ export function GameScreen({
     onFinish(suspeito, descarte)
   }
 
+  function handlePrimary() {
+    if (step === 'veredito') {
+      enviar()
+      return
+    }
+    if (step === 'pistas') {
+      if (session.cluesRevealed < totalPistas) {
+        setFeedback('Toque em um local do mapa para coletar a proxima pista.')
+        return
+      }
+      nextStep()
+      return
+    }
+    if (step === 'lab' && requiresLabBeforeVerdict(session)) {
+      setFeedback('Rode pelo menos 1 teste antes de avancar.')
+      return
+    }
+    nextStep()
+  }
+
   return (
     <div className="quiz-shell quiz-shell--game quiz-game-hud">
       <div className="quiz-back-row">
@@ -207,7 +262,7 @@ export function GameScreen({
         total={4}
         label={
           <>
-            <strong>{String(stepNum).padStart(2, '0')}</strong> {stepTitle}
+            <strong>{String(stepNum).padStart(2, '0')}</strong> {stepMeta.title} · {stepMeta.label}
           </>
         }
       />
@@ -215,15 +270,18 @@ export function GameScreen({
       {step === 'caso' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">STAGE 01 · CASE FILE</p>
+            <p className="quiz-question-eyebrow retro">FASE 01 · DOSSIE</p>
             <h3>{gameCase.nome}</h3>
             <p>{gameCase.intro}</p>
             <p style={{ marginTop: '0.65rem' }}>{gameCase.contexto}</p>
+            <p className="quiz-bncc-chip" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
+              BNCC: {gameCase.bncc.join(' · ')}
+            </p>
           </div>
           <div className="quiz-stats-row">
             <div className="quiz-stat-box">
               <span>Ambiente</span>
-              <strong>{gameCase.cenario === 'agua' ? 'Água' : gameCase.cenario === 'solo' ? 'Solo' : 'Lagoa'}</strong>
+              <strong>{gameCase.cenario === 'agua' ? 'Agua' : gameCase.cenario === 'solo' ? 'Solo' : 'Lagoa'}</strong>
             </div>
             <div className="quiz-stat-box">
               <span>Nota</span>
@@ -240,15 +298,29 @@ export function GameScreen({
       {step === 'pistas' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">STAGE 02 · CLUES</p>
-            <h3>Collect evidence</h3>
-            <p>Colete todas as pistas antes de ir ao laboratório.</p>
+            <p className="quiz-question-eyebrow retro">FASE 02 · CENA</p>
+            <h3>Colete evidencias no mapa</h3>
+            <p>Explore os locais e monte sua teoria no quadro.</p>
           </div>
-          {pistas.length === 0 ? (
-            <div className="quiz-card" style={{ textAlign: 'center', color: 'var(--quiz-text-muted)' }}>
-              Toque em Continuar para coletar a primeira pista.
+
+          <CaseMap
+            gameCase={gameCase}
+            session={session}
+            totalPistas={totalPistas}
+            onVisit={visitHotspot}
+          />
+
+          {miniAtiva && proximaClue?.miniPergunta && (
+            <div className="quiz-card">
+              <CluePuzzle
+                puzzle={proximaClue.miniPergunta}
+                onSuccess={onPuzzleSuccess}
+                onCancel={() => setMiniAtiva(null)}
+              />
             </div>
-          ) : (
+          )}
+
+          {pistas.length > 0 && (
             <div className="quiz-options" style={{ marginBottom: '0.5rem' }}>
               {pistas.map((p, i) => (
                 <div key={p.id} className="quiz-card" style={{ padding: '0.85rem 1rem' }}>
@@ -258,42 +330,23 @@ export function GameScreen({
               ))}
             </div>
           )}
-          {session.cluesRevealed < totalPistas && (
-            <div className="quiz-card">
-              {!miniAtiva ? (
-                <button type="button" className="quiz-btn-primary" style={{ width: '100%' }} onClick={pedirDesbloqueio}>
-                  Coletar pista {visibleIds.length + 1}/{totalPistas}
-                </button>
-              ) : (
-                proximaClue?.miniPergunta && (
-                  <>
-                    <p style={{ fontWeight: 700, margin: '0 0 0.5rem' }}>Checkpoint de Química</p>
-                    <p style={{ margin: '0 0 0.75rem', color: 'var(--quiz-text-muted)' }}>
-                      {proximaClue.miniPergunta.pergunta}
-                    </p>
-                    <div className="quiz-options">
-                      {proximaClue.miniPergunta.opcoes.map((op, idx) => (
-                        <QuizOption key={op} onClick={() => responderMini(proximaClue.id, idx)}>
-                          <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
-                          {op}
-                        </QuizOption>
-                      ))}
-                    </div>
-                  </>
-                )
-              )}
-            </div>
-          )}
+
+          <EvidenceBoard
+            gameCase={gameCase}
+            session={session}
+            pistas={pistas}
+            onUpdateSession={onUpdateSession}
+          />
         </>
       )}
 
       {step === 'lab' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">STAGE 03 · LAB</p>
-            <h3>Andre lab tests</h3>
+            <p className="quiz-question-eyebrow retro">FASE 03 · LABORATORIO</p>
+            <h3>Testes do Andre</h3>
             <p>
-              Você tem <strong>{session.labCharges}</strong> carga(s). Cada teste novo gasta 1.
+              Voce tem <strong>{session.labCharges}</strong> carga(s). Cada teste novo elimina hipoteses erradas.
             </p>
           </div>
           <div className="quiz-options">
@@ -301,9 +354,10 @@ export function GameScreen({
               <QuizOption
                 key={t.id}
                 selected={session.testesFeitos.includes(t.id)}
-                onClick={() => rodarTeste(t.id, t.resultado)}
+                onClick={() => rodarTeste(t.id, `${t.personagem}: ${t.resultado}`)}
               >
                 {t.nome}
+                {t.testeChave ? ' ★' : ''}
                 {session.testesFeitos.includes(t.id) ? ' ✓' : ''}
               </QuizOption>
             ))}
@@ -311,25 +365,43 @@ export function GameScreen({
           {resultadoLab && (
             <div className="quiz-feedback quiz-feedback--ok lab-result-flash">{resultadoLab}</div>
           )}
+          {session.suspeitosEliminadosLab.length > 0 && (
+            <p className="quiz-feedback quiz-feedback--ok" style={{ fontSize: '0.9rem' }}>
+              Eliminados pelo lab: {session.suspeitosEliminadosLab.length} hipotese(s).
+            </p>
+          )}
         </>
       )}
 
       {step === 'veredito' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">STAGE 04 · VERDICT</p>
-            <h3>Final answer</h3>
+            <p className="quiz-question-eyebrow retro">FASE 04 · VEREDITO</p>
+            <h3>Acusacao final</h3>
             <p>Poluente e descarte valem 50% da nota cada.</p>
+            {teoriaTop && (
+              <p className="quiz-feedback quiz-feedback--ok" style={{ marginTop: '0.5rem' }}>
+                Teoria forte no quadro: {teoriaTop.slice(0, 40)}…
+              </p>
+            )}
           </div>
-          <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Fonte de poluição</p>
+          <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Fonte de poluicao</p>
           <div className="quiz-options">
             {suspeitosFiltrados.map((s, idx) => (
-              <QuizOption key={s} selected={suspeito === s} onClick={() => setSuspeito(s)}>
+              <QuizOption
+                key={s}
+                selected={suspeito === s}
+                onClick={() => setSuspeito(s)}
+                highlight={destacados.includes(s)}
+              >
                 <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
                 {s}
               </QuizOption>
             ))}
           </div>
+          {suspeitosFiltrados.length === 0 && (
+            <p className="quiz-feedback quiz-feedback--err">Todos suspeitos eliminados — volte ao lab.</p>
+          )}
           <p style={{ fontWeight: 600, margin: '0.75rem 0 0.5rem', fontSize: '0.85rem' }}>Descarte correto</p>
           <div className="quiz-options">
             {gameCase.descartes.map((d, idx) => (
@@ -345,7 +417,13 @@ export function GameScreen({
       {feedback && (
         <div
           className={`quiz-feedback ${
-            feedback.toLowerCase().includes('incorret') || feedback.includes('Sem cargas')
+            feedback.toLowerCase().includes('incorret') ||
+            feedback.includes('Sem cargas') ||
+            feedback.includes('nao combina') ||
+            feedback.includes('Colete') ||
+            feedback.includes('Toque') ||
+            feedback.includes('Rode') ||
+            feedback.includes('Faca')
               ? 'quiz-feedback--err'
               : 'quiz-feedback--ok'
           }`}
@@ -357,7 +435,7 @@ export function GameScreen({
       <div className="quiz-footer-actions">
         {step === 'pistas' && (
           <button type="button" className="quiz-hint-btn quiz-hint-btn--text" onClick={pedirDica} disabled={session.dicasUsadas >= 3} title="Dica">
-            Dica
+            Dica ({3 - session.dicasUsadas})
           </button>
         )}
         {step !== 'caso' && step !== 'pistas' && (
@@ -368,18 +446,20 @@ export function GameScreen({
         <button
           type="button"
           className="quiz-btn-primary"
-          disabled={step === 'veredito' ? !suspeito || !descarte : step === 'pistas' ? false : false}
-          onClick={() => {
-            if (step === 'veredito') enviar()
-            else if (step === 'pistas' && session.cluesRevealed < totalPistas) pedirDesbloqueio()
-            else nextStep()
-          }}
+          disabled={step === 'veredito' ? !suspeito || !descarte || suspeitosFiltrados.length === 0 : false}
+          onClick={handlePrimary}
         >
           {step === 'veredito'
-            ? 'SUBMIT'
-            : step === 'pistas' && session.cluesRevealed < totalPistas
-              ? `CLUE ${visibleIds.length}/${totalPistas}`
-              : 'NEXT >>'}
+            ? 'ENVIAR VEREDITO'
+            : step === 'pistas'
+              ? session.cluesRevealed < totalPistas
+                ? `PISTAS ${session.cluesRevealed}/${totalPistas}`
+                : 'IR AO LAB >>'
+              : step === 'lab'
+                ? requiresLabBeforeVerdict(session)
+                  ? 'TESTE OBRIGATORIO'
+                  : 'VEREDITO >>'
+                : 'CONTINUAR >>'}
         </button>
       </div>
     </div>

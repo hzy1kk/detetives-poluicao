@@ -1,7 +1,13 @@
-/** Fundo 8-bit: grade + estrelas + scanline CRT */
-export function PixelBackground() {
+type Cenario = 'agua' | 'solo' | 'lago'
+
+type Props = {
+  cenario?: Cenario
+}
+
+/** Fundo 8-bit: grade + estrelas + scanline CRT; paleta por cenario */
+export function PixelBackground({ cenario }: Props) {
   return (
-    <div className="pixel-bg" aria-hidden>
+    <div className={`pixel-bg${cenario ? ` pixel-bg--${cenario}` : ''}`} aria-hidden>
       <div className="pixel-bg__grid" />
       <div className="pixel-bg__stars">
         {Array.from({ length: 48 }, (_, i) => (

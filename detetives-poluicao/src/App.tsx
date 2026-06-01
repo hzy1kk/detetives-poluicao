@@ -26,6 +26,7 @@ import { ParticleCanvas } from './components/effects/ParticleCanvas'
 
 import { getCaseById } from './data/cases'
 import { SCHOOL } from './data/config'
+import { getCompletedCaseIds } from './lib/caseProgress'
 import { buildReport, createSession, pickCase } from './lib/gameEngine'
 import {
   loadAmbientEnabled,
@@ -139,13 +140,14 @@ function App() {
     (treino: boolean) => {
       void resumeAudio()
       const settings = loadTeacherSettings()
-      const picked = pickCase(difficulty, settings.temasAtivos, getLastCaseId())
+      const completed = profile ? getCompletedCaseIds(profile.nome) : []
+      const picked = pickCase(difficulty, settings.temasAtivos, getLastCaseId(), completed)
       setLastCaseId(picked.id)
       setSession(createSession(picked.id, difficulty, treino))
       setReport(null)
       goTo('game')
     },
-    [difficulty],
+    [difficulty, profile],
   )
 
   function handleLogin(account: StudentAccount, diff: Difficulty) {
@@ -211,7 +213,10 @@ function App() {
 
   return (
     <main className={`app app--${screen}`}>
-      {isQuiz && <PixelBackground />}
+      {isQuiz && (
+        <PixelBackground cenario={screen === 'game' ? gameCase?.cenario : undefined} />
+      )}
+      {isTeacher && <PixelBackground />}
       {showParticles && <ParticleCanvas density={32} />}
 
       {isQuiz && screen !== 'game' && (

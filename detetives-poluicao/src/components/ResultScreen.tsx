@@ -5,7 +5,8 @@ import { playClick } from '../lib/audio'
 import type { GameCase, Report } from '../types'
 import { downloadJson } from '../lib/storage'
 import { GOOGLE_FORMS_URL } from '../data/config'
-import { CelebrationScene } from './scene/CelebrationScene'
+import { PixelCelebration } from './scene/PixelCelebration'
+import { PwaInstallBanner } from './PwaInstallBanner'
 
 const CONFETTI_COLORS = ['#ffec27', '#29adff', '#00e436', '#ff0044', '#ffffff']
 
@@ -40,7 +41,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
     <>
       <AnimatePresence>
         {showCelebration && (
-          <CelebrationScene
+          <PixelCelebration
             tier={report.performanceTier}
             notaTotal={report.notaTotal}
             onContinue={() => setShowCelebration(false)}
@@ -64,6 +65,8 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
             ))}
           </div>
         )}
+
+        {report.correto && !report.modoTreino && !showCelebration && <PwaInstallBanner />}
 
         <div className="quiz-result-hero bit-box" style={{ padding: '1rem', marginBottom: '1rem' }}>
           <p className="retro bit-result-badge">

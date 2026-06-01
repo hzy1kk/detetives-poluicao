@@ -722,8 +722,302 @@ html[data-theme='quiz'] .quiz-hint-btn {
   border-radius: 0 !important;
 }
 
+/* Cenario — paleta do fundo */
+.pixel-bg--agua .pixel-bg__grid {
+  background-image:
+    linear-gradient(var(--8bit-blue) 1px, transparent 1px),
+    linear-gradient(90deg, var(--8bit-blue) 1px, transparent 1px);
+  opacity: 0.08;
+}
+
+.pixel-bg--solo .pixel-bg__grid {
+  background-image:
+    linear-gradient(#8b6914 1px, transparent 1px),
+    linear-gradient(90deg, #8b6914 1px, transparent 1px);
+  opacity: 0.1;
+}
+
+.pixel-bg--lago .pixel-bg__grid {
+  background-image:
+    linear-gradient(var(--8bit-green) 1px, transparent 1px),
+    linear-gradient(90deg, var(--8bit-green) 1px, transparent 1px);
+  opacity: 0.08;
+}
+
+/* Mapa da cena */
+.case-map {
+  margin: 0.75rem 0;
+  padding: 1rem;
+  background: var(--8bit-bg-alt);
+  border: var(--pixel) solid var(--8bit-black);
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+}
+
+.case-map__title {
+  font-size: 0.5rem !important;
+  color: var(--8bit-yellow) !important;
+  margin: 0 0 0.25rem;
+}
+
+.case-map__sub {
+  font-family: var(--font-retro);
+  font-size: 1rem;
+  color: var(--8bit-muted);
+  margin: 0 0 0.75rem;
+}
+
+.case-map__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.case-map__spot {
+  font-family: var(--font-retro);
+  padding: 0.75rem 0.35rem;
+  background: var(--8bit-surface-dark);
+  border: 2px solid var(--8bit-black);
+  box-shadow: 2px 2px 0 var(--8bit-black);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.case-map__spot:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.case-map__spot--visited:not(:disabled) {
+  border-color: var(--8bit-green);
+}
+
+.case-map__emoji {
+  font-size: 1.5rem;
+}
+
+.case-map__label {
+  font-size: 0.38rem !important;
+}
+
+/* Quadro de evidencias */
+.evidence-board {
+  margin: 0.75rem 0;
+  padding: 1rem;
+}
+
+.evidence-board__title {
+  font-size: 0.48rem !important;
+  color: var(--8bit-yellow) !important;
+  margin: 0 0 0.35rem;
+}
+
+.evidence-board__hint {
+  font-family: var(--font-retro);
+  font-size: 0.95rem;
+  color: var(--8bit-muted);
+  margin: 0 0 0.75rem;
+}
+
+.evidence-board__theories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.evidence-board__theory {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-retro);
+  font-size: 0.85rem;
+}
+
+.evidence-board__theory .retro {
+  font-size: 0.45rem !important;
+  color: var(--8bit-green);
+  min-width: 1.2rem;
+}
+
+.evidence-board__clue {
+  border-top: 2px solid var(--8bit-black);
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.evidence-board__clue-text {
+  font-family: var(--font-retro);
+  font-size: 0.95rem;
+  margin: 0 0 0.35rem;
+}
+
+.evidence-board__pins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.evidence-pin {
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--8bit-black);
+  background: var(--8bit-surface);
+  cursor: pointer;
+}
+
+.evidence-pin--on {
+  background: var(--8bit-yellow);
+  color: var(--8bit-black);
+}
+
+/* Puzzles parear */
+.clue-parear-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.clue-parear-label {
+  font-size: 0.4rem !important;
+  margin: 0 0 0.35rem;
+  color: var(--8bit-muted);
+}
+
+.clue-parear-btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.35rem;
+  padding: 0.5rem;
+  font-family: var(--font-retro);
+  font-size: 0.9rem;
+  text-align: left;
+  background: var(--8bit-surface-dark);
+  border: 2px solid var(--8bit-black);
+  cursor: pointer;
+}
+
+.clue-parear-btn--active {
+  background: var(--8bit-blue);
+  color: var(--8bit-white);
+}
+
+.clue-parear-btn--done {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.clue-ordenar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-retro);
+}
+
+.quiz-option--highlight {
+  border-color: var(--8bit-yellow) !important;
+  box-shadow: 0 0 0 2px var(--8bit-yellow);
+}
+
+.quiz-bncc-chip {
+  font-family: var(--font-retro);
+  color: var(--8bit-blue);
+}
+
+/* Badges casos */
+.case-badges-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.case-badge {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border: 2px solid var(--8bit-black);
+  background: var(--8bit-surface-dark);
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.case-badge--done {
+  opacity: 1;
+  filter: none;
+  background: var(--8bit-green);
+  box-shadow: 2px 2px 0 var(--8bit-black);
+}
+
+/* PWA banner */
+.pwa-banner {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.85rem 1rem;
+}
+
+.pwa-banner__title {
+  font-size: 0.48rem !important;
+  color: var(--8bit-yellow) !important;
+  margin: 0 0 0.35rem;
+}
+
+.pwa-banner__text {
+  font-family: var(--font-retro);
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.pwa-banner__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Celebracao pixel */
+.pixel-celebration .pixel-celebration__trophy {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  animation: pixel-bounce 0.6s steps(4) infinite;
+}
+
+@keyframes pixel-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Teacher topics */
+.teacher-topics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.teacher-topic-chip {
+  font-family: var(--font-retro);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+html[data-theme='teacher'] .teacher-topics-grid input {
+  margin-top: 0.15rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bit-title {
+    animation: none;
+  }
+  .pixel-celebration__trophy {
     animation: none;
   }
 }

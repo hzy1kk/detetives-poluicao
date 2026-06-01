@@ -14,6 +14,7 @@ import { playClick } from '../lib/audio'
 import type { Report } from '../types'
 import { QrAccessPanel } from './QrAccessPanel'
 import { StudentAccountsPanel } from './teacher/StudentAccountsPanel'
+import { TeacherSettingsPanel } from './teacher/TeacherSettingsPanel'
 
 type Props = {
   onBack: () => void
@@ -184,6 +185,8 @@ export function TeacherScreen({ onBack }: Props) {
           <strong className="green">{stats.pctDesc}%</strong>
         </div>
       </div>
+
+      <TeacherSettingsPanel />
 
       <QrAccessPanel compact />
 
