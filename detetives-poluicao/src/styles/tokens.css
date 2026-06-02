@@ -1,19 +1,30 @@
-/* 8-bit / NES palette — UI UX Pro Max (Pixel Art + Arcade) */
+/* Paleta do site: verde, cinza e pouco branco (suave) */
 
 :root {
-  --8bit-bg: #1a1c2e;
-  --8bit-bg-alt: #262b44;
-  --8bit-surface: #3b5dc9;
-  --8bit-surface-dark: #1d2b53;
-  --8bit-red: #ff0044;
-  --8bit-blue: #29adff;
-  --8bit-green: #00e436;
-  --8bit-yellow: #ffec27;
-  --8bit-purple: #7e2553;
-  --8bit-white: #ffffff;
-  --8bit-black: #000000;
-  --8bit-muted: #8b9bb4;
-  --8bit-shadow: #0f0f1a;
+  --site-green: #0dc972;
+  --site-green-dark: #09955c;
+  --site-green-light: #5ee9a8;
+  --site-gray-950: #121514;
+  --site-gray-900: #1c211f;
+  --site-gray-800: #282e2c;
+  --site-gray-700: #3a423f;
+  --site-gray-500: #8f9a95;
+  --site-gray-300: #c8d0cc;
+  --site-white-soft: #e6ebe8;
+
+  --8bit-bg: var(--site-gray-900);
+  --8bit-bg-alt: var(--site-gray-800);
+  --8bit-surface: var(--site-gray-700);
+  --8bit-surface-dark: #222826;
+  --8bit-red: #d45656;
+  --8bit-blue: var(--site-green);
+  --8bit-green: var(--site-green);
+  --8bit-yellow: var(--site-green-light);
+  --8bit-purple: var(--site-gray-700);
+  --8bit-white: var(--site-white-soft);
+  --8bit-black: var(--site-gray-950);
+  --8bit-muted: var(--site-gray-500);
+  --8bit-shadow: #0a0c0b;
 
   --font-pixel: 'Press Start 2P', monospace;
   --font-retro: 'VT323', monospace;
@@ -21,16 +32,15 @@
   --pixel: 4px;
   --ease-step: steps(4, end);
 
-  /* Aliases usados pelo app (quiz-*) */
-  --fusion-cyan: var(--8bit-blue);
-  --fusion-violet: var(--8bit-purple);
+  --fusion-cyan: var(--site-green);
+  --fusion-violet: var(--site-gray-700);
   --fusion-magenta: var(--8bit-red);
-  --fusion-blue: var(--8bit-blue);
-  --fusion-gold: var(--8bit-yellow);
+  --fusion-blue: var(--site-green);
+  --fusion-gold: var(--site-green-light);
   --fusion-deep: var(--8bit-bg);
   --fusion-mid: var(--8bit-bg-alt);
   --glass-bg: var(--8bit-surface-dark);
-  --glass-border: var(--8bit-black);
+  --glass-border: var(--site-gray-700);
   --glass-glow: transparent;
   --font-display: var(--font-pixel);
   --font-body: var(--font-retro);
@@ -39,15 +49,15 @@
   --quiz-bg-soft: var(--8bit-bg-alt);
   --quiz-surface: var(--8bit-surface-dark);
   --quiz-surface-2: var(--8bit-bg-alt);
-  --quiz-border: var(--8bit-black);
-  --quiz-border-strong: var(--8bit-white);
-  --quiz-text: var(--8bit-white);
-  --quiz-text-muted: var(--8bit-muted);
-  --quiz-green: var(--8bit-green);
-  --quiz-green-dark: #00b82e;
+  --quiz-border: var(--site-gray-700);
+  --quiz-border-strong: var(--site-gray-300);
+  --quiz-text: var(--site-white-soft);
+  --quiz-text-muted: var(--site-gray-500);
+  --quiz-green: var(--site-green);
+  --quiz-green-dark: var(--site-green-dark);
   --quiz-green-soft: var(--8bit-surface-dark);
-  --quiz-blue: var(--8bit-blue);
-  --quiz-sky: var(--8bit-blue);
+  --quiz-blue: var(--site-green);
+  --quiz-sky: var(--site-green-light);
   --quiz-blue-soft: var(--8bit-surface-dark);
   --quiz-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
   --quiz-shadow-sm: var(--pixel) var(--pixel) 0 var(--8bit-black);

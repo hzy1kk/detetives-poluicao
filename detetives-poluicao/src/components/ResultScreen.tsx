@@ -8,7 +8,7 @@ import { GOOGLE_FORMS_URL } from '../data/config'
 import { PixelCelebration } from './scene/PixelCelebration'
 import { PwaInstallBanner } from './PwaInstallBanner'
 
-const CONFETTI_COLORS = ['#ffec27', '#29adff', '#00e436', '#ff0044', '#ffffff']
+const CONFETTI_COLORS = ['#0dc972', '#5ee9a8', '#c8d0cc', '#e6ebe8', '#3a423f']
 
 type Props = {
   report: Report
@@ -70,10 +70,10 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
 
         <div className="quiz-result-hero bit-box" style={{ padding: '1rem', marginBottom: '1rem' }}>
           <p className="retro bit-result-badge">
-            {report.correto ? 'STAGE CLEAR' : 'GAME OVER'}
+            {report.correto ? 'FASE CONCLUIDA' : 'TENTE DE NOVO'}
           </p>
           <h2 className="quiz-page-title retro" style={{ marginBottom: '0.5rem' }}>
-            {report.correto ? 'CASE SOLVED' : 'TRY AGAIN'}
+            {report.correto ? 'CASO RESOLVIDO' : 'QUASE LA'}
           </h2>
           <p className="retro bit-stars" aria-label={`${report.estrelas} estrelas`}>
             {stars}
@@ -82,15 +82,15 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
 
         <div className="quiz-score-grid">
           <div className={`quiz-score-box bit-stat${report.poluenteCorreto ? '' : ' quiz-score-box--fail'}`}>
-            <span className="retro">POLLUTER</span>
+            <span className="retro">POLUENTE</span>
             <strong>{report.notaPoluente}</strong>
           </div>
           <div className={`quiz-score-box bit-stat${report.descarteCorreto ? '' : ' quiz-score-box--fail'}`}>
-            <span className="retro">DISPOSE</span>
+            <span className="retro">DESCARTE</span>
             <strong>{report.notaDescarte}</strong>
           </div>
           <div className="quiz-score-box quiz-score-box--total bit-stat">
-            <span className="retro">SCORE</span>
+            <span className="retro">NOTA</span>
             <strong>{report.notaTotal}</strong>
           </div>
         </div>
@@ -160,7 +160,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
             onPlayAgain()
           }}
         >
-          ▶ NEW CASE
+          ▶ NOVO CASO
         </motion.button>
         <button
           type="button"
@@ -171,7 +171,7 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
             onMenu()
           }}
         >
-          MAIN MENU
+          MENU PRINCIPAL
         </button>
       </div>
     </>

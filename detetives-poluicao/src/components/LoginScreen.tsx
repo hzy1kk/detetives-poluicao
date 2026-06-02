@@ -14,7 +14,7 @@ type Props = {
 
 const DIFF_LABELS: Record<Difficulty, string> = {
   facil: 'FACIL',
-  medio: 'NORMAL',
+  medio: 'MEDIO',
   dificil: 'DIFICIL',
 }
 
@@ -44,7 +44,7 @@ export function LoginScreen({ onLogin, onTeacherAccess, defaultDifficulty }: Pro
   return (
     <div className="quiz-shell quiz-shell--no-nav bit-menu-screen">
       <div className="bit-menu-card bit-box bit-box--blue" style={{ width: '100%' }}>
-        <p className="bit-subtitle retro">Press Start</p>
+        <p className="bit-subtitle retro">Pressione para jogar</p>
         <h1 className="bit-title retro">DETETIVES</h1>
         <h1 className="bit-title retro" style={{ fontSize: '0.65rem', marginTop: '0.35rem' }}>
           DA POLUICAO

@@ -25,14 +25,14 @@ export function RankingScreen({ profile, onNavigate }: Props) {
   }, [rows, tab, profile.nome])
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'all', label: 'ALL' },
+    { id: 'all', label: 'TODOS' },
     { id: 'top', label: 'TOP 10' },
-    { id: 'me', label: 'ME' },
+    { id: 'me', label: 'EU' },
   ]
 
   return (
     <QuizLayout profile={profile} activeNav="ranking" onNavigate={onNavigate}>
-      <h2 className="quiz-page-title retro">HIGH SCORES</h2>
+      <h2 className="quiz-page-title retro">MELHORES NOTAS</h2>
       <p className="quiz-page-lead">Turma {profile.turma} · neste aparelho</p>
 
       <div className="bit-tab-row">

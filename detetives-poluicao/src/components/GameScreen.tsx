@@ -332,15 +332,15 @@ export function GameScreen({
           }}
         >
           {step === 'caso'
-            ? 'IR AO MAPA >>'
+            ? 'IR AO MAPA'
             : step === 'mapa'
               ? concluiuPerguntas
-                ? 'VEREDITO >>'
+                ? 'VEREDITO'
                 : faltamPerguntas === 1
                   ? 'Falta 1 pergunta'
                   : `Faltam ${faltamPerguntas} perguntas`
               : vereditoStep === 'poluente'
-                ? 'PROXIMO >>'
+                ? 'PROXIMO'
                 : 'ENVIAR'}
         </button>
       </div>

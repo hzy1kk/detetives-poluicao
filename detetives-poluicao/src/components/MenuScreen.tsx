@@ -117,15 +117,15 @@ export function MenuScreen({
         {stats.partidas > 0 && (
           <div className="bit-hud-stats">
             <div className="bit-stat retro">
-              <span>PLAYS</span>
+              <span>PARTIDAS</span>
               {stats.partidas}
             </div>
             <div className="bit-stat retro">
-              <span>LAST</span>
+              <span>ULTIMA</span>
               {stats.ultima ?? '--'}
             </div>
             <div className="bit-stat retro">
-              <span>AVG</span>
+              <span>MEDIA</span>
               {stats.media ?? '--'}
             </div>
           </div>
@@ -133,7 +133,7 @@ export function MenuScreen({
 
         <div className="bit-box" style={{ width: '100%', padding: '0.75rem 1rem', marginBottom: '0.75rem' }}>
           <p className="quiz-settings-label retro" style={{ margin: '0 0 0.5rem', fontSize: '0.45rem' }}>
-            FONT SIZE
+            TAMANHO DA LETRA
           </p>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {(['p', 'm', 'g'] as const).map((s) => (

@@ -33,7 +33,7 @@ export function BootSplash({ onDone }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.5 }}
         >
-          LOADING...
+          CARREGANDO...
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}

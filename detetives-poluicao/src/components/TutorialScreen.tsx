@@ -18,10 +18,10 @@ const STEPS = [
 ]
 
 const CREW = [
-  { nome: 'LUCAS', papel: 'INVESTIGACAO', color: 'var(--8bit-blue)' },
-  { nome: 'ANA', papel: 'QUIMICA', color: 'var(--8bit-green)' },
-  { nome: 'ANDRE', papel: 'LAB', color: 'var(--8bit-yellow)' },
-  { nome: 'GABRIEL', papel: 'AMBIENTE', color: 'var(--8bit-red)' },
+  { nome: 'LUCAS', papel: 'INVESTIGACAO', color: 'var(--site-green)' },
+  { nome: 'ANA', papel: 'QUIMICA', color: 'var(--site-green-light)' },
+  { nome: 'ANDRE', papel: 'LAB', color: 'var(--site-gray-300)' },
+  { nome: 'GABRIEL', papel: 'AMBIENTE', color: 'var(--site-gray-500)' },
 ]
 
 export function TutorialScreen({ profile, onDone, onNavigate }: Props) {

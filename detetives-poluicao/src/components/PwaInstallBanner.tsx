@@ -42,7 +42,7 @@ export function PwaInstallBanner() {
 
   return (
     <div className="pwa-banner bit-box" role="region" aria-label="Instalar aplicativo">
-      <p className="retro pwa-banner__title">INSERIR CARTUCHO</p>
+      <p className="retro pwa-banner__title">INSTALAR JOGO</p>
       <p className="pwa-banner__text">Instale o jogo na tela inicial para jogar offline.</p>
       <div className="pwa-banner__actions">
         <button type="button" className="bit-btn bit-btn--green retro" onClick={install}>

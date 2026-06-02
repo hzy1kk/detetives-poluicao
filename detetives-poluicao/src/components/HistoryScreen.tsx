@@ -32,7 +32,7 @@ export function HistoryScreen({ profile, onNavigate }: Props) {
           <ChevronLeft aria-hidden size={22} strokeWidth={2} />
         </button>
         <h2 className="quiz-page-title retro" style={{ margin: 0, flex: 1 }}>
-          HISTORY
+          HISTORICO
         </h2>
       </div>
 
@@ -55,7 +55,7 @@ export function HistoryScreen({ profile, onNavigate }: Props) {
                   <strong style={{ fontFamily: 'var(--font-retro)', fontSize: '1.05rem' }}>{r.casoNome}</strong>
                   <small style={{ display: 'block', color: 'var(--quiz-text-muted)' }}>
                     {formatTime(r.tempoSegundos)} · {'*'.repeat(r.estrelas)}
-                    {r.modoTreino ? ' · TRAINING' : ''}
+                    {r.modoTreino ? ' · Treino' : ''}
                   </small>
                 </div>
                 <strong className="retro" style={{ color: 'var(--8bit-green)', fontSize: '0.55rem' }}>

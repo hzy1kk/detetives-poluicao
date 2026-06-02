@@ -15,10 +15,10 @@ const items: {
   Icon: typeof Home
   label: string
 }[] = [
-  { id: 'menu', screen: 'menu', Icon: Home, label: 'HOME' },
-  { id: 'ranking', screen: 'ranking', Icon: Trophy, label: 'SCORE' },
-  { id: 'tutorial', screen: 'tutorial', Icon: BookOpen, label: 'HELP' },
-  { id: 'about', screen: 'about', Icon: Info, label: 'INFO' },
+  { id: 'menu', screen: 'menu', Icon: Home, label: 'INICIO' },
+  { id: 'ranking', screen: 'ranking', Icon: Trophy, label: 'NOTAS' },
+  { id: 'tutorial', screen: 'tutorial', Icon: BookOpen, label: 'AJUDA' },
+  { id: 'about', screen: 'about', Icon: Info, label: 'SOBRE' },
 ]
 
 export function QuizBottomNav({ active, onNavigate }: Props) {

@@ -26,15 +26,15 @@ html[data-screen='game'] body {
 }
 
 html[data-font='p'] {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 html[data-font='m'] {
-  font-size: 17px;
+  font-size: 18px;
 }
 
 html[data-font='g'] {
-  font-size: 19px;
+  font-size: 21px;
 }
 
 h1,

@@ -49,7 +49,7 @@ export function PixelCelebration({ tier, notaTotal, onContinue }: Props) {
         {cfg.emoji}
       </div>
       <div className="celebration-text">
-        <p className="celebration-tier-badge retro">SCORE {notaTotal}/100</p>
+        <p className="celebration-tier-badge retro">NOTA {notaTotal}/100</p>
         <h2 id="pixel-celeb-title" className={`celebration-title celebration-title--${tier} retro`}>
           {cfg.title}
         </h2>
@@ -61,7 +61,7 @@ export function PixelCelebration({ tier, notaTotal, onContinue }: Props) {
           whileTap={{ scale: 0.98 }}
           style={{ marginTop: '1rem' }}
         >
-          CONTINUAR &gt;&gt;
+          CONTINUAR
         </motion.button>
       </div>
     </motion.div>
