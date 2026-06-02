@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { ChevronLeft, Clock } from 'lucide-react'
 import { SegmentProgress } from './quiz/SegmentProgress'
+import { QuestionRunProgress } from './quiz/QuestionRunProgress'
 import { QuizOption } from './quiz/QuizOption'
 import { CaseMap } from './game/CaseMap'
 import { QuestionCard } from './game/QuestionCard'
+import { QuestionOverlay } from './game/QuestionOverlay'
 import {
   getErrorHint,
   getHintText,
@@ -25,6 +27,7 @@ type Props = {
 }
 
 type GameStep = 'caso' | 'mapa' | 'veredito'
+type VereditoStep = 'poluente' | 'descarte'
 
 const STEPS: { id: GameStep; title: string }[] = [
   { id: 'caso', title: 'CASO' },
@@ -43,6 +46,7 @@ export function GameScreen({
   onQuit,
 }: Props) {
   const [step, setStep] = useState<GameStep>('caso')
+  const [vereditoStep, setVereditoStep] = useState<VereditoStep>('poluente')
   const [suspeito, setSuspeito] = useState('')
   const [descarte, setDescarte] = useState('')
   const [perguntaAtiva, setPerguntaAtiva] = useState(false)
@@ -54,6 +58,8 @@ export function GameScreen({
   const perguntaId = session.perguntaIds[indiceAtual]
   const perguntaAtual = perguntaId ? getQuestionById(perguntaId) : null
   const concluiuPerguntas = session.cluesRevealed >= totalPerguntas
+  const perguntaNum = Math.min(indiceAtual + 1, totalPerguntas)
+  const faltamPerguntas = totalPerguntas - session.cluesRevealed
 
   const pistasColetadas = gameCase.pistas.slice(0, session.cluesRevealed)
 
@@ -81,11 +87,11 @@ export function GameScreen({
     })
     setUltimaPista(perguntaAtual.pistaOk)
     setPerguntaAtiva(false)
-    setFeedback(perguntaAtual.pistaOk)
+    setFeedback('')
   }
 
   function pedirDica() {
-    if (session.dicasUsadas >= 2) return
+    if (session.dicasUsadas >= 2 || perguntaAtiva) return
     playClick()
     onUpdateSession({ ...session, dicasUsadas: session.dicasUsadas + 1 })
     setFeedback(getHintText(gameCase, session.dicasUsadas + 1))
@@ -132,6 +138,7 @@ export function GameScreen({
       return
     }
     playClick()
+    setVereditoStep('poluente')
     setStep('veredito')
     setFeedback('')
   }
@@ -139,8 +146,14 @@ export function GameScreen({
   const stepNum = STEP_NUM[step]
   const stepTitle = STEPS.find((s) => s.id === step)?.title ?? ''
 
+  const feedbackIsErr =
+    feedback.toLowerCase().includes('err') ||
+    feedback.includes('Responda') ||
+    feedback.includes('incorret') ||
+    feedback.includes('errado')
+
   return (
-    <div className="quiz-shell quiz-shell--game quiz-game-hud">
+    <div className={`quiz-shell quiz-shell--game quiz-game-hud${perguntaAtiva ? ' quiz-shell--question-open' : ''}`}>
       <div className="quiz-back-row">
         <button type="button" className="quiz-back-btn" onClick={onQuit} aria-label="Sair">
           <ChevronLeft aria-hidden size={22} strokeWidth={2} />
@@ -163,57 +176,59 @@ export function GameScreen({
         }
       />
 
+      {step === 'mapa' && !concluiuPerguntas && (
+        <QuestionRunProgress current={perguntaNum} total={totalPerguntas} />
+      )}
+
       {step === 'caso' && (
-        <>
-          <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">FASE 01</p>
-            <h3>{gameCase.nome}</h3>
-            <p>{gameCase.intro}</p>
-            <p style={{ marginTop: '0.5rem' }}>{gameCase.contexto}</p>
-          </div>
-        </>
+        <div className="quiz-question-card">
+          <p className="quiz-question-eyebrow retro">FASE 01</p>
+          <h3>{gameCase.nome}</h3>
+          <p className="quiz-instruction">{gameCase.intro}</p>
+          <p className="quiz-instruction" style={{ marginTop: '0.5rem' }}>
+            {gameCase.contexto}
+          </p>
+        </div>
       )}
 
       {step === 'mapa' && (
         <>
           <div className="quiz-question-card">
             <p className="quiz-question-eyebrow retro">FASE 02</p>
-            <h3>Explore o mapa</h3>
-            <p>Cada local traz uma pergunta. Dificuldade sobe de 1 a 5.</p>
+            <h3>Toque em um local</h3>
+            <p className="quiz-instruction">Cada local tem uma pergunta de quimica. A dificuldade sobe de 1 a 5.</p>
           </div>
 
-          <CaseMap
-            gameCase={gameCase}
-            session={session}
-            totalPerguntas={totalPerguntas}
-            onVisit={visitHotspot}
-          />
-
-          {perguntaAtiva && perguntaAtual && (
-            <QuestionCard
-              question={perguntaAtual}
-              nivel={indiceAtual + 1}
-              onCorrect={onRespostaCerta}
-              onWrong={(msg) => setFeedback(msg)}
+          <div className={perguntaAtiva ? 'case-map-wrap case-map-wrap--paused' : 'case-map-wrap'}>
+            <CaseMap
+              gameCase={gameCase}
+              session={session}
+              totalPerguntas={totalPerguntas}
+              onVisit={visitHotspot}
             />
-          )}
+          </div>
+
+          <QuestionOverlay open={perguntaAtiva && !!perguntaAtual}>
+            {perguntaAtual && (
+              <QuestionCard
+                question={perguntaAtual}
+                nivel={perguntaNum}
+                total={totalPerguntas}
+                onCorrect={onRespostaCerta}
+              />
+            )}
+          </QuestionOverlay>
 
           {pistasColetadas.length > 0 && !perguntaAtiva && (
             <div className="quiz-card" style={{ padding: '0.75rem 1rem' }}>
-              <p className="retro" style={{ fontSize: '0.42rem', margin: '0 0 0.35rem' }}>
-                PISTAS ({pistasColetadas.length}/{totalPerguntas})
-              </p>
-              <ul style={{ margin: 0, paddingLeft: '1.1rem', fontFamily: 'var(--font-retro)', fontSize: '0.95rem' }}>
+              <p className="retro question-clues-label">Pistas ({pistasColetadas.length}/{totalPerguntas})</p>
+              <ul className="question-clues-list">
                 {pistasColetadas.map((p) => (
-                  <li key={p.id} style={{ marginBottom: '0.25rem' }}>
-                    {p.texto}
-                  </li>
+                  <li key={p.id}>{p.texto}</li>
                 ))}
               </ul>
               {ultimaPista && (
-                <p className="quiz-feedback quiz-feedback--ok" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                  {ultimaPista}
-                </p>
+                <p className="quiz-feedback quiz-feedback--ok question-clues-latest">{ultimaPista}</p>
               )}
             </div>
           )}
@@ -225,39 +240,61 @@ export function GameScreen({
           <div className="quiz-question-card">
             <p className="quiz-question-eyebrow retro">FASE 03</p>
             <h3>Veredito final</h3>
-            <p>50% poluente + 50% descarte.</p>
+            <p className="quiz-instruction">
+              {vereditoStep === 'poluente'
+                ? 'Passo 1: quem poluiu? Escolha o poluente.'
+                : 'Passo 2: qual o descarte correto?'}
+            </p>
           </div>
-          <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Poluente</p>
-          <div className="quiz-options">
-            {gameCase.suspeitos.map((s, idx) => (
-              <QuizOption key={s} selected={suspeito === s} onClick={() => setSuspeito(s)}>
-                <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
-                {s}
-              </QuizOption>
-            ))}
-          </div>
-          <p style={{ fontWeight: 600, margin: '0.75rem 0 0.5rem', fontSize: '0.85rem' }}>Descarte</p>
-          <div className="quiz-options">
-            {gameCase.descartes.map((d, idx) => (
-              <QuizOption key={d} selected={descarte === d} onClick={() => setDescarte(d)}>
-                <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
-                {d}
-              </QuizOption>
-            ))}
-          </div>
+
+          {vereditoStep === 'poluente' && (
+            <>
+              <p className="quiz-step-label">Quem poluiu?</p>
+              <div className="quiz-options">
+                {gameCase.suspeitos.map((s, idx) => (
+                  <QuizOption
+                    key={s}
+                    hideRadio
+                    selected={suspeito === s}
+                    onClick={() => {
+                      playClick()
+                      setSuspeito(s)
+                    }}
+                  >
+                    <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
+                    {s}
+                  </QuizOption>
+                ))}
+              </div>
+            </>
+          )}
+
+          {vereditoStep === 'descarte' && (
+            <>
+              <p className="quiz-step-label">Descarte correto</p>
+              <div className="quiz-options">
+                {gameCase.descartes.map((d, idx) => (
+                  <QuizOption
+                    key={d}
+                    hideRadio
+                    selected={descarte === d}
+                    onClick={() => {
+                      playClick()
+                      setDescarte(d)
+                    }}
+                  >
+                    <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
+                    {d}
+                  </QuizOption>
+                ))}
+              </div>
+            </>
+          )}
         </>
       )}
 
-      {feedback && (
-        <div
-          className={`quiz-feedback ${
-            feedback.toLowerCase().includes('err') ||
-            feedback.includes('Responda') ||
-            feedback.includes('incorret')
-              ? 'quiz-feedback--err'
-              : 'quiz-feedback--ok'
-          }`}
-        >
+      {feedback && !perguntaAtiva && (
+        <div className={`quiz-feedback ${feedbackIsErr ? 'quiz-feedback--err' : 'quiz-feedback--ok'}`}>
           {feedback}
         </div>
       )}
@@ -268,7 +305,7 @@ export function GameScreen({
             type="button"
             className="quiz-hint-btn quiz-hint-btn--text"
             onClick={pedirDica}
-            disabled={session.dicasUsadas >= 2}
+            disabled={session.dicasUsadas >= 2 || perguntaAtiva}
           >
             Dica ({2 - session.dicasUsadas})
           </button>
@@ -276,11 +313,22 @@ export function GameScreen({
         <button
           type="button"
           className="quiz-btn-primary"
-          disabled={step === 'veredito' ? !suspeito || !descarte : false}
+          disabled={
+            step === 'veredito'
+              ? vereditoStep === 'poluente'
+                ? !suspeito
+                : !descarte
+              : step === 'mapa' && !concluiuPerguntas
+          }
           onClick={() => {
             if (step === 'caso') irParaMapa()
             else if (step === 'mapa') irParaVeredito()
-            else enviar()
+            else if (vereditoStep === 'poluente') {
+              if (!suspeito) return
+              playClick()
+              setVereditoStep('descarte')
+              setFeedback('')
+            } else enviar()
           }}
         >
           {step === 'caso'
@@ -288,8 +336,12 @@ export function GameScreen({
             : step === 'mapa'
               ? concluiuPerguntas
                 ? 'VEREDITO >>'
-                : `PERGUNTAS ${session.cluesRevealed}/${totalPerguntas}`
-              : 'ENVIAR'}
+                : faltamPerguntas === 1
+                  ? 'Falta 1 pergunta'
+                  : `Faltam ${faltamPerguntas} perguntas`
+              : vereditoStep === 'poluente'
+                ? 'PROXIMO >>'
+                : 'ENVIAR'}
         </button>
       </div>
     </div>

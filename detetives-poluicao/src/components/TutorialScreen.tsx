@@ -27,8 +27,8 @@ const CREW = [
 export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
   return (
     <QuizLayout profile={profile} activeNav="tutorial" onNavigate={onNavigate}>
-      <h2 className="quiz-page-title retro">HOW TO PLAY</h2>
-      <p className="quiz-page-lead">3 fases: caso → mapa (5 perguntas) → veredito.</p>
+      <h2 className="quiz-page-title retro">COMO JOGAR</h2>
+      <p className="quiz-page-lead">3 fases: caso, mapa (5 perguntas) e veredito.</p>
 
       <div className="quiz-card bit-box">
         <ol className="bit-step-list">
@@ -70,7 +70,7 @@ export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
           onDone()
         }}
       >
-        ▶ CONTINUE
+        ▶ CONTINUAR
       </motion.button>
     </QuizLayout>
   )

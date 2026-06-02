@@ -19,8 +19,8 @@ export function CaseMap({ gameCase, session, totalPerguntas, onVisit }: Props) {
       <p className="retro case-map__title">MAPA DA CENA</p>
       <p className="case-map__sub">
         {done
-          ? '5 perguntas concluidas. Va ao veredito.'
-          : `Toque em um local — pergunta ${answered + 1}/${totalPerguntas}`}
+          ? 'Todas as perguntas feitas! Va ao veredito.'
+          : `Toque em um local — pergunta ${answered + 1} de ${totalPerguntas}`}
       </p>
       <div className="case-map__grid">
         {gameCase.mapaLocais.map((loc) => {

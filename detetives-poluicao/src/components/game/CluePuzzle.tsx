@@ -29,13 +29,16 @@ function EscolhaPuzzle({
   return (
     <>
       <p style={{ fontWeight: 700, margin: '0 0 0.5rem' }} className="retro">
-        CHECKPOINT QUIMICA
+        PERGUNTA RAPIDA
       </p>
-      <p style={{ margin: '0 0 0.75rem', color: 'var(--8bit-muted)' }}>{puzzle.pergunta}</p>
+      <p className="quiz-instruction" style={{ margin: '0 0 0.75rem' }}>
+        {puzzle.pergunta}
+      </p>
       <div className="quiz-options">
         {puzzle.opcoes.map((op, idx) => (
           <QuizOption
             key={op}
+            hideRadio
             onClick={() => {
               playClick()
               if (puzzle.correta === idx) {
@@ -94,7 +97,9 @@ function ParearPuzzle({
       <p className="retro" style={{ fontSize: '0.45rem', margin: '0 0 0.35rem' }}>
         LIGUE AS PISTAS
       </p>
-      <p style={{ margin: '0 0 0.75rem' }}>{puzzle.pergunta}</p>
+      <p className="quiz-instruction" style={{ margin: '0 0 0.75rem' }}>
+        {puzzle.pergunta}
+      </p>
       <div className="clue-parear-grid">
         <div>
           <p className="clue-parear-label retro">SINAIS</p>
@@ -172,7 +177,9 @@ function OrdenarPuzzle({
       <p className="retro" style={{ fontSize: '0.45rem' }}>
         ORDEM CORRETA
       </p>
-      <p style={{ margin: '0 0 0.75rem' }}>{puzzle.pergunta}</p>
+      <p className="quiz-instruction" style={{ margin: '0 0 0.75rem' }}>
+        {puzzle.pergunta}
+      </p>
       {order.map((itemIdx, pos) => (
         <div key={itemIdx} className="clue-ordenar-row">
           <span>{pos + 1}.</span>

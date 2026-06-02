@@ -57,7 +57,7 @@ export function MenuScreen({
     { id: 'rank', label: 'RANKING', action: () => onNavigate('ranking') },
     { id: 'hist', label: 'HISTORICO', action: onHistory },
     { id: 'learn', label: 'COMO JOGAR', action: () => onNavigate('tutorial') },
-    { id: 'docs', label: 'DOCUMENTS', action: () => window.open('/docs/index.html', '_blank') },
+    { id: 'docs', label: 'DOCUMENTOS', action: () => window.open('/docs/index.html', '_blank') },
     { id: 'teacher', label: 'PROFESSORA', action: onTeacher },
   ]
 
