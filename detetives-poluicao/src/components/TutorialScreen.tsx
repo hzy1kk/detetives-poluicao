@@ -10,12 +10,11 @@ type Props = {
 }
 
 const STEPS = [
-  'Tela inicial: digite seu usuario (sem senha).',
-  'Um caso novo a cada partida (~15 min).',
-  'Colete pistas — algumas tem quiz de Quimica.',
-  'Laboratorio: testes limitados.',
-  'Acerte poluente + descarte (50% + 50%).',
-  'Veja nota e ranking da turma.',
+  'Digite seu nome e escolha a dificuldade.',
+  'Leia o caso e va ao mapa.',
+  '5 perguntas no mapa — do mais facil ao mais dificil.',
+  'Acerte poluente + descarte no veredito.',
+  'Veja sua nota e o ranking.',
 ]
 
 const CREW = [
@@ -29,7 +28,7 @@ export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
   return (
     <QuizLayout profile={profile} activeNav="tutorial" onNavigate={onNavigate}>
       <h2 className="quiz-page-title retro">HOW TO PLAY</h2>
-      <p className="quiz-page-lead">4 fases por caso: caso → pistas → lab → veredito.</p>
+      <p className="quiz-page-lead">3 fases: caso → mapa (5 perguntas) → veredito.</p>
 
       <div className="quiz-card bit-box">
         <ol className="bit-step-list">

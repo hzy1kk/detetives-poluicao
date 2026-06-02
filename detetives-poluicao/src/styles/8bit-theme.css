@@ -1013,6 +1013,19 @@ html[data-theme='teacher'] .teacher-topics-grid input {
   margin-top: 0.15rem;
 }
 
+.question-card__tier {
+  font-size: 0.42rem !important;
+  color: var(--8bit-green) !important;
+  margin: 0 0 0.5rem;
+}
+
+.question-card__text {
+  font-family: var(--font-retro);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  margin: 0 0 0.75rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bit-title {
     animation: none;

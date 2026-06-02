@@ -4,23 +4,23 @@ import { playClick, playReveal } from '../../lib/audio'
 type Props = {
   gameCase: GameCase
   session: GameSession
-  totalPistas: number
+  totalPerguntas: number
   onVisit: (hotspotId: string) => void
 }
 
-export function CaseMap({ gameCase, session, totalPistas, onVisit }: Props) {
-  const collected = session.cluesRevealed
-  const done = collected >= totalPistas
+export function CaseMap({ gameCase, session, totalPerguntas, onVisit }: Props) {
+  const answered = session.cluesRevealed
+  const done = answered >= totalPerguntas
   const allVisited = gameCase.mapaLocais.every((l) => session.locaisVisitados.includes(l.id))
-  const needMore = collected < totalPistas
+  const needMore = answered < totalPerguntas
 
   return (
     <div className={`case-map case-map--${gameCase.cenario}`}>
       <p className="retro case-map__title">MAPA DA CENA</p>
       <p className="case-map__sub">
         {done
-          ? 'Todas as pistas coletadas.'
-          : `Explore um local (${collected}/${totalPistas})`}
+          ? '5 perguntas concluidas. Va ao veredito.'
+          : `Toque em um local — pergunta ${answered + 1}/${totalPerguntas}`}
       </p>
       <div className="case-map__grid">
         {gameCase.mapaLocais.map((loc) => {

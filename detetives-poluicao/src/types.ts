@@ -85,8 +85,7 @@ export type GameCase = {
   gabarito: { suspeito: string; descarte: string }
   explicacao: string
   aprendizados: [string, string, string]
-  dicas: [string, string, string]
-  suspeitoEliminarDica3: string
+  dicas: [string, string]
 }
 
 export type Report = {
@@ -149,16 +148,14 @@ export type GameSession = {
   caseId: string
   difficulty: Difficulty
   modoTreino: boolean
-  clueOrder: string[]
+  /** IDs das 5 perguntas sorteadas (tier 1..5) */
+  perguntaIds: string[]
+  /** Perguntas respondidas com sucesso (0–5) */
   cluesRevealed: number
+  perguntasAcertos: number
   dicasUsadas: number
   tentativas: number
-  testesFeitos: string[]
-  labCharges: number
-  startedAt: number
-  miniRespostas: Record<string, boolean>
-  pistaSuspeito: Record<string, string | null>
   locaisVisitados: string[]
-  suspeitosEliminadosLab: string[]
+  startedAt: number
   finalizado: boolean
 }

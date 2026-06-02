@@ -1,24 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { ChevronLeft, Clock } from 'lucide-react'
 import { SegmentProgress } from './quiz/SegmentProgress'
 import { QuizOption } from './quiz/QuizOption'
 import { CaseMap } from './game/CaseMap'
-import { CluePuzzle } from './game/CluePuzzle'
-import { EvidenceBoard } from './game/EvidenceBoard'
+import { QuestionCard } from './game/QuestionCard'
 import {
-  applyLabTest,
-  getActiveSuspeitos,
-  getClueCount,
   getErrorHint,
   getHintText,
-  getSuspeitoComMaisPistas,
-  getVisibleClueIds,
+  getQuestionsPerRun,
   formatTime,
-  isTeoriaAlinhada,
-  requiresLabBeforeVerdict,
-  requiresTheoryPins,
 } from '../lib/gameEngine'
-import { playClick, playError, playReveal, playSuccess, playUnlock } from '../lib/audio'
+import { getQuestionById } from '../lib/questionPicker'
+import { playClick, playError, playSuccess } from '../lib/audio'
 import { vibrateError, vibrateSuccess } from '../lib/haptics'
 import type { GameCase, GameSession } from '../types'
 
@@ -31,16 +24,15 @@ type Props = {
   onQuit: () => void
 }
 
-type GameStep = 'caso' | 'pistas' | 'lab' | 'veredito'
+type GameStep = 'caso' | 'mapa' | 'veredito'
 
-const STEPS: { id: GameStep; title: string; label: string }[] = [
-  { id: 'caso', title: 'CASO', label: 'Arquivo' },
-  { id: 'pistas', title: 'PISTAS', label: 'Cena' },
-  { id: 'lab', title: 'LAB', label: 'Laboratorio' },
-  { id: 'veredito', title: 'VEREDITO', label: 'Acusacao' },
+const STEPS: { id: GameStep; title: string }[] = [
+  { id: 'caso', title: 'CASO' },
+  { id: 'mapa', title: 'MAPA' },
+  { id: 'veredito', title: 'VEREDITO' },
 ]
 
-const STEP_NUM: Record<GameStep, number> = { caso: 1, pistas: 2, lab: 3, veredito: 4 }
+const STEP_NUM: Record<GameStep, number> = { caso: 1, mapa: 2, veredito: 3 }
 
 export function GameScreen({
   gameCase,
@@ -53,149 +45,54 @@ export function GameScreen({
   const [step, setStep] = useState<GameStep>('caso')
   const [suspeito, setSuspeito] = useState('')
   const [descarte, setDescarte] = useState('')
-  const [resultadoLab, setResultadoLab] = useState('')
-  const [miniAtiva, setMiniAtiva] = useState<string | null>(null)
+  const [perguntaAtiva, setPerguntaAtiva] = useState(false)
   const [feedback, setFeedback] = useState('')
-  const [suspeitosOcultos, setSuspeitosOcultos] = useState<string[]>([])
-  const [destacados, setDestacados] = useState<string[]>([])
+  const [ultimaPista, setUltimaPista] = useState('')
 
-  const totalPistas = getClueCount(session.difficulty)
-  const visibleIds = getVisibleClueIds(session, gameCase)
-  const pistas = visibleIds
-    .map((id) => gameCase.pistas.find((p) => p.id === id))
-    .filter(Boolean) as typeof gameCase.pistas
+  const totalPerguntas = getQuestionsPerRun()
+  const indiceAtual = session.cluesRevealed
+  const perguntaId = session.perguntaIds[indiceAtual]
+  const perguntaAtual = perguntaId ? getQuestionById(perguntaId) : null
+  const concluiuPerguntas = session.cluesRevealed >= totalPerguntas
 
-  const proximaPistaId = useMemo(() => {
-    if (session.cluesRevealed >= totalPistas) return null
-    return session.clueOrder[session.cluesRevealed] ?? null
-  }, [session, totalPistas])
-
-  const proximaClue = proximaPistaId
-    ? gameCase.pistas.find((p) => p.id === proximaPistaId)
-    : null
-
-  const suspeitosFiltrados = getActiveSuspeitos(gameCase, session, suspeitosOcultos)
-  const stepNum = STEP_NUM[step]
-  const stepMeta = STEPS.find((s) => s.id === step)!
-
-  const teoriaTop = getSuspeitoComMaisPistas(gameCase, session)
-
-  function nextStep() {
-    const i = STEPS.findIndex((s) => s.id === step)
-    if (i < STEPS.length - 1) {
-      if (step === 'pistas' && session.cluesRevealed < totalPistas) {
-        setFeedback(`Colete todas as ${totalPistas} pistas no mapa antes do laboratorio.`)
-        return
-      }
-      if (step === 'lab' && requiresLabBeforeVerdict(session)) {
-        setFeedback('Rode pelo menos 1 teste no laboratorio antes do veredito.')
-        return
-      }
-      playClick()
-      setStep(STEPS[i + 1].id)
-      setFeedback('')
-    }
-  }
-
-  function prevStep() {
-    const i = STEPS.findIndex((s) => s.id === step)
-    if (i > 0) {
-      playClick()
-      setStep(STEPS[i - 1].id)
-      setFeedback('')
-    }
-  }
+  const pistasColetadas = gameCase.pistas.slice(0, session.cluesRevealed)
 
   function visitHotspot(hotspotId: string) {
-    if (session.cluesRevealed >= totalPistas) return
+    if (concluiuPerguntas || perguntaAtiva || !perguntaAtual) return
 
     const allVisited = gameCase.mapaLocais.every((l) => session.locaisVisitados.includes(l.id))
     let locais = session.locaisVisitados
-    if (allVisited && session.cluesRevealed < totalPistas) {
-      locais = []
-    }
+    if (allVisited && session.cluesRevealed < totalPerguntas) locais = []
     if (locais.includes(hotspotId) && !allVisited) return
 
-    const nextLocais = [...locais, hotspotId]
-    onUpdateSession({ ...session, locaisVisitados: nextLocais })
-
-    if (!proximaClue) return
-    if (proximaClue.miniPergunta && !session.miniRespostas[proximaClue.id]) {
-      setMiniAtiva(proximaClue.id)
-      return
-    }
-    unlockNext(nextLocais)
+    onUpdateSession({ ...session, locaisVisitados: [...locais, hotspotId] })
+    setPerguntaAtiva(true)
+    setFeedback('')
   }
 
-  function unlockNext(locais = session.locaisVisitados) {
-    playUnlock()
-    playReveal()
-    onUpdateSession({
-      ...session,
-      locaisVisitados: locais,
-      cluesRevealed: Math.min(session.cluesRevealed + 1, totalPistas),
-    })
-    setMiniAtiva(null)
-    setFeedback('Nova pista coletada!')
-  }
-
-  function onPuzzleSuccess() {
-    if (!proximaClue) return
-    playSuccess()
+  function onRespostaCerta() {
+    if (!perguntaAtual) return
     vibrateSuccess()
+    const nextRevealed = session.cluesRevealed + 1
     onUpdateSession({
       ...session,
-      miniRespostas: { ...session.miniRespostas, [proximaClue.id]: true },
-      cluesRevealed: Math.min(session.cluesRevealed + 1, totalPistas),
+      cluesRevealed: nextRevealed,
+      perguntasAcertos: session.perguntasAcertos + 1,
     })
-    setMiniAtiva(null)
-    setFeedback('Correto! Pista liberada.')
+    setUltimaPista(perguntaAtual.pistaOk)
+    setPerguntaAtiva(false)
+    setFeedback(perguntaAtual.pistaOk)
   }
 
   function pedirDica() {
-    if (session.dicasUsadas >= 3) return
+    if (session.dicasUsadas >= 2) return
     playClick()
-    const level = session.dicasUsadas + 1
-    onUpdateSession({ ...session, dicasUsadas: level })
-    if (level === 3) {
-      setSuspeitosOcultos((prev) =>
-        prev.includes(gameCase.suspeitoEliminarDica3)
-          ? prev
-          : [...prev, gameCase.suspeitoEliminarDica3],
-      )
-    }
-    setFeedback(getHintText(gameCase, level))
-  }
-
-  function rodarTeste(testId: string, resultado: string) {
-    playClick()
-    if (session.labCharges <= 0 && !session.testesFeitos.includes(testId)) {
-      setFeedback('Sem cargas no laboratorio.')
-      return
-    }
-    const { session: next, eliminados, destacados: dest } = applyLabTest(gameCase, session, testId)
-    onUpdateSession(next)
-    setResultadoLab(resultado)
-    if (dest.length) setDestacados((d) => [...new Set([...d, ...dest])])
-    if (eliminados.length > 0 && !session.testesFeitos.includes(testId)) {
-      setFeedback(`TESTE OK — ${eliminados.length} suspeito(s) eliminado(s).`)
-    }
+    onUpdateSession({ ...session, dicasUsadas: session.dicasUsadas + 1 })
+    setFeedback(getHintText(gameCase, session.dicasUsadas + 1))
   }
 
   function enviar() {
     playClick()
-    if (requiresLabBeforeVerdict(session)) {
-      setFeedback('Faca pelo menos 1 teste no laboratorio.')
-      return
-    }
-    if (requiresTheoryPins(session)) {
-      const pins = Object.values(session.pistaSuspeito).filter(Boolean).length
-      if (pins > 0 && !isTeoriaAlinhada(gameCase, session, suspeito)) {
-        setFeedback('Sua teoria no quadro nao combina com o poluente escolhido. Revise as pistas.')
-        return
-      }
-    }
-
     const tent = session.tentativas + 1
     const polOk = suspeito === gameCase.gabarito.suspeito
     const descOk = descarte === gameCase.gabarito.descarte
@@ -206,11 +103,11 @@ export function GameScreen({
       vibrateError()
       const baseMsg =
         !polOk && !descOk
-          ? 'Poluente e descarte incorretos.'
+          ? 'Poluente e descarte errados.'
           : !polOk
-            ? 'Poluente incorreto (50%).'
-            : 'Descarte incorreto (50%).'
-      setFeedback(`${baseMsg}\n\n${getErrorHint(gameCase, polOk, descOk)}`)
+            ? 'Poluente errado.'
+            : 'Descarte errado.'
+      setFeedback(`${baseMsg} ${getErrorHint(gameCase, polOk, descOk)}`)
       return
     }
     if (ok) {
@@ -223,25 +120,24 @@ export function GameScreen({
     onFinish(suspeito, descarte)
   }
 
-  function handlePrimary() {
-    if (step === 'veredito') {
-      enviar()
-      return
-    }
-    if (step === 'pistas') {
-      if (session.cluesRevealed < totalPistas) {
-        setFeedback('Toque em um local do mapa para coletar a proxima pista.')
-        return
-      }
-      nextStep()
-      return
-    }
-    if (step === 'lab' && requiresLabBeforeVerdict(session)) {
-      setFeedback('Rode pelo menos 1 teste antes de avancar.')
-      return
-    }
-    nextStep()
+  function irParaMapa() {
+    playClick()
+    setStep('mapa')
+    setFeedback('')
   }
+
+  function irParaVeredito() {
+    if (!concluiuPerguntas) {
+      setFeedback('Responda as 5 perguntas no mapa primeiro.')
+      return
+    }
+    playClick()
+    setStep('veredito')
+    setFeedback('')
+  }
+
+  const stepNum = STEP_NUM[step]
+  const stepTitle = STEPS.find((s) => s.id === step)?.title ?? ''
 
   return (
     <div className="quiz-shell quiz-shell--game quiz-game-hud">
@@ -259,10 +155,10 @@ export function GameScreen({
 
       <SegmentProgress
         current={stepNum}
-        total={4}
+        total={3}
         label={
           <>
-            <strong>{String(stepNum).padStart(2, '0')}</strong> {stepMeta.title} · {stepMeta.label}
+            <strong>{String(stepNum).padStart(2, '0')}</strong> {stepTitle}
           </>
         }
       />
@@ -270,105 +166,56 @@ export function GameScreen({
       {step === 'caso' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">FASE 01 · DOSSIE</p>
+            <p className="quiz-question-eyebrow retro">FASE 01</p>
             <h3>{gameCase.nome}</h3>
             <p>{gameCase.intro}</p>
-            <p style={{ marginTop: '0.65rem' }}>{gameCase.contexto}</p>
-            <p className="quiz-bncc-chip" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
-              BNCC: {gameCase.bncc.join(' · ')}
-            </p>
-          </div>
-          <div className="quiz-stats-row">
-            <div className="quiz-stat-box">
-              <span>Ambiente</span>
-              <strong>{gameCase.cenario === 'agua' ? 'Agua' : gameCase.cenario === 'solo' ? 'Solo' : 'Lagoa'}</strong>
-            </div>
-            <div className="quiz-stat-box">
-              <span>Nota</span>
-              <strong>50+50</strong>
-            </div>
-            <div className="quiz-stat-box">
-              <span>Pistas</span>
-              <strong>{totalPistas}</strong>
-            </div>
+            <p style={{ marginTop: '0.5rem' }}>{gameCase.contexto}</p>
           </div>
         </>
       )}
 
-      {step === 'pistas' && (
+      {step === 'mapa' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">FASE 02 · CENA</p>
-            <h3>Colete evidencias no mapa</h3>
-            <p>Explore os locais e monte sua teoria no quadro.</p>
+            <p className="quiz-question-eyebrow retro">FASE 02</p>
+            <h3>Explore o mapa</h3>
+            <p>Cada local traz uma pergunta. Dificuldade sobe de 1 a 5.</p>
           </div>
 
           <CaseMap
             gameCase={gameCase}
             session={session}
-            totalPistas={totalPistas}
+            totalPerguntas={totalPerguntas}
             onVisit={visitHotspot}
           />
 
-          {miniAtiva && proximaClue?.miniPergunta && (
-            <div className="quiz-card">
-              <CluePuzzle
-                puzzle={proximaClue.miniPergunta}
-                onSuccess={onPuzzleSuccess}
-                onCancel={() => setMiniAtiva(null)}
-              />
+          {perguntaAtiva && perguntaAtual && (
+            <QuestionCard
+              question={perguntaAtual}
+              nivel={indiceAtual + 1}
+              onCorrect={onRespostaCerta}
+              onWrong={(msg) => setFeedback(msg)}
+            />
+          )}
+
+          {pistasColetadas.length > 0 && !perguntaAtiva && (
+            <div className="quiz-card" style={{ padding: '0.75rem 1rem' }}>
+              <p className="retro" style={{ fontSize: '0.42rem', margin: '0 0 0.35rem' }}>
+                PISTAS ({pistasColetadas.length}/{totalPerguntas})
+              </p>
+              <ul style={{ margin: 0, paddingLeft: '1.1rem', fontFamily: 'var(--font-retro)', fontSize: '0.95rem' }}>
+                {pistasColetadas.map((p) => (
+                  <li key={p.id} style={{ marginBottom: '0.25rem' }}>
+                    {p.texto}
+                  </li>
+                ))}
+              </ul>
+              {ultimaPista && (
+                <p className="quiz-feedback quiz-feedback--ok" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
+                  {ultimaPista}
+                </p>
+              )}
             </div>
-          )}
-
-          {pistas.length > 0 && (
-            <div className="quiz-options" style={{ marginBottom: '0.5rem' }}>
-              {pistas.map((p, i) => (
-                <div key={p.id} className="quiz-card" style={{ padding: '0.85rem 1rem' }}>
-                  <span className="quiz-pista-chip">Pista {i + 1}</span>
-                  <p style={{ margin: '0.35rem 0 0', lineHeight: 1.45 }}>{p.texto}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <EvidenceBoard
-            gameCase={gameCase}
-            session={session}
-            pistas={pistas}
-            onUpdateSession={onUpdateSession}
-          />
-        </>
-      )}
-
-      {step === 'lab' && (
-        <>
-          <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">FASE 03 · LABORATORIO</p>
-            <h3>Testes do Andre</h3>
-            <p>
-              Voce tem <strong>{session.labCharges}</strong> carga(s). Cada teste novo elimina hipoteses erradas.
-            </p>
-          </div>
-          <div className="quiz-options">
-            {gameCase.testes.map((t) => (
-              <QuizOption
-                key={t.id}
-                selected={session.testesFeitos.includes(t.id)}
-                onClick={() => rodarTeste(t.id, `${t.personagem}: ${t.resultado}`)}
-              >
-                {t.nome}
-                {t.testeChave ? ' ★' : ''}
-                {session.testesFeitos.includes(t.id) ? ' ✓' : ''}
-              </QuizOption>
-            ))}
-          </div>
-          {resultadoLab && (
-            <div className="quiz-feedback quiz-feedback--ok lab-result-flash">{resultadoLab}</div>
-          )}
-          {session.suspeitosEliminadosLab.length > 0 && (
-            <p className="quiz-feedback quiz-feedback--ok" style={{ fontSize: '0.9rem' }}>
-              Eliminados pelo lab: {session.suspeitosEliminadosLab.length} hipotese(s).
-            </p>
           )}
         </>
       )}
@@ -376,33 +223,20 @@ export function GameScreen({
       {step === 'veredito' && (
         <>
           <div className="quiz-question-card">
-            <p className="quiz-question-eyebrow retro">FASE 04 · VEREDITO</p>
-            <h3>Acusacao final</h3>
-            <p>Poluente e descarte valem 50% da nota cada.</p>
-            {teoriaTop && (
-              <p className="quiz-feedback quiz-feedback--ok" style={{ marginTop: '0.5rem' }}>
-                Teoria forte no quadro: {teoriaTop.slice(0, 40)}…
-              </p>
-            )}
+            <p className="quiz-question-eyebrow retro">FASE 03</p>
+            <h3>Veredito final</h3>
+            <p>50% poluente + 50% descarte.</p>
           </div>
-          <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Fonte de poluicao</p>
+          <p style={{ fontWeight: 600, margin: '0 0 0.5rem', fontSize: '0.85rem' }}>Poluente</p>
           <div className="quiz-options">
-            {suspeitosFiltrados.map((s, idx) => (
-              <QuizOption
-                key={s}
-                selected={suspeito === s}
-                onClick={() => setSuspeito(s)}
-                highlight={destacados.includes(s)}
-              >
+            {gameCase.suspeitos.map((s, idx) => (
+              <QuizOption key={s} selected={suspeito === s} onClick={() => setSuspeito(s)}>
                 <span className="quiz-choice-key">{String.fromCharCode(65 + idx)}</span>
                 {s}
               </QuizOption>
             ))}
           </div>
-          {suspeitosFiltrados.length === 0 && (
-            <p className="quiz-feedback quiz-feedback--err">Todos suspeitos eliminados — volte ao lab.</p>
-          )}
-          <p style={{ fontWeight: 600, margin: '0.75rem 0 0.5rem', fontSize: '0.85rem' }}>Descarte correto</p>
+          <p style={{ fontWeight: 600, margin: '0.75rem 0 0.5rem', fontSize: '0.85rem' }}>Descarte</p>
           <div className="quiz-options">
             {gameCase.descartes.map((d, idx) => (
               <QuizOption key={d} selected={descarte === d} onClick={() => setDescarte(d)}>
@@ -417,13 +251,9 @@ export function GameScreen({
       {feedback && (
         <div
           className={`quiz-feedback ${
-            feedback.toLowerCase().includes('incorret') ||
-            feedback.includes('Sem cargas') ||
-            feedback.includes('nao combina') ||
-            feedback.includes('Colete') ||
-            feedback.includes('Toque') ||
-            feedback.includes('Rode') ||
-            feedback.includes('Faca')
+            feedback.toLowerCase().includes('err') ||
+            feedback.includes('Responda') ||
+            feedback.includes('incorret')
               ? 'quiz-feedback--err'
               : 'quiz-feedback--ok'
           }`}
@@ -433,33 +263,33 @@ export function GameScreen({
       )}
 
       <div className="quiz-footer-actions">
-        {step === 'pistas' && (
-          <button type="button" className="quiz-hint-btn quiz-hint-btn--text" onClick={pedirDica} disabled={session.dicasUsadas >= 3} title="Dica">
-            Dica ({3 - session.dicasUsadas})
-          </button>
-        )}
-        {step !== 'caso' && step !== 'pistas' && (
-          <button type="button" className="quiz-hint-btn quiz-hint-btn--text" onClick={prevStep} title="Voltar">
-            Voltar
+        {step === 'mapa' && (
+          <button
+            type="button"
+            className="quiz-hint-btn quiz-hint-btn--text"
+            onClick={pedirDica}
+            disabled={session.dicasUsadas >= 2}
+          >
+            Dica ({2 - session.dicasUsadas})
           </button>
         )}
         <button
           type="button"
           className="quiz-btn-primary"
-          disabled={step === 'veredito' ? !suspeito || !descarte || suspeitosFiltrados.length === 0 : false}
-          onClick={handlePrimary}
+          disabled={step === 'veredito' ? !suspeito || !descarte : false}
+          onClick={() => {
+            if (step === 'caso') irParaMapa()
+            else if (step === 'mapa') irParaVeredito()
+            else enviar()
+          }}
         >
-          {step === 'veredito'
-            ? 'ENVIAR VEREDITO'
-            : step === 'pistas'
-              ? session.cluesRevealed < totalPistas
-                ? `PISTAS ${session.cluesRevealed}/${totalPistas}`
-                : 'IR AO LAB >>'
-              : step === 'lab'
-                ? requiresLabBeforeVerdict(session)
-                  ? 'TESTE OBRIGATORIO'
-                  : 'VEREDITO >>'
-                : 'CONTINUAR >>'}
+          {step === 'caso'
+            ? 'IR AO MAPA >>'
+            : step === 'mapa'
+              ? concluiuPerguntas
+                ? 'VEREDITO >>'
+                : `PERGUNTAS ${session.cluesRevealed}/${totalPerguntas}`
+              : 'ENVIAR'}
         </button>
       </div>
     </div>

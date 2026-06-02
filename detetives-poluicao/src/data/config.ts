@@ -29,16 +29,14 @@ export const GAME_URL = 'https://detetives-poluicao.vercel.app'
  */
 export const GOOGLE_FORMS_URL = ''
 
-export const CLUE_COUNT: Record<'facil' | 'medio' | 'dificil', number> = {
-  facil: 4,
-  medio: 5,
-  dificil: 6,
-}
+/** Perguntas por partida (sempre 5, dificuldade crescente 1–5) */
+export const QUESTIONS_PER_RUN = 5
 
-export const LAB_CHARGES: Record<'facil' | 'medio' | 'dificil', number> = {
-  facil: 2,
-  medio: 2,
-  dificil: 3,
+/** @deprecated Mantido para compat; use QUESTIONS_PER_RUN */
+export const CLUE_COUNT: Record<'facil' | 'medio' | 'dificil', number> = {
+  facil: QUESTIONS_PER_RUN,
+  medio: QUESTIONS_PER_RUN,
+  dificil: QUESTIONS_PER_RUN,
 }
 
 export const TOPIC_LABELS: Record<string, string> = {
