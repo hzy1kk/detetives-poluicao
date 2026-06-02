@@ -8,6 +8,8 @@ import './styles/8bit-theme.css'
 import './styles/teacher-saas.css'
 import './styles/teacher-8bit.css'
 import './styles/max-polish.css'
+import './styles/mobile.css'
+import { shouldReduceMotionEffects } from './lib/mobile'
 import { ensureStudentAccountsSeeded } from './lib/accounts'
 import { LoginScreen } from './components/LoginScreen'
 import { MenuScreen } from './components/MenuScreen'
@@ -70,7 +72,6 @@ function App() {
   )
   const [session, setSession] = useState<GameSession | null>(null)
   const [report, setReport] = useState<Report | null>(null)
-  const [elapsedSec, setElapsedSec] = useState(0)
   const [soundOn, setSoundOn] = useState(loadSoundEnabled)
   const [ambientOn, setAmbientOn] = useState(loadAmbientEnabled)
   const [fontSize, setFontSize] = useState<FontSize>(loadFontSize)
@@ -86,6 +87,7 @@ function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = isTeacher ? 'teacher' : 'quiz'
     document.documentElement.dataset.screen = screen
+    document.documentElement.dataset.perf = shouldReduceMotionEffects() ? 'lite' : 'full'
   }, [isTeacher, screen])
 
   function goTo(next: Screen) {
@@ -121,20 +123,6 @@ function App() {
     document.documentElement.dataset.font = fontSize
     saveFontSize(fontSize)
   }, [fontSize])
-
-  useEffect(() => {
-    if (screen !== 'game' || !session || session.finalizado) {
-      setElapsedSec(0)
-      return
-    }
-    const tick = () =>
-      setElapsedSec(Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000)))
-    tick()
-    const id = window.setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [screen, session])
-
-  const tempoSegundos = elapsedSec
 
   const startGame = useCallback(
     (treino: boolean) => {
@@ -174,6 +162,10 @@ function App() {
     if (!session || !profile) return
     const gameCase = getCaseById(session.caseId)
     if (!gameCase) return
+    const tempoSegundos = Math.max(
+      0,
+      Math.floor((Date.now() - session.startedAt) / 1000),
+    )
     const r = buildReport({
       aluno: profile.nome,
       turma: profile.turma,
@@ -208,16 +200,19 @@ function App() {
     )
   }
 
-  const showParticles =
-    isQuiz && (screen === 'menu' || screen === 'result')
+  const litePerf = shouldReduceMotionEffects()
+  const showParticles = isQuiz && !litePerf && (screen === 'menu' || screen === 'result')
 
   return (
     <main className={`app app--${screen}`}>
       {isQuiz && (
-        <PixelBackground cenario={screen === 'game' ? gameCase?.cenario : undefined} />
+        <PixelBackground
+          lite={litePerf}
+          cenario={screen === 'game' ? gameCase?.cenario : undefined}
+        />
       )}
-      {isTeacher && <PixelBackground />}
-      {showParticles && <ParticleCanvas density={32} />}
+      {isTeacher && <PixelBackground lite={litePerf} />}
+      {showParticles && <ParticleCanvas density={24} />}
 
       {isQuiz && screen !== 'game' && (
         <SoundFAB
@@ -229,6 +224,15 @@ function App() {
       )}
 
       <div className="app-content">
+        {screen === 'game' && session && gameCase ? (
+          <GameScreen
+            gameCase={gameCase}
+            session={session}
+            onUpdateSession={setSession}
+            onFinish={handleFinish}
+            onQuit={() => goTo('menu')}
+          />
+        ) : (
         <AnimatePresence mode="wait">
           {screen === 'login' && (
             <PageTransition screenKey="login">
@@ -268,19 +272,6 @@ function App() {
             </PageTransition>
           )}
 
-          {screen === 'game' && session && gameCase && (
-            <PageTransition screenKey="game">
-              <GameScreen
-                gameCase={gameCase}
-                session={session}
-                tempoSegundos={tempoSegundos}
-                onUpdateSession={setSession}
-                onFinish={handleFinish}
-                onQuit={() => goTo('menu')}
-              />
-            </PageTransition>
-          )}
-
           {screen === 'result' && report && getCaseById(report.casoId) && (
             <PageTransition screenKey="result">
               <ResultScreen
@@ -316,6 +307,7 @@ function App() {
             </PageTransition>
           )}
         </AnimatePresence>
+        )}
       </div>
     </main>
   )

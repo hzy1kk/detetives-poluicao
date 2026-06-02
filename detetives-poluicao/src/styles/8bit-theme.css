@@ -322,6 +322,10 @@ html[data-theme='quiz'] body {
   font-size: 1.15rem !important;
 }
 
+.quiz-option:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 .quiz-option--selected {
   background: var(--8bit-green) !important;
   color: var(--8bit-black) !important;

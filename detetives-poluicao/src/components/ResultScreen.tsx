@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { shouldReduceMotionEffects } from '../lib/mobile'
 import { AnimatePresence, motion } from 'framer-motion'
 import { formatTime } from '../lib/gameEngine'
 import { playClick } from '../lib/audio'
@@ -21,15 +22,17 @@ export function ResultScreen({ report, gameCase, onMenu, onPlayAgain }: Props) {
   const [showCelebration, setShowCelebration] = useState(true)
   const stars = '★'.repeat(report.estrelas) + '☆'.repeat(3 - report.estrelas)
 
+  const confettiCount = shouldReduceMotionEffects() ? 12 : 40
+
   const confetti = useMemo(
     () =>
-      Array.from({ length: 40 }, (_, i) => ({
+      Array.from({ length: confettiCount }, (_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: `${Math.random() * 0.8}s`,
         color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
       })),
-    [],
+    [confettiCount],
   )
 
   function copiarCodigo() {

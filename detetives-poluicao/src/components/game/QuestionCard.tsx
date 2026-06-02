@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { QuizOption } from '../quiz/QuizOption'
 import type { BankQuestion } from '../../data/questionBank'
 import { playClick, playError, playSuccess } from '../../lib/audio'
+import { shouldReduceMotionEffects } from '../../lib/mobile'
 
 type Props = {
   question: BankQuestion
@@ -11,9 +12,8 @@ type Props = {
   onWrong?: (msg: string) => void
 }
 
-const RESULT_MS = 1200
-
 export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }: Props) {
+  const resultMs = shouldReduceMotionEffects() ? 750 : 1200
   const [feedback, setFeedback] = useState<string | null>(null)
   const [pickedIdx, setPickedIdx] = useState<number | null>(null)
   const [result, setResult] = useState<'correct' | 'wrong' | null>(null)
@@ -30,9 +30,9 @@ export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }:
     if (result !== 'correct') return
     const t = window.setTimeout(() => {
       onCorrect()
-    }, RESULT_MS)
+    }, resultMs)
     return () => window.clearTimeout(t)
-  }, [result, onCorrect])
+  }, [result, onCorrect, resultMs])
 
   function pick(idx: number) {
     if (locked) return
@@ -55,7 +55,7 @@ export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }:
         setPickedIdx(null)
         setResult(null)
         setFeedback(null)
-      }, RESULT_MS)
+      }, resultMs)
     }
   }
 

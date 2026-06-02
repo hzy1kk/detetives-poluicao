@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { shouldReduceMotionEffects } from '../../lib/mobile'
 
 type Props = {
   onDone: () => void
@@ -7,7 +8,8 @@ type Props = {
 
 export function BootSplash({ onDone }: Props) {
   useEffect(() => {
-    const t = window.setTimeout(onDone, 2400)
+    const ms = shouldReduceMotionEffects() ? 1400 : 2400
+    const t = window.setTimeout(onDone, ms)
     return () => clearTimeout(t)
   }, [onDone])
 

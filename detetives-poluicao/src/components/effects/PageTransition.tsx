@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
+import { shouldReduceMotionEffects } from '../../lib/mobile'
 
 const variants = {
   initial: { opacity: 0, y: 8 },
@@ -13,6 +14,10 @@ type Props = {
 }
 
 export function PageTransition({ children, screenKey }: Props) {
+  if (shouldReduceMotionEffects()) {
+    return <div className="page-transition">{children}</div>
+  }
+
   return (
     <motion.div
       key={screenKey}

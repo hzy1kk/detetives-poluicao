@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { shouldReduceMotionEffects } from '../../lib/mobile'
 
 type Particle = {
   x: number
@@ -20,7 +21,7 @@ export function ParticleCanvas({ density = 55, connect = true }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (shouldReduceMotionEffects()) return
 
     const canvasEl = canvasRef.current
     if (!canvasEl) return

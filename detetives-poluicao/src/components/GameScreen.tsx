@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { ChevronLeft, Clock } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { ChevronLeft } from 'lucide-react'
 import { SegmentProgress } from './quiz/SegmentProgress'
 import { QuestionRunProgress } from './quiz/QuestionRunProgress'
 import { QuizOption } from './quiz/QuizOption'
 import { CaseMap } from './game/CaseMap'
+import { GameTimer } from './game/GameTimer'
 import { QuestionCard } from './game/QuestionCard'
 import { QuestionOverlay } from './game/QuestionOverlay'
 import {
   getErrorHint,
   getHintText,
   getQuestionsPerRun,
-  formatTime,
 } from '../lib/gameEngine'
 import { getQuestionById } from '../lib/questionPicker'
 import { playClick, playError, playSuccess } from '../lib/audio'
@@ -20,7 +20,6 @@ import type { GameCase, GameSession } from '../types'
 type Props = {
   gameCase: GameCase
   session: GameSession
-  tempoSegundos: number
   onUpdateSession: (s: GameSession) => void
   onFinish: (suspeito: string, descarte: string) => void
   onQuit: () => void
@@ -40,7 +39,6 @@ const STEP_NUM: Record<GameStep, number> = { caso: 1, mapa: 2, veredito: 3 }
 export function GameScreen({
   gameCase,
   session,
-  tempoSegundos,
   onUpdateSession,
   onFinish,
   onQuit,
@@ -76,7 +74,7 @@ export function GameScreen({
     setFeedback('')
   }
 
-  function onRespostaCerta() {
+  const onRespostaCerta = useCallback(() => {
     if (!perguntaAtual) return
     vibrateSuccess()
     const nextRevealed = session.cluesRevealed + 1
@@ -88,7 +86,7 @@ export function GameScreen({
     setUltimaPista(perguntaAtual.pistaOk)
     setPerguntaAtiva(false)
     setFeedback('')
-  }
+  }, [perguntaAtual, session, onUpdateSession])
 
   function pedirDica() {
     if (session.dicasUsadas >= 2 || perguntaAtiva) return
@@ -159,10 +157,7 @@ export function GameScreen({
           <ChevronLeft aria-hidden size={22} strokeWidth={2} />
         </button>
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
-          <span className="quiz-timer-pill">
-            <Clock aria-hidden size={16} strokeWidth={2} />
-            {formatTime(tempoSegundos)}
-          </span>
+          <GameTimer startedAt={session.startedAt} />
         </div>
       </div>
 
