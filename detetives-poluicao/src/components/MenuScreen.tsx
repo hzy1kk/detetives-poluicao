@@ -132,7 +132,7 @@ export function MenuScreen({
         )}
 
         <div className="bit-box" style={{ width: '100%', padding: '0.75rem 1rem', marginBottom: '0.75rem' }}>
-          <p className="quiz-settings-label retro" style={{ margin: '0 0 0.5rem', fontSize: '0.45rem' }}>
+          <p className="quiz-settings-label retro" style={{ margin: '0 0 0.5rem', fontSize: '0.55rem' }}>
             TAMANHO DA LETRA
           </p>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -141,7 +141,7 @@ export function MenuScreen({
                 key={s}
                 type="button"
                 className={`bit-menu-item retro${fontSize === s ? ' bit-menu-item--active' : ''}`}
-                style={{ flex: 1, textAlign: 'center', padding: '0.5rem' }}
+                style={{ flex: 1, textAlign: 'center', padding: '0.65rem', minHeight: '48px', fontSize: '0.62rem' }}
                 onClick={() => {
                   playClick()
                   onFontSize(s)

@@ -68,6 +68,8 @@ export function getQuestionsPerRun(): number {
   return QUESTIONS_PER_RUN
 }
 
+export const MAX_HINTS_PER_RUN = 2
+
 export function getHintText(gameCase: GameCase, level: number): string {
   if (level <= 1) return gameCase.dicas[0]
   return gameCase.dicas[1]

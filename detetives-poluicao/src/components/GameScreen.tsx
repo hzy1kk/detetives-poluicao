@@ -5,6 +5,8 @@ import { QuestionRunProgress } from './quiz/QuestionRunProgress'
 import { QuizOption } from './quiz/QuizOption'
 import { CaseMap } from './game/CaseMap'
 import { GameTimer } from './game/GameTimer'
+import { HintMeter } from './game/HintMeter'
+import { MAX_HINTS_PER_RUN } from '../lib/gameEngine'
 import { QuestionCard } from './game/QuestionCard'
 import { QuestionOverlay } from './game/QuestionOverlay'
 import {
@@ -89,7 +91,7 @@ export function GameScreen({
   }, [perguntaAtual, session, onUpdateSession])
 
   function pedirDica() {
-    if (session.dicasUsadas >= 2 || perguntaAtiva) return
+    if (session.dicasUsadas >= MAX_HINTS_PER_RUN || perguntaAtiva) return
     playClick()
     onUpdateSession({ ...session, dicasUsadas: session.dicasUsadas + 1 })
     setFeedback(getHintText(gameCase, session.dicasUsadas + 1))
@@ -296,14 +298,11 @@ export function GameScreen({
 
       <div className="quiz-footer-actions">
         {step === 'mapa' && (
-          <button
-            type="button"
-            className="quiz-hint-btn quiz-hint-btn--text"
-            onClick={pedirDica}
-            disabled={session.dicasUsadas >= 2 || perguntaAtiva}
-          >
-            Dica ({2 - session.dicasUsadas})
-          </button>
+          <HintMeter
+            used={session.dicasUsadas}
+            disabled={perguntaAtiva}
+            onUse={pedirDica}
+          />
         )}
         <button
           type="button"

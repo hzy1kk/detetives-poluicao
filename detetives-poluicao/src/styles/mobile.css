@@ -89,11 +89,14 @@
     padding: 0.65rem 0.25rem;
   }
 
-  .case-map__label {
-    font-size: 0.48rem !important;
-    line-height: 1.35;
-    text-align: center;
-    word-break: break-word;
+  .hint-meter__bulb {
+    width: 52px;
+    height: 52px;
+  }
+
+  .hint-meter__bulb svg {
+    width: 26px;
+    height: 26px;
   }
 
   .question-overlay {
