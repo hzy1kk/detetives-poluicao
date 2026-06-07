@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { QuizOption } from '../quiz/QuizOption'
 import type { BankQuestion } from '../../data/questionBank'
 import { shuffleQuestionOptions } from '../../lib/shuffleOptions'
@@ -9,24 +9,26 @@ type Props = {
   question: BankQuestion
   nivel: number
   total?: number
+  shuffleKey: string
   onCorrect: () => void
   onWrong?: (msg: string) => void
 }
 
-export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }: Props) {
+export function QuestionCard({ question, nivel, total = 5, shuffleKey, onCorrect, onWrong }: Props) {
   const resultMs = shouldReduceMotionEffects() ? 750 : 1200
-  const shuffled = useMemo(() => shuffleQuestionOptions(question), [question.id])
+  const [shuffled, setShuffled] = useState(() => shuffleQuestionOptions(question))
   const [feedback, setFeedback] = useState<string | null>(null)
   const [pickedIdx, setPickedIdx] = useState<number | null>(null)
   const [result, setResult] = useState<'correct' | 'wrong' | null>(null)
   const [locked, setLocked] = useState(false)
 
   useEffect(() => {
+    setShuffled(shuffleQuestionOptions(question))
     setFeedback(null)
     setPickedIdx(null)
     setResult(null)
     setLocked(false)
-  }, [question.id])
+  }, [question.id, shuffleKey, question])
 
   function pick(idx: number) {
     if (locked) return

@@ -193,6 +193,7 @@ export function GameScreen({
               question={perguntaAtual}
               nivel={perguntaNum}
               total={totalPerguntas}
+              shuffleKey={`${session.startedAt}-${perguntaAtual.id}`}
               onCorrect={onRespostaCerta}
             />
           )}
