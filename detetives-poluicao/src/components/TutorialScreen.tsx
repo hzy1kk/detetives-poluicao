@@ -11,8 +11,8 @@ type Props = {
 
 const STEPS = [
   'Digite seu nome e escolha a dificuldade.',
-  'Leia o caso e va ao mapa.',
-  '5 perguntas no mapa — do mais facil ao mais dificil.',
+  'Leia o caso e va as perguntas.',
+  '5 perguntas em ordem — do mais facil ao mais dificil.',
   'Acerte poluente + descarte no veredito.',
   'Veja sua nota e o ranking.',
 ]
@@ -28,7 +28,7 @@ export function TutorialScreen({ profile, onDone, onNavigate }: Props) {
   return (
     <QuizLayout profile={profile} activeNav="tutorial" onNavigate={onNavigate}>
       <h2 className="quiz-page-title retro">COMO JOGAR</h2>
-      <p className="quiz-page-lead">3 fases: caso, mapa (5 perguntas) e veredito.</p>
+      <p className="quiz-page-lead">3 fases: caso, perguntas (5) e veredito.</p>
 
       <div className="quiz-card bit-box">
         <ol className="bit-step-list">

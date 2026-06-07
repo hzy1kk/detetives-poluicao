@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { QuizOption } from '../quiz/QuizOption'
 import type { MiniPergunta } from '../../types'
 import { playClick, playError, playSuccess } from '../../lib/audio'
+import { shuffleQuestionOptions } from '../../lib/shuffleOptions'
 
 type Props = {
   puzzle: MiniPergunta
@@ -26,6 +27,11 @@ function EscolhaPuzzle({
   puzzle: Extract<MiniPergunta, { tipo: 'escolha' }>
   onSuccess: () => void
 }) {
+  const shuffled = useMemo(
+    () => shuffleQuestionOptions(puzzle),
+    [puzzle.pergunta, puzzle.correta, puzzle.opcoes.join('|')],
+  )
+
   return (
     <>
       <p style={{ fontWeight: 700, margin: '0 0 0.5rem' }} className="retro">
@@ -35,13 +41,13 @@ function EscolhaPuzzle({
         {puzzle.pergunta}
       </p>
       <div className="quiz-options">
-        {puzzle.opcoes.map((op, idx) => (
+        {shuffled.opcoes.map((op, idx) => (
           <QuizOption
-            key={op}
+            key={`${op}-${idx}`}
             hideRadio
             onClick={() => {
               playClick()
-              if (puzzle.correta === idx) {
+              if (shuffled.correta === idx) {
                 playSuccess()
                 onSuccess()
               } else {

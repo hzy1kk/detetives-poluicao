@@ -1,3 +1,5 @@
+import { shuffleQuestionOptions } from '../lib/shuffleOptions'
+
 export const QUESTIONS_PER_RUN = 5
 
 export type QuestionTier = 1 | 2 | 3 | 4 | 5
@@ -23,7 +25,16 @@ function q(
   pistaOk: string,
   feedbackErro: string,
 ): BankQuestion {
-  return { id, casoId, tier, pergunta, opcoes, correta, pistaOk, feedbackErro }
+  return shuffleQuestionOptions({
+    id,
+    casoId,
+    tier,
+    pergunta,
+    opcoes,
+    correta,
+    pistaOk,
+    feedbackErro,
+  })
 }
 
 const oleo: BankQuestion[] = [

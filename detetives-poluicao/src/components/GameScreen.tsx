@@ -1,14 +1,13 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { SegmentProgress } from './quiz/SegmentProgress'
 import { QuestionRunProgress } from './quiz/QuestionRunProgress'
 import { QuizOption } from './quiz/QuizOption'
-import { CaseMap } from './game/CaseMap'
 import { GameTimer } from './game/GameTimer'
 import { HintMeter } from './game/HintMeter'
+import { ClueBoard } from './game/ClueBoard'
 import { MAX_HINTS_PER_RUN } from '../lib/gameEngine'
 import { QuestionCard } from './game/QuestionCard'
-import { QuestionOverlay } from './game/QuestionOverlay'
 import {
   getErrorHint,
   getHintText,
@@ -27,16 +26,16 @@ type Props = {
   onQuit: () => void
 }
 
-type GameStep = 'caso' | 'mapa' | 'veredito'
+type GameStep = 'caso' | 'perguntas' | 'veredito'
 type VereditoStep = 'poluente' | 'descarte'
 
 const STEPS: { id: GameStep; title: string }[] = [
   { id: 'caso', title: 'CASO' },
-  { id: 'mapa', title: 'MAPA' },
+  { id: 'perguntas', title: 'PERGUNTAS' },
   { id: 'veredito', title: 'VEREDITO' },
 ]
 
-const STEP_NUM: Record<GameStep, number> = { caso: 1, mapa: 2, veredito: 3 }
+const STEP_NUM: Record<GameStep, number> = { caso: 1, perguntas: 2, veredito: 3 }
 
 export function GameScreen({
   gameCase,
@@ -49,9 +48,7 @@ export function GameScreen({
   const [vereditoStep, setVereditoStep] = useState<VereditoStep>('poluente')
   const [suspeito, setSuspeito] = useState('')
   const [descarte, setDescarte] = useState('')
-  const [perguntaAtiva, setPerguntaAtiva] = useState(false)
   const [feedback, setFeedback] = useState('')
-  const [ultimaPista, setUltimaPista] = useState('')
 
   const totalPerguntas = getQuestionsPerRun()
   const indiceAtual = session.cluesRevealed
@@ -59,22 +56,13 @@ export function GameScreen({
   const perguntaAtual = perguntaId ? getQuestionById(perguntaId) : null
   const concluiuPerguntas = session.cluesRevealed >= totalPerguntas
   const perguntaNum = Math.min(indiceAtual + 1, totalPerguntas)
-  const faltamPerguntas = totalPerguntas - session.cluesRevealed
 
-  const pistasColetadas = gameCase.pistas.slice(0, session.cluesRevealed)
-
-  function visitHotspot(hotspotId: string) {
-    if (concluiuPerguntas || perguntaAtiva || !perguntaAtual) return
-
-    const allVisited = gameCase.mapaLocais.every((l) => session.locaisVisitados.includes(l.id))
-    let locais = session.locaisVisitados
-    if (allVisited && session.cluesRevealed < totalPerguntas) locais = []
-    if (locais.includes(hotspotId) && !allVisited) return
-
-    onUpdateSession({ ...session, locaisVisitados: [...locais, hotspotId] })
-    setPerguntaAtiva(true)
-    setFeedback('')
-  }
+  const pistasColetadas = useMemo(() => {
+    return session.perguntaIds
+      .slice(0, session.cluesRevealed)
+      .map((id) => getQuestionById(id)?.pistaOk)
+      .filter((p): p is string => !!p)
+  }, [session.perguntaIds, session.cluesRevealed])
 
   const onRespostaCerta = useCallback(() => {
     if (!perguntaAtual) return
@@ -85,13 +73,11 @@ export function GameScreen({
       cluesRevealed: nextRevealed,
       perguntasAcertos: session.perguntasAcertos + 1,
     })
-    setUltimaPista(perguntaAtual.pistaOk)
-    setPerguntaAtiva(false)
     setFeedback('')
   }, [perguntaAtual, session, onUpdateSession])
 
   function pedirDica() {
-    if (session.dicasUsadas >= MAX_HINTS_PER_RUN || perguntaAtiva) return
+    if (session.dicasUsadas >= MAX_HINTS_PER_RUN) return
     playClick()
     onUpdateSession({ ...session, dicasUsadas: session.dicasUsadas + 1 })
     setFeedback(getHintText(gameCase, session.dicasUsadas + 1))
@@ -126,15 +112,15 @@ export function GameScreen({
     onFinish(suspeito, descarte)
   }
 
-  function irParaMapa() {
+  function irParaPerguntas() {
     playClick()
-    setStep('mapa')
+    setStep('perguntas')
     setFeedback('')
   }
 
   function irParaVeredito() {
     if (!concluiuPerguntas) {
-      setFeedback('Responda as 5 perguntas no mapa primeiro.')
+      setFeedback('Responda as 5 perguntas primeiro.')
       return
     }
     playClick()
@@ -153,7 +139,7 @@ export function GameScreen({
     feedback.includes('errado')
 
   return (
-    <div className={`quiz-shell quiz-shell--game quiz-game-hud${perguntaAtiva ? ' quiz-shell--question-open' : ''}`}>
+    <div className="quiz-shell quiz-shell--game quiz-game-hud">
       <div className="quiz-back-row">
         <button type="button" className="quiz-back-btn" onClick={onQuit} aria-label="Sair">
           <ChevronLeft aria-hidden size={22} strokeWidth={2} />
@@ -173,7 +159,7 @@ export function GameScreen({
         }
       />
 
-      {step === 'mapa' && !concluiuPerguntas && (
+      {step === 'perguntas' && !concluiuPerguntas && (
         <QuestionRunProgress current={perguntaNum} total={totalPerguntas} />
       )}
 
@@ -188,48 +174,31 @@ export function GameScreen({
         </div>
       )}
 
-      {step === 'mapa' && (
-        <>
-          <div className="quiz-question-card">
+      {step === 'perguntas' && (
+        <div className="quiz-run">
+          <div className="quiz-question-card quiz-run__banner">
             <p className="quiz-question-eyebrow retro">FASE 02</p>
-            <h3>Toque em um local</h3>
-            <p className="quiz-instruction">Cada local tem uma pergunta de quimica. A dificuldade sobe de 1 a 5.</p>
+            <h3>
+              {gameCase.emoji} {gameCase.nome}
+            </h3>
+            <p className="quiz-instruction">
+              {concluiuPerguntas
+                ? 'Todas as perguntas respondidas! Va ao veredito.'
+                : 'Responda as perguntas em ordem. Cada acerto revela uma pista.'}
+            </p>
           </div>
 
-          <div className={perguntaAtiva ? 'case-map-wrap case-map-wrap--paused' : 'case-map-wrap'}>
-            <CaseMap
-              gameCase={gameCase}
-              session={session}
-              totalPerguntas={totalPerguntas}
-              onVisit={visitHotspot}
+          {!concluiuPerguntas && perguntaAtual && (
+            <QuestionCard
+              question={perguntaAtual}
+              nivel={perguntaNum}
+              total={totalPerguntas}
+              onCorrect={onRespostaCerta}
             />
-          </div>
-
-          <QuestionOverlay open={perguntaAtiva && !!perguntaAtual}>
-            {perguntaAtual && (
-              <QuestionCard
-                question={perguntaAtual}
-                nivel={perguntaNum}
-                total={totalPerguntas}
-                onCorrect={onRespostaCerta}
-              />
-            )}
-          </QuestionOverlay>
-
-          {pistasColetadas.length > 0 && !perguntaAtiva && (
-            <div className="quiz-card" style={{ padding: '0.75rem 1rem' }}>
-              <p className="retro question-clues-label">Pistas ({pistasColetadas.length}/{totalPerguntas})</p>
-              <ul className="question-clues-list">
-                {pistasColetadas.map((p) => (
-                  <li key={p.id}>{p.texto}</li>
-                ))}
-              </ul>
-              {ultimaPista && (
-                <p className="quiz-feedback quiz-feedback--ok question-clues-latest">{ultimaPista}</p>
-              )}
-            </div>
           )}
-        </>
+
+          <ClueBoard clues={pistasColetadas} total={totalPerguntas} />
+        </div>
       )}
 
       {step === 'veredito' && (
@@ -290,53 +259,47 @@ export function GameScreen({
         </>
       )}
 
-      {feedback && !perguntaAtiva && (
+      {feedback && (
         <div className={`quiz-feedback ${feedbackIsErr ? 'quiz-feedback--err' : 'quiz-feedback--ok'}`}>
           {feedback}
         </div>
       )}
 
-      <div className="quiz-footer-actions">
-        {step === 'mapa' && (
-          <HintMeter
-            used={session.dicasUsadas}
-            disabled={perguntaAtiva}
-            onUse={pedirDica}
-          />
+      <div className={`quiz-footer-actions${step === 'perguntas' && !concluiuPerguntas ? ' quiz-footer-actions--hint-only' : ''}`}>
+        {step === 'perguntas' && (
+          <HintMeter used={session.dicasUsadas} onUse={pedirDica} />
         )}
-        <button
-          type="button"
-          className="quiz-btn-primary"
-          disabled={
-            step === 'veredito'
-              ? vereditoStep === 'poluente'
-                ? !suspeito
-                : !descarte
-              : step === 'mapa' && !concluiuPerguntas
-          }
-          onClick={() => {
-            if (step === 'caso') irParaMapa()
-            else if (step === 'mapa') irParaVeredito()
-            else if (vereditoStep === 'poluente') {
-              if (!suspeito) return
-              playClick()
-              setVereditoStep('descarte')
-              setFeedback('')
-            } else enviar()
-          }}
-        >
-          {step === 'caso'
-            ? 'IR AO MAPA'
-            : step === 'mapa'
-              ? concluiuPerguntas
+        {(step !== 'perguntas' || concluiuPerguntas) && (
+          <button
+            type="button"
+            className="quiz-btn-primary"
+            disabled={
+              step === 'veredito'
+                ? vereditoStep === 'poluente'
+                  ? !suspeito
+                  : !descarte
+                : false
+            }
+            onClick={() => {
+              if (step === 'caso') irParaPerguntas()
+              else if (step === 'perguntas') irParaVeredito()
+              else if (vereditoStep === 'poluente') {
+                if (!suspeito) return
+                playClick()
+                setVereditoStep('descarte')
+                setFeedback('')
+              } else enviar()
+            }}
+          >
+            {step === 'caso'
+              ? 'IR AS PERGUNTAS'
+              : step === 'perguntas'
                 ? 'VEREDITO'
-                : faltamPerguntas === 1
-                  ? 'Falta 1 pergunta'
-                  : `Faltam ${faltamPerguntas} perguntas`
-              : vereditoStep === 'poluente'
-                ? 'PROXIMO'
-                : 'ENVIAR'}
-        </button>
+                : vereditoStep === 'poluente'
+                  ? 'PROXIMO'
+                  : 'ENVIAR'}
+          </button>
+        )}
       </div>
     </div>
   )

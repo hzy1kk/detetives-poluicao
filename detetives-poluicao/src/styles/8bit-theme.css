@@ -1192,6 +1192,18 @@ html[data-theme='teacher'] .teacher-topics-grid input {
   font-size: 1rem !important;
 }
 
+.evidence-board.bit-box {
+  background: var(--8bit-surface-dark);
+  border: var(--pixel) solid var(--8bit-black);
+  box-shadow: var(--pixel) var(--pixel) 0 var(--8bit-black);
+}
+
+.evidence-board__clue:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
 .question-clues-label {
   font-size: 0.45rem !important;
   margin: 0 0 0.35rem !important;

@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { QuizOption } from '../quiz/QuizOption'
 import type { BankQuestion } from '../../data/questionBank'
+import { shuffleQuestionOptions } from '../../lib/shuffleOptions'
 import { playClick, playError, playSuccess } from '../../lib/audio'
 import { shouldReduceMotionEffects } from '../../lib/mobile'
 
@@ -14,6 +15,7 @@ type Props = {
 
 export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }: Props) {
   const resultMs = shouldReduceMotionEffects() ? 750 : 1200
+  const shuffled = useMemo(() => shuffleQuestionOptions(question), [question.id])
   const [feedback, setFeedback] = useState<string | null>(null)
   const [pickedIdx, setPickedIdx] = useState<number | null>(null)
   const [result, setResult] = useState<'correct' | 'wrong' | null>(null)
@@ -26,28 +28,20 @@ export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }:
     setLocked(false)
   }, [question.id])
 
-  useEffect(() => {
-    if (result !== 'correct') return
-    const t = window.setTimeout(() => {
-      onCorrect()
-    }, resultMs)
-    return () => window.clearTimeout(t)
-  }, [result, onCorrect, resultMs])
-
   function pick(idx: number) {
     if (locked) return
     playClick()
     setPickedIdx(idx)
     setLocked(true)
 
-    if (question.correta === idx) {
+    if (shuffled.correta === idx) {
       playSuccess()
       setResult('correct')
-      setFeedback('Pista desbloqueada!')
+      setFeedback(shuffled.pistaOk)
     } else {
       playError()
       setResult('wrong')
-      const msg = question.feedbackErro
+      const msg = shuffled.feedbackErro
       setFeedback(msg)
       onWrong?.(msg)
       window.setTimeout(() => {
@@ -59,15 +53,19 @@ export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }:
     }
   }
 
+  function continuar() {
+    playClick()
+    onCorrect()
+  }
+
   return (
     <div className="quiz-card question-card">
-      <p className="question-card__header" id="question-overlay-title">
+      <p className="question-card__header" id="question-title">
         <span className="retro question-card__tier">Pergunta {nivel} de {total}</span>
-        <span className="question-card__badge">Dificuldade {nivel}</span>
       </p>
-      <p className="question-card__text">{question.pergunta}</p>
+      <p className="question-card__text">{shuffled.pergunta}</p>
       <div className="quiz-options">
-        {question.opcoes.map((op, idx) => (
+        {shuffled.opcoes.map((op, idx) => (
           <QuizOption
             key={op}
             hideRadio
@@ -82,14 +80,29 @@ export function QuestionCard({ question, nivel, total = 5, onCorrect, onWrong }:
         ))}
       </div>
       {feedback && (
-        <p
-          className={`quiz-feedback question-card__feedback ${
-            result === 'wrong' ? 'quiz-feedback--err' : 'quiz-feedback--ok'
-          }`}
-          role="status"
-        >
-          {feedback}
-        </p>
+        <div className="question-card__result">
+          <p
+            className={`quiz-feedback question-card__feedback ${
+              result === 'wrong' ? 'quiz-feedback--err' : 'quiz-feedback--ok'
+            }`}
+            role="status"
+          >
+            {result === 'correct' ? (
+              <>
+                <span className="retro question-card__result-label">Pista desbloqueada!</span>
+                <br />
+                {feedback}
+              </>
+            ) : (
+              feedback
+            )}
+          </p>
+          {result === 'correct' && (
+            <button type="button" className="quiz-btn-primary question-card__continue retro" onClick={continuar}>
+              CONTINUAR
+            </button>
+          )}
+        </div>
       )}
     </div>
   )
